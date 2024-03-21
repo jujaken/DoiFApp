@@ -8,11 +8,23 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}" CornerRadius="1.1" BorderThickness="1" BorderBrush="{TemplateBinding Foreground}" >
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding Foreground}"
+                            CornerRadius="1.1" BorderThickness="1" >
                         <Grid>
                             <ContentPresenter Margin="3,1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </Grid>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="border" Property="Background" Value="#FF867F7A"/>
+                            <Setter TargetName="border" Property="BorderBrush" Value="#101010"/>
+                            <Setter Property="Foreground" Value="#101010"/>
+                            <Setter Property="Opacity" Value="0.5"/>
+                            <Setter Property="Cursor" Value="No"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
