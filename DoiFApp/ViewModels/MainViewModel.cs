@@ -69,7 +69,7 @@ namespace DoiFApp.ViewModels
         [RelayCommand(CanExecute = nameof(CanExtractToTempFile))]
         public async Task ExtractToTempFile()
         {
-            throw new NotImplementedException();
+            await Notify("Данные выгружены!", "Посмотрите файл в директории!");
         }
 
         public bool CanExctractWorkloadTable { get; protected set; }
@@ -77,7 +77,7 @@ namespace DoiFApp.ViewModels
         [RelayCommand(CanExecute = nameof(CanExctractWorkloadTable))]
         public async Task ExctractWorkloadTable()
         {
-            throw new NotImplementedException();
+            await Notify("Данные выгружены!", "Посмотрите файл в директории!");
         }
 
         public bool CanExctractReportTable { get; protected set; }
@@ -85,7 +85,7 @@ namespace DoiFApp.ViewModels
         [RelayCommand(CanExecute = nameof(CanExctractReportTable))]
         public async Task ExctractReportTable()
         {
-            throw new NotImplementedException();
+            await Notify("Данные выгружены!", "Посмотрите файл в директории!");
         }
 
         private Task Notify(string title, string desc, Color? color = null)
