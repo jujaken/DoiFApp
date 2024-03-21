@@ -7,39 +7,39 @@ namespace DoiFApp.ViewModels
     public partial class MainViewModel : ObservableObject
     {
         [ObservableProperty]
-        private ObservableCollection<ToolViewModel> commands = [];
+        private ObservableCollection<ToolViewModel> tools = [];
 
         public MainViewModel()
         {
-            commands.Add(new ToolViewModel()
+            tools.Add(new ToolViewModel()
             {
                 Title = "Загрузи эксель",
                 Description = "Загружает таблицу excel и формирует необходимые данные для работы приложения",
                 Command = LoadExcelCommand
             });
 
-            commands.Add(new ToolViewModel()
+            tools.Add(new ToolViewModel()
             {
                 Title = "Выгрузи во временный файл",
                 Description = "Выгружает таблицу excel в temp таблицу",
                 Command = ExtractToTempFileCommand
             });
 
-            commands.Add(new ToolViewModel()
+            tools.Add(new ToolViewModel()
             {
                 Title = "Загрузи temp-файл",
                 Description = "Загружает temp-файл для для просмотра",
                 Command = LoadTempFileCommand
             });
 
-            commands.Add(new ToolViewModel()
+            tools.Add(new ToolViewModel()
             {
                 Title = "Сформируй загруженность",
                 Description = "Формирует таблицу загруженности",
                 Command = ExctractWorkloadTableCommand
             });
 
-            commands.Add(new ToolViewModel()
+            tools.Add(new ToolViewModel()
             {
                 Title = "Сформируй отчёт",
                 Description = "Формирует таблицу-отчёт",

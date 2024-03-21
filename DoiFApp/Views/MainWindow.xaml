@@ -24,7 +24,7 @@
 
         <Grid x:Name="ToolsZone" Grid.Column="0">
 
-            <ListBox Background="Gray">
+            <ListBox Background="Gray" DataContext="{Binding Tools}">
 
             </ListBox>
 
