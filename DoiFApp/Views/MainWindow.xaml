@@ -15,7 +15,11 @@
             <DataTemplate DataType="{x:Type vm:DataPageViewModel}">
                 <local:DataPageView/>
             </DataTemplate>
-            
+
+            <DataTemplate DataType="{x:Type vm:LoadingPageViewModel}">
+                <local:LoadingPageView/>
+            </DataTemplate>
+
         </ResourceDictionary>
         
     </Window.Resources>

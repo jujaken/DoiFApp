@@ -71,12 +71,7 @@ namespace DoiFApp.ViewModels
 
         [RelayCommand]
         public async Task LoadSession()
-        {
-            var page = new DataPageViewModel();
-            await page.LoadLessonData();
-            CurPage = page;
-            CanExtract = true;
-        }
+            => await CommandWithProcess(async () => await OpenSession());
 
         [RelayCommand]
         public async Task LoadExcel()
@@ -91,17 +86,19 @@ namespace DoiFApp.ViewModels
             if (string.IsNullOrEmpty(fileDialog.FileName))
                 return;
 
-            try
+            await CommandWithProcess(async () =>
             {
-                await Ioc.Default.GetRequiredService<IExcelReader>().ReadToData(fileDialog.FileName);
-                await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
-            }
-            catch
-            {
-                await Notify("Ошибка загрузки!", "Что-то пошло не так.", NotifyColorType.Error);
-            }
-
-            await LoadSession();
+                try
+                {
+                    await Ioc.Default.GetRequiredService<IExcelReader>().ReadToData(fileDialog.FileName);
+                    //await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
+                    await OpenSession();
+                }
+                catch
+                {
+                    //await Notify("Ошибка загрузки!", "Что-то пошло не так.", NotifyColorType.Error);
+                }
+            });
         }
 
         [RelayCommand]
@@ -126,6 +123,23 @@ namespace DoiFApp.ViewModels
         public async Task ExctractReportTable()
         {
             await Notify("Данные выгружены!", "Посмотрите файл в директории!");
+        }
+
+        private async Task CommandWithProcess(Action action)
+        {
+            var lp = new LoadingPageViewModel();
+            CurPage = lp;
+            await Task.Run(action);
+            if (CurPage == lp)
+                CurPage = null;
+        }
+
+        private async Task OpenSession()
+        {
+            var page = new DataPageViewModel();
+            await page.LoadLessonData();
+            CurPage = page;
+            CanExtract = true;
         }
 
         private Task Notify(string title, string desc, NotifyColorType colorType = NotifyColorType.Info)
