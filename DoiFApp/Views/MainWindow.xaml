@@ -14,7 +14,32 @@
     
     <Grid>
 
-        <ContentControl Content="{Binding CurrentNotify}"/>
+        <Grid.ColumnDefinitions>
+
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="150"/>
+
+        </Grid.ColumnDefinitions>
+
+        <Grid x:Name="ToolsZone" Grid.Column="0">
+
+            <Border Background="Gray"/>
+
+
+        </Grid>
+
+        <Grid x:Name="MainZone" Grid.Column="1">
+
+            <Border Background="DarkGray"/>
+
+        </Grid>
+
+        <Grid x:Name="NotifyZone" Grid.Column="2">
+
+            <Border Background="Gray"/>
+
+        </Grid>
 
     </Grid>
     
