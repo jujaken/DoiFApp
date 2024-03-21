@@ -3,8 +3,12 @@
                     xmlns:vm="clr-namespace:DoiFApp.ViewModels"
                     xmlns:v="clr-namespace:DoiFApp.Views">
 
+    <DataTemplate DataType="{x:Type vm:ToolViewModel}">
+        <v:ToolView/>
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type vm:NotifyViewModel}">
-        <v:Notify/>
+        <v:NotifyView/>
     </DataTemplate>
 
 </ResourceDictionary>

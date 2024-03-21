@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace DoiFApp.Views
 {
     /// <summary>
-    /// Логика взаимодействия для Notify.xaml
+    /// Логика взаимодействия для ToolView.xaml
     /// </summary>
-    public partial class NotifyView : UserControl
+    public partial class ToolView : UserControl
     {
-        public NotifyView()
+        public ToolView()
         {
             InitializeComponent();
         }
