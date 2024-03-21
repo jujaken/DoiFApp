@@ -26,6 +26,16 @@
 
             <ListBox Background="Gray" ItemsSource="{Binding Tools}">
 
+                <ListBox.ItemTemplate>
+
+                    <DataTemplate>
+
+                        <local:ToolView DataContext="{Binding}"/>
+
+                    </DataTemplate>
+
+                </ListBox.ItemTemplate>
+
             </ListBox>
 
         </Grid>

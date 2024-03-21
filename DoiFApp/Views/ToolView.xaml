@@ -6,11 +6,8 @@
              xmlns:local="clr-namespace:DoiFApp.Views"
              mc:Ignorable="d" 
              xmlns:vm="clr-namespace:DoiFApp.ViewModels"
-             d:DesignHeight="30" d:DesignWidth="200">
-    
-    <UserControl.DataContext>
-        <vm:ToolViewModel/>
-    </UserControl.DataContext>
+             d:DesignHeight="30" d:DesignWidth="200"
+             d:DataContext="{d:DesignInstance vm:ToolViewModel, IsDesignTimeCreatable=True}">
     
     <Grid>
 

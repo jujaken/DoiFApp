@@ -11,7 +11,6 @@
             
             <ResourceDictionary.MergedDictionaries>
 
-                <ResourceDictionary Source="VmToV.xaml"/>
 
             </ResourceDictionary.MergedDictionaries>
             
