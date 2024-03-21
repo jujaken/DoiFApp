@@ -8,12 +8,12 @@ namespace DoiFApp.ViewModels
     {
         private LessonModel? model;
 
-        public string Date => model is not null ? $"{model.Date:dd:mm:yyyy}" : "00.00.0000";
+        public string Date => model is not null ? $"{model.Date:dd.MM.yyyy}" : "00.00.0000";
         public string Time => model?.Time ?? "00:00-00:00";
         public string Discipline => model?.Discipline ?? "math";
         public string LessionType => model?.LessionType ?? "s";
+        public string Topic => model?.Topic ?? "-";
         public string Teachers => model is not null ? GetListStr(model.Teachers, '\n') : "Ivanov I.I.";
-
         public string Groups => model is not null ? GetListStr(model.Groups, ',') : "666";
         public string Auditoriums => model is not null ? GetListStr(model.Groups, ',') : "777";
 

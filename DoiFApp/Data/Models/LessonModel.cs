@@ -8,6 +8,7 @@
 
         public string Discipline { get; set; } = string.Empty;
         public string LessionType { get; set; } = string.Empty;
+        public string? Topic { get; set; }
 
         public List<string> Teachers { get; set; } = [];
         public List<string> Groups { get; set; } = [];
