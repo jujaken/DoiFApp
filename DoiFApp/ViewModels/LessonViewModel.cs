@@ -28,6 +28,9 @@ namespace DoiFApp.ViewModels
         }
 
         public LessonViewModel(LessonModel model) : this()
+            => SetModel(model);
+
+        public void SetModel(LessonModel model)
         {
             this.model = model;
             OnPropertyChanged(nameof(Date));
@@ -37,11 +40,6 @@ namespace DoiFApp.ViewModels
             OnPropertyChanged(nameof(Teachers));
             OnPropertyChanged(nameof(Groups));
             OnPropertyChanged(nameof(Auditoriums));
-        }
-
-        public void SetModel(LessonModel model)
-        {
-            this.model = model;
         }
 
         private string GetListStr(List<string> items, char v)
