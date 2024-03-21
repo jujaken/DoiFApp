@@ -37,6 +37,26 @@ namespace DoiFApp.Services
                 _ => new Color { R = 50, G = 50, B = 50 },
             });
 
+        public NotifyBuilder WithRemove(Action action)
+        {
+            viewModel.OnRemove += action;
+            return this;
+        }
+
+        public NotifyBuilder WithRemove(Action<NotifyViewModel> action)
+        {
+            viewModel.OnRemove += () => action(viewModel);
+            return this;
+        }
+
+
+        public NotifyBuilder WithRemove(Func<NotifyViewModel, bool> action)
+        {
+            viewModel.OnRemove += () => action(viewModel);
+            return this;
+        }
+
+
         public NotifyViewModel Build()
         {
             (var vm, viewModel) = (viewModel, new NotifyViewModel());

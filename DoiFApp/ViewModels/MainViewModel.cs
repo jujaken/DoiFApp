@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using DoiFApp.Services;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
 
@@ -88,15 +90,15 @@ namespace DoiFApp.ViewModels
             await Notify("Данные выгружены!", "Посмотрите файл в директории!");
         }
 
-        private Task Notify(string title, string desc, Color? color = null)
+        private Task Notify(string title, string desc, NotifyColorType colorType = NotifyColorType.Info)
         {
-            var notify = new NotifyViewModel()
-            {
-                Title = title,
-                Description = desc,
-            };
-            notify.Color = color is not null ? new SolidColorBrush((Color)color) :  notify.Color;
-            notify.OnRemove += () => Notifies.Remove(notify);
+            var notify = Ioc.Default.GetRequiredService<NotifyBuilder>()
+                .WithTitle(title)
+                .WithDescription(desc)
+                .WithColor(colorType)
+                .WithRemove(Notifies.Remove)
+                .Build();
+
             Notifies.Add(notify);
 
             return Task.CompletedTask;
