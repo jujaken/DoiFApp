@@ -14,7 +14,7 @@
         <Button Content="{Binding Title}" Command="{Binding Command}">
 
             <Button.ToolTip>
-                <ToolTip Content="{Binding Description}"/>
+                <ToolTip Content="{Binding Description}" Placement="Mouse"/>
             </Button.ToolTip>
 
         </Button>
