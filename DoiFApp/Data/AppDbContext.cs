@@ -1,13 +1,13 @@
-﻿using DoIFToolApp.Models.Data;
+﻿using DoiFApp.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DoiFApp
+namespace DoiFApp.Data
 {
     public class AppDbContext : DbContext
     {
         public DbSet<LessonModel> Lessons { get; set; }
 
-        public void ClearDb()
+        public void Recreate()
         {
             Database.EnsureDeleted();
             Database.EnsureCreated();

@@ -1,4 +1,4 @@
-﻿namespace DoiFApp.Repo
+﻿namespace DoiFApp.Data.Repo
 {
     public interface IRepo<T> where T : class
     {

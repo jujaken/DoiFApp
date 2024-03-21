@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace DoiFApp.Repo
+namespace DoiFApp.Data.Repo
 {
     public class Repo<T>(AppDbContext context) : IRepo<T> where T : class
     {

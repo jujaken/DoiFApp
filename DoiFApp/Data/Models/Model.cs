@@ -1,5 +1,4 @@
-﻿
-namespace DoiFApp.Models
+﻿namespace DoiFApp.Data.Models
 {
     public abstract class Model
     {
