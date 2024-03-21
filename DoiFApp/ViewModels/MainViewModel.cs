@@ -9,6 +9,9 @@ namespace DoiFApp.ViewModels
         [ObservableProperty]
         private ObservableCollection<ToolViewModel> tools = [];
 
+        [ObservableProperty]
+        private ObservableCollection<NotifyViewModel> notifies = [];
+
         public MainViewModel()
         {
             tools.Add(new ToolViewModel()
@@ -45,15 +48,19 @@ namespace DoiFApp.ViewModels
                 Description = "Формирует таблицу-отчёт",
                 Command = ExctractReportTableCommand
             });
-        }
 
-        [ObservableProperty]
-        private ObservableCollection<NotifyViewModel> notifies = [];
+        }
 
         [RelayCommand]
         public async Task LoadExcel()
         {
-            throw new NotImplementedException();
+            var notify = new NotifyViewModel()
+            {
+                Title = "Excel таблица была загружена!",
+                Description = "Теперь, выгрузите её в temp файл",
+            };
+            notify.OnRemove += () => Notifies.Remove(notify);
+            Notifies.Add(notify);
         }
 
         [RelayCommand]

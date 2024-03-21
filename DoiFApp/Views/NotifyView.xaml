@@ -9,11 +9,6 @@
              d:DesignHeight="180" d:DesignWidth="250"
              d:DataContext="{d:DesignInstance vm:NotifyViewModel, IsDesignTimeCreatable=True}">
 
-
-    <UserControl.DataContext>
-        <vm:NotifyViewModel/>
-    </UserControl.DataContext>
-    
     <Grid>
         
         <Border CornerRadius="20" BorderThickness="2" BorderBrush="Black">
@@ -30,8 +25,13 @@
                 
                 <Grid Grid.Row="0">
                     
-                    <Label Content="{Binding Title}" HorizontalAlignment="Center"/>
-                    
+                    <Label Content="{Binding Title}"
+                           HorizontalAlignment="Center"/>
+
+                    <Button Content="×"
+                            Command="{Binding RemoveCommand}"
+                            HorizontalAlignment="Right"/>
+
                 </Grid>
                 
                 <Grid Grid.Row="1">

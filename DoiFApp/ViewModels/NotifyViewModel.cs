@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Windows.Media;
 
 namespace DoiFApp.ViewModels
@@ -13,5 +14,14 @@ namespace DoiFApp.ViewModels
 
         [ObservableProperty]
         private string? description = "Description...";
+
+        public event Action? OnRemove;
+
+        [RelayCommand]
+        public Task Remove()
+        {
+            OnRemove?.Invoke();
+            return Task.CompletedTask;
+        }
     }
 }

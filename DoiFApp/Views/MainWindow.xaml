@@ -50,6 +50,16 @@
 
             <ListBox Background="Gray" ItemsSource="{Binding Notifies}">
 
+                <ListBox.ItemTemplate>
+
+                    <DataTemplate>
+
+                        <local:NotifyView DataContext="{Binding}"/>
+
+                    </DataTemplate>
+
+                </ListBox.ItemTemplate>
+
             </ListBox>
 
         </Grid>
