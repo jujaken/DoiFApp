@@ -24,7 +24,7 @@
 
         <Grid x:Name="ToolsZone" Grid.Column="0">
 
-            <ListBox Background="Gray" DataContext="{Binding Tools}">
+            <ListBox Background="Gray" ItemsSource="{Binding Tools}">
 
             </ListBox>
 
@@ -38,7 +38,7 @@
 
         <Grid x:Name="NotifiesZone" Grid.Column="2">
 
-            <ListBox Background="Gray" DataContext="{Binding Notifies}">
+            <ListBox Background="Gray" ItemsSource="{Binding Notifies}">
 
             </ListBox>
 
