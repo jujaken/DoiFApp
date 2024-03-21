@@ -19,6 +19,16 @@ namespace DoiFApp.ViewModels
         private object? curPage;
 
         [ObservableProperty]
+
+        private Task? curTask;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(LoadSessionCommand),
+                                   nameof(LoadExcelCommand),
+                                   nameof(LoadTempFileCommand))]
+        public bool noTask = true;
+
+        [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ExtractToTempFileCommand),
                                     nameof(ExctractWorkloadTableCommand),
                                     nameof(ExctractReportTableCommand))]
@@ -69,11 +79,11 @@ namespace DoiFApp.ViewModels
             });
         }
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(NoTask))]
         public async Task LoadSession()
             => await CommandWithProcess(async () => await OpenSession());
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(NoTask))]
         public async Task LoadExcel()
         {
             var fileDialog = new OpenFileDialog
@@ -91,20 +101,20 @@ namespace DoiFApp.ViewModels
                 try
                 {
                     await Ioc.Default.GetRequiredService<IExcelReader>().ReadToData(fileDialog.FileName);
-                    //await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
+                    await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
                     await OpenSession();
                 }
                 catch
                 {
-                    //await Notify("Ошибка загрузки!", "Что-то пошло не так.", NotifyColorType.Error);
+                    await Notify("Ошибка загрузки!", "Что-то пошло не так.", NotifyColorType.Error);
                 }
             });
         }
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(NoTask))]
         public async Task LoadTempFile()
         {
-            await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
+            await CommandWithProcess(() => Thread.Sleep(2000));
         }
 
         [RelayCommand(CanExecute = nameof(CanExtract))]
@@ -129,9 +139,17 @@ namespace DoiFApp.ViewModels
         {
             var lp = new LoadingPageViewModel();
             CurPage = lp;
-            await Task.Run(action);
+
+            CurTask = Task.Run(action);
+            NoTask = false;
+
+            await CurTask;
+
             if (CurPage == lp)
                 CurPage = null;
+
+            CurTask = null;
+            NoTask = true;
         }
 
         private async Task OpenSession()
