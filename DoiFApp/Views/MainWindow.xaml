@@ -24,8 +24,9 @@
 
         <Grid x:Name="ToolsZone" Grid.Column="0">
 
-            <Border Background="Gray"/>
+            <ListBox Background="Gray">
 
+            </ListBox>
 
         </Grid>
 
@@ -35,9 +36,11 @@
 
         </Grid>
 
-        <Grid x:Name="NotifyZone" Grid.Column="2">
+        <Grid x:Name="NotifiesZone" Grid.Column="2">
 
-            <Border Background="Gray"/>
+            <ListBox Background="Gray">
+                
+            </ListBox>
 
         </Grid>
 
