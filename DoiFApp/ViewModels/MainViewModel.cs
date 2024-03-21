@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Windows.Media;
 
 namespace DoiFApp.ViewModels
 {
@@ -23,16 +24,16 @@ namespace DoiFApp.ViewModels
 
             tools.Add(new ToolViewModel()
             {
-                Title = "Выгрузи во временный файл",
-                Description = "Выгружает таблицу excel в temp таблицу",
-                Command = ExtractToTempFileCommand
+                Title = "Загрузи temp-файл",
+                Description = "Загружает temp-файл для для просмотра",
+                Command = LoadTempFileCommand
             });
 
             tools.Add(new ToolViewModel()
             {
-                Title = "Загрузи temp-файл",
-                Description = "Загружает temp-файл для для просмотра",
-                Command = LoadTempFileCommand
+                Title = "Выгрузи во временный файл",
+                Description = "Выгружает таблицу excel в temp таблицу",
+                Command = ExtractToTempFileCommand
             });
 
             tools.Add(new ToolViewModel()
@@ -54,37 +55,51 @@ namespace DoiFApp.ViewModels
         [RelayCommand]
         public async Task LoadExcel()
         {
-            var notify = new NotifyViewModel()
-            {
-                Title = "Excel таблица была загружена!",
-                Description = "Теперь, выгрузите её в temp файл",
-            };
-            notify.OnRemove += () => Notifies.Remove(notify);
-            Notifies.Add(notify);
-        }
-
-        [RelayCommand]
-        public async Task ExtractToTempFile()
-        {
-            throw new NotImplementedException();
+            await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
         }
 
         [RelayCommand]
         public async Task LoadTempFile()
         {
+            await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
+        }
+
+        public bool CanExtractToTempFile { get; protected set; }
+
+        [RelayCommand(CanExecute = nameof(CanExtractToTempFile))]
+        public async Task ExtractToTempFile()
+        {
             throw new NotImplementedException();
         }
 
-        [RelayCommand]
+        public bool CanExctractWorkloadTable { get; protected set; }
+
+        [RelayCommand(CanExecute = nameof(CanExctractWorkloadTable))]
         public async Task ExctractWorkloadTable()
         {
             throw new NotImplementedException();
         }
 
-        [RelayCommand]
+        public bool CanExctractReportTable { get; protected set; }
+
+        [RelayCommand(CanExecute = nameof(CanExctractReportTable))]
         public async Task ExctractReportTable()
         {
             throw new NotImplementedException();
+        }
+
+        private Task Notify(string title, string desc, Color? color = null)
+        {
+            var notify = new NotifyViewModel()
+            {
+                Title = title,
+                Description = desc,
+            };
+            notify.Color = color is not null ? new SolidColorBrush((Color)color) :  notify.Color;
+            notify.OnRemove += () => Notifies.Remove(notify);
+            Notifies.Add(notify);
+
+            return Task.CompletedTask;
         }
     }
 }
