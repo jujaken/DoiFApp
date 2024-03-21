@@ -1,7 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using DoiFApp.Data;
+using DoiFApp.Data.Models;
+using DoiFApp.Data.Repo;
 using DoiFApp.Services;
 using DoiFApp.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using OfficeOpenXml;
 using System.Windows;
 
 namespace DoiFApp
@@ -14,20 +18,22 @@ namespace DoiFApp
         {
             Services = ConfigureServices();
             Ioc.Default.ConfigureServices(Services);
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
         private IServiceProvider ConfigureServices()
         {
-            var sc = new ServiceCollection()
+            return new ServiceCollection()
+                .AddDbContext<AppDbContext>()
                 // view models:
                 .AddTransient<NotifyViewModel>()
                 .AddTransient<ToolViewModel>()
                 // services:
                 .AddTransient<IExcelReader, ExcelReader>()
+                .AddTransient<IRepo<LessonModel>, Repo<LessonModel>>() 
                 .AddTransient<NotifyBuilder>()
-                /* so cool dependency injection*/;
-
-            return sc.BuildServiceProvider();
+                .BuildServiceProvider();
         }
     }
 }

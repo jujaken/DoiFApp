@@ -2,8 +2,8 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using DoiFApp.Services;
+using Microsoft.Win32;
 using System.Collections.ObjectModel;
-using System.Windows.Media;
 
 namespace DoiFApp.ViewModels
 {
@@ -57,7 +57,22 @@ namespace DoiFApp.ViewModels
         [RelayCommand]
         public async Task LoadExcel()
         {
+            var fileDialog = new OpenFileDialog
+            {
+                Filter = "excel file|*.xlsx"
+            };
+
+            fileDialog.ShowDialog();
+            await Ioc.Default.GetRequiredService<IExcelReader>().ReadToData(fileDialog.FileName);
             await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
+            try
+            {
+                
+            }
+            catch
+            {
+                await Notify("Ошибка загрузки!", "Что-то пошло не так.", NotifyColorType.Error);
+            }
         }
 
         [RelayCommand]
