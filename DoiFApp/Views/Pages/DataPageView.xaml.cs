@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace DoiFApp.Views
+namespace DoiFApp.Views.Pages
 {
     public partial class DataPageView : UserControl
     {

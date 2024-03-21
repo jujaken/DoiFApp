@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DoiFApp.Views
+namespace DoiFApp.Views.Pages
 {
     /// <summary>
     /// Логика взаимодействия для LoadingPageView.xaml

@@ -1,0 +1,54 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- labels -->
+    
+    <Style TargetType="Label">
+        <Setter Property="FontFamily" Value="Cascadia Code"/>
+        <Setter Property="Foreground" Value="#101010"/>
+    </Style>
+
+    <Style x:Key="Title" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+        <Setter Property="FontSize" Value="48"/>
+    </Style>
+
+    <Style x:Key="l1" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+        <Setter Property="FontSize" Value="24"/>
+    </Style>
+
+    <Style x:Key="l2" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+        <Setter Property="FontSize" Value="18"/>
+    </Style>
+
+    <Style x:Key="l3" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style x:Key="l4" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+        <Setter Property="FontSize" Value="10"/>
+    </Style>
+
+    <Style x:Key="notifytittle" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+    
+    <Style x:Key="data1" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Text Boxes -->
+
+    <Style TargetType="TextBox">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="BorderThickness" Value="1.5"/>
+    </Style>
+
+    <Style x:Key="DataBox" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+    
+</ResourceDictionary>
