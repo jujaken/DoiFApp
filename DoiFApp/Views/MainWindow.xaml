@@ -8,6 +8,18 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
 
+    <Window.Resources>
+
+        <ResourceDictionary>
+
+            <DataTemplate DataType="{x:Type vm:DataPageViewModel}">
+                <local:DataPageView/>
+            </DataTemplate>
+            
+        </ResourceDictionary>
+        
+    </Window.Resources>
+
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
@@ -41,9 +53,10 @@
 
         </Grid>
 
-        <Grid x:Name="MainZone" Grid.Column="1">
+        <Grid x:Name="PageZone" Grid.Column="1">
 
             <Border Background="DarkGray"/>
+            <ContentControl Content="{Binding CurPage}"/>
 
         </Grid>
 

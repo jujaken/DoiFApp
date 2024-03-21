@@ -15,6 +15,9 @@ namespace DoiFApp.ViewModels
         [ObservableProperty]
         private ObservableCollection<NotifyViewModel> notifies = [];
 
+        [ObservableProperty]
+        private object? curPage;
+
         public MainViewModel()
         {
             tools.Add(new ToolViewModel()
@@ -63,11 +66,15 @@ namespace DoiFApp.ViewModels
             };
 
             fileDialog.ShowDialog();
-            await Ioc.Default.GetRequiredService<IExcelReader>().ReadToData(fileDialog.FileName);
-            await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
+    
             try
             {
-                
+                await Ioc.Default.GetRequiredService<IExcelReader>().ReadToData(fileDialog.FileName);
+                await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
+
+                var page = new DataPageViewModel();
+                await page.LoadLessonData();
+                CurPage = page;
             }
             catch
             {

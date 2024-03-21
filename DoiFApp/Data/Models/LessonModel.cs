@@ -13,6 +13,6 @@
         public List<string> Groups { get; set; } = [];
         public List<string> Auditoriums { get; set; } = [];
 
-        public int Wight { get; set; }
+        public int Wight { get; set; } = 2;
     }
 }
