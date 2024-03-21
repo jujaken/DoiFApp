@@ -18,6 +18,12 @@ namespace DoiFApp.ViewModels
         [ObservableProperty]
         private object? curPage;
 
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(ExtractToTempFileCommand),
+                                    nameof(ExctractWorkloadTableCommand),
+                                    nameof(ExctractReportTableCommand))]
+        public bool canExtract;
+
         public MainViewModel()
         {
             tools.Add(new ToolViewModel()
@@ -61,7 +67,6 @@ namespace DoiFApp.ViewModels
                 Description = "Формирует таблицу-отчёт",
                 Command = ExctractReportTableCommand
             });
-
         }
 
         [RelayCommand]
@@ -70,6 +75,7 @@ namespace DoiFApp.ViewModels
             var page = new DataPageViewModel();
             await page.LoadLessonData();
             CurPage = page;
+            CanExtract = true;
         }
 
         [RelayCommand]
@@ -104,25 +110,19 @@ namespace DoiFApp.ViewModels
             await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
         }
 
-        public bool CanExtractToTempFile { get; protected set; }
-
-        [RelayCommand(CanExecute = nameof(CanExtractToTempFile))]
+        [RelayCommand(CanExecute = nameof(CanExtract))]
         public async Task ExtractToTempFile()
         {
             await Notify("Данные выгружены!", "Посмотрите файл в директории!");
         }
 
-        public bool CanExctractWorkloadTable { get; protected set; }
-
-        [RelayCommand(CanExecute = nameof(CanExctractWorkloadTable))]
+        [RelayCommand(CanExecute = nameof(CanExtract))]
         public async Task ExctractWorkloadTable()
         {
             await Notify("Данные выгружены!", "Посмотрите файл в директории!");
         }
 
-        public bool CanExctractReportTable { get; protected set; }
-
-        [RelayCommand(CanExecute = nameof(CanExctractReportTable))]
+        [RelayCommand(CanExecute = nameof(CanExtract))]
         public async Task ExctractReportTable()
         {
             await Notify("Данные выгружены!", "Посмотрите файл в директории!");
