@@ -19,23 +19,23 @@ namespace DoiFApp.Utils
             return this;
         }
 
-        public NotifyBuilder WithColor(Color color)
+        public NotifyBuilder WithColor(SolidColorBrush colorBrush)
         {
-            viewModel.Color = color;
+            viewModel.Color = colorBrush;
             return this;
         }
 
+        public NotifyBuilder WithColor(Color color)
+            => WithColor(new SolidColorBrush(color));
+
         public NotifyBuilder WithColor(NotifyColorType color)
-        {
-            viewModel.Color = color switch
+            => WithColor(color switch
             {
                 NotifyColorType.Error => new Color { R = 50, G = 5, B = 5 },
                 NotifyColorType.Warning => new Color { R = 50, G = 5, B = 50 },
                 NotifyColorType.Info => new Color { R = 5, G = 5, B = 50 },
                 _ => new Color { R = 50, G = 50, B = 50 },
-            };
-            return this;
-        }
+            });
 
         public NotifyViewModel Build()
         {

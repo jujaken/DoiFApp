@@ -6,7 +6,7 @@ namespace DoiFApp.ViewModels
     public partial class MainViewModel : ObservableObject
     {
         [ObservableProperty]
-        public NotifyViewModel? currentNotify;
+        private NotifyViewModel? currentNotify = new NotifyViewModel();
 
         [RelayCommand]
         public async Task LoadExcel()
