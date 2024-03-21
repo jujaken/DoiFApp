@@ -22,39 +22,54 @@ namespace DoiFApp.ViewModels
         {
             tools.Add(new ToolViewModel()
             {
-                Title = "Загрузи эксель",
+                Title = "Загрузить из сессии",
+                Description = "Загружает таблицу excel и формирует необходимые данные для работы приложения",
+                Command = LoadSessionCommand
+            });
+
+            tools.Add(new ToolViewModel()
+            {
+                Title = "Загрузить эксель",
                 Description = "Загружает таблицу excel и формирует необходимые данные для работы приложения",
                 Command = LoadExcelCommand
             });
 
             tools.Add(new ToolViewModel()
             {
-                Title = "Загрузи temp-файл",
+                Title = "Загрузить temp-файл",
                 Description = "Загружает temp-файл для для просмотра",
                 Command = LoadTempFileCommand
             });
 
             tools.Add(new ToolViewModel()
             {
-                Title = "Выгрузи во временный файл",
+                Title = "Выгрузить во временный файл",
                 Description = "Выгружает таблицу excel в temp таблицу",
                 Command = ExtractToTempFileCommand
             });
 
             tools.Add(new ToolViewModel()
             {
-                Title = "Сформируй загруженность",
+                Title = "Выдать загруженность",
                 Description = "Формирует таблицу загруженности",
                 Command = ExctractWorkloadTableCommand
             });
 
             tools.Add(new ToolViewModel()
             {
-                Title = "Сформируй отчёт",
+                Title = "Выдать отчёт",
                 Description = "Формирует таблицу-отчёт",
                 Command = ExctractReportTableCommand
             });
 
+        }
+
+        [RelayCommand]
+        public async Task LoadSession()
+        {
+            var page = new DataPageViewModel();
+            await page.LoadLessonData();
+            CurPage = page;
         }
 
         [RelayCommand]
@@ -67,21 +82,20 @@ namespace DoiFApp.ViewModels
 
             fileDialog.ShowDialog();
 
-            await Ioc.Default.GetRequiredService<IExcelReader>().ReadToData(fileDialog.FileName);
-            await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
+            if (string.IsNullOrEmpty(fileDialog.FileName))
+                return;
 
             try
             {
-
-
-                var page = new DataPageViewModel();
-                await page.LoadLessonData();
-                CurPage = page;
+                await Ioc.Default.GetRequiredService<IExcelReader>().ReadToData(fileDialog.FileName);
+                await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
             }
             catch
             {
                 await Notify("Ошибка загрузки!", "Что-то пошло не так.", NotifyColorType.Error);
             }
+
+            await LoadSession();
         }
 
         [RelayCommand]
