@@ -6,12 +6,12 @@ namespace DoiFApp.ViewModels
     public partial class NotifyViewModel : ObservableObject
     {
         [ObservableProperty]
-        private Color color;
+        private Brush color = new SolidColorBrush(new Color() { R = 50, G = 24, B = 42 });
 
         [ObservableProperty]
-        private string? title;
+        private string? title = "Tittle";
 
         [ObservableProperty]
-        private string? description;
+        private string? description = "Description...";
     }
 }
