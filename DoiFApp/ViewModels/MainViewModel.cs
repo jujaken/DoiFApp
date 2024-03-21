@@ -9,7 +9,6 @@ namespace DoiFApp.ViewModels
         [ObservableProperty]
         private ObservableCollection<ToolViewModel> commands = [];
 
-
         public MainViewModel()
         {
             commands.Add(new ToolViewModel()
