@@ -24,10 +24,11 @@
 
         <Grid x:Name="ToolsZone" Grid.Column="0">
 
-            <ListBox Background="Gray" ItemsSource="{Binding Tools}">
+            <ListBox Background="Gray"
+                     ItemsSource="{Binding Tools}">
 
                 <ListBox.ItemTemplate>
-
+                    
                     <DataTemplate>
 
                         <local:ToolView DataContext="{Binding}"/>

@@ -6,14 +6,14 @@
              xmlns:local="clr-namespace:DoiFApp.Views"
              xmlns:vm="clr-namespace:DoiFApp.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="180" d:DesignWidth="250"
+             d:DesignHeight="90" d:DesignWidth="120"
              d:DataContext="{d:DesignInstance vm:NotifyViewModel, IsDesignTimeCreatable=True}">
 
     <Grid>
         
-        <Border CornerRadius="20" BorderThickness="2" BorderBrush="Black">
+        <Border CornerRadius="3" BorderThickness="0.2" BorderBrush="Black">
             
-            <Grid Margin="20">
+            <Grid Margin="3">
                 
                 <Grid.RowDefinitions>
                     
