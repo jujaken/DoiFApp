@@ -1,7 +1,6 @@
-﻿using DoiFApp;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace EFTest.Data
+namespace DoiFApp.Repo
 {
     public class Repo<T>(AppDbContext context) : IRepo<T> where T : class
     {

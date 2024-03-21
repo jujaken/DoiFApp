@@ -1,4 +1,4 @@
-﻿namespace EFTest.Data
+﻿namespace DoiFApp.Repo
 {
     public interface IRepo<T> where T : class
     {
