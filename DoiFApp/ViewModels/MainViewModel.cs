@@ -81,11 +81,37 @@ namespace DoiFApp.ViewModels
 
         [RelayCommand(CanExecute = nameof(NoTask))]
         public async Task LoadSession()
-            => await CommandWithProcess(async () => await OpenSession());
+        {
+            var page = new DataPageViewModel();
+
+            await CommandWithProcess(async () =>
+            {
+                try
+                {
+                    await page.LoadLessonData();
+                }
+                catch
+                {
+                    return false;
+                }
+                return true;
+            },
+             async () => {
+                 await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
+                 CurPage = page;
+                 CanExtract = true;
+             },
+             async () =>
+             {
+                 await Notify("Ошибка загрузки!", "Что-то пошло не так.", NotifyColorType.Error);
+             });
+        }
 
         [RelayCommand(CanExecute = nameof(NoTask))]
         public async Task LoadExcel()
         {
+            var page = new DataPageViewModel();
+
             var fileDialog = new OpenFileDialog
             {
                 Filter = "excel file|*.xlsx"
@@ -101,20 +127,29 @@ namespace DoiFApp.ViewModels
                 try
                 {
                     await Ioc.Default.GetRequiredService<IExcelReader>().ReadToData(fileDialog.FileName);
-                    await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
-                    await OpenSession();
+                    await page.LoadLessonData();
                 }
                 catch
                 {
-                    await Notify("Ошибка загрузки!", "Что-то пошло не так.", NotifyColorType.Error);
+                    return false;
                 }
+                return true;
+            },
+            async () => {
+                await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
+                CurPage = page;
+                CanExtract = true;
+            },
+            async () =>
+            {
+                await Notify("Ошибка загрузки!", "Что-то пошло не так.", NotifyColorType.Error);
             });
         }
 
         [RelayCommand(CanExecute = nameof(NoTask))]
         public async Task LoadTempFile()
         {
-            await CommandWithProcess(() => Thread.Sleep(2000));
+            await CommandWithProcess(() => { Thread.Sleep(2000); return Task.FromResult(true); });
         }
 
         [RelayCommand(CanExecute = nameof(CanExtract))]
@@ -135,29 +170,28 @@ namespace DoiFApp.ViewModels
             await Notify("Данные выгружены!", "Посмотрите файл в директории!");
         }
 
-        private async Task CommandWithProcess(Action action)
+        private async Task CommandWithProcess(Func<Task<bool>> action, Action? onSucces = null, Action? onProblem = null)
         {
             var lp = new LoadingPageViewModel();
             CurPage = lp;
 
-            CurTask = Task.Run(action);
+            var task = Task.Run(action);
+
+            CurTask = task;
             NoTask = false;
 
-            await CurTask;
+            var res = await task;
+
+            if (res)
+                onSucces?.Invoke();
+            else
+                onProblem?.Invoke();
 
             if (CurPage == lp)
                 CurPage = null;
 
             CurTask = null;
             NoTask = true;
-        }
-
-        private async Task OpenSession()
-        {
-            var page = new DataPageViewModel();
-            await page.LoadLessonData();
-            CurPage = page;
-            CanExtract = true;
         }
 
         private Task Notify(string title, string desc, NotifyColorType colorType = NotifyColorType.Info)
