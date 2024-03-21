@@ -20,16 +20,18 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <Label Content="{Binding Date}" Grid.Column="0"/>
         <Label Content="{Binding Time}" Grid.Column="1"/>
         <Label Content="{Binding Groups}" Grid.Column="2"/>
         <Label Content="{Binding Discipline}" Grid.Column="3"/>
-        <Label Content="{Binding LessionType}" Grid.Column="4"/>
-        <Label Content="{Binding Teachers}" Grid.Column="5"/>
-        <Label Content="{Binding Auditoriums}" Grid.Column="6"/>
-        <TextBox Text="{Binding Wight}" Grid.Column="7"/>
+        <Label Content="{Binding Topic}" Grid.Column="4"/>
+        <Label Content="{Binding LessionType}" Grid.Column="5"/>
+        <Label Content="{Binding Teachers}" Grid.Column="6"/>
+        <Label Content="{Binding Auditoriums}" Grid.Column="7"/>
+        <TextBox Text="{Binding Wight}" Grid.Column="8"/>
 
     </Grid>
 
