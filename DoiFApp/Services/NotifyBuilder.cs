@@ -1,4 +1,5 @@
 ﻿using DoiFApp.ViewModels;
+using System.Windows;
 using System.Windows.Media;
 
 namespace DoiFApp.Services
@@ -39,20 +40,20 @@ namespace DoiFApp.Services
 
         public NotifyBuilder WithRemove(Action action)
         {
-            viewModel.OnRemove += action;
+            viewModel.OnRemove += (vm) => action();
             return this;
         }
 
         public NotifyBuilder WithRemove(Action<NotifyViewModel> action)
         {
-            viewModel.OnRemove += () => action(viewModel);
+            viewModel.OnRemove += (vm) => action(vm);
             return this;
         }
 
 
         public NotifyBuilder WithRemove(Func<NotifyViewModel, bool> action)
         {
-            viewModel.OnRemove += () => action(viewModel);
+            viewModel.OnRemove += (vm) => action(vm);
             return this;
         }
 

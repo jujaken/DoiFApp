@@ -10,46 +10,55 @@
              d:DataContext="{d:DesignInstance vm:NotifyViewModel, IsDesignTimeCreatable=True}">
 
     <Grid>
-        
+
         <Border CornerRadius="3" BorderThickness="0.2" BorderBrush="Black">
-            
+
             <Grid Margin="3">
-                
+
                 <Grid.RowDefinitions>
-                    
+
                     <RowDefinition Height="32"/>
                     <RowDefinition Height="2"/>
                     <RowDefinition Height="*"/>
-                    
+
                 </Grid.RowDefinitions>
-                
+
                 <Grid Grid.Row="0">
-                    
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
                     <Label Content="{Binding Title}"
-                           HorizontalAlignment="Center"/>
+                            HorizontalAlignment="Center"/>
 
                     <Button Content="×"
+                            Width="16"
+                            Height="16"
+                            Style="{StaticResource ExitButton}"
                             Command="{Binding RemoveCommand}"
-                            HorizontalAlignment="Right"/>
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"
+                            Grid.Column="1"/>
+                </Grid>
+
+                <Grid Grid.Row="1">
+
+                    <Border Background="{Binding Color}"/>
 
                 </Grid>
-                
-                <Grid Grid.Row="1">
-                    
-                    <Border Background="{Binding Color}"/>
-                    
-                </Grid>
-                
+
                 <Grid Grid.Row="2">
-                    
-                    <Label Content="{Binding Description}"/>
-                    
+
+                    <TextBlock TextWrapping="Wrap"
+                               Text="{Binding Description}"/>
+
                 </Grid>
-                
+
             </Grid>
-            
+
         </Border>
-        
+
     </Grid>
-    
+
 </UserControl>

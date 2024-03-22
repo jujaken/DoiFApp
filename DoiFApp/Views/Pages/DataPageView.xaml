@@ -11,7 +11,8 @@
 
     <Grid>
 
-        <ListView ItemsSource="{Binding LessonViewModels}" Style="{StaticResource dynamiclist}">
+        <ListView ItemsSource="{Binding LessonViewModels}"
+                  Style="{StaticResource dynamiclist}">
 
             <ListView.View>
 
@@ -25,7 +26,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    
+
                     <GridViewColumn Header="Время">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -34,7 +35,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    
+
                     <GridViewColumn Header="Группы">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -43,7 +44,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    
+
                     <GridViewColumn Header="Дисциплина">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -52,7 +53,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    
+
                     <GridViewColumn Header="Тема">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -61,7 +62,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    
+
                     <GridViewColumn Header="Вид занятия">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -70,7 +71,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    
+
                     <GridViewColumn Header="Преподаватели">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -79,7 +80,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    
+
                     <GridViewColumn Header="Аудитория">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -88,22 +89,23 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    
+
                     <GridViewColumn Header="Вес">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBox Text="{Binding Wight}"
-                                         Style="{StaticResource DataBox}"/>
+                                         Style="{StaticResource DataBox}"
+                                         Width="50"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
                 </GridView>
-                
+
             </ListView.View>
-            
+
         </ListView>
-        
+
     </Grid>
-    
+
 </UserControl>

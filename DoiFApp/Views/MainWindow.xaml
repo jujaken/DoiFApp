@@ -58,7 +58,7 @@
 
                     <DataTemplate>
 
-                        <local:NotifyView DataContext="{Binding}"/>
+                        <local:NotifyView DataContext="{Binding}" MaxWidth="150"/>
 
                     </DataTemplate>
 
