@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using DoiFApp.Data.Models;
+using DoiFApp.Data.Repo;
 using System.Text;
 
 namespace DoiFApp.ViewModels
@@ -22,8 +24,11 @@ namespace DoiFApp.ViewModels
             get => model?.Wight ?? 0;
             set
             {
-                if (model is not null)
-                    SetProperty(model.Wight, value, model, (m, v) => m.Wight = v);
+                if (model is null || model.Wight == value)
+                    return;
+
+                SetProperty(model.Wight, value, model, (m, v) => m.Wight = v);
+                Ioc.Default.GetRequiredService<IRepo<LessonModel>>().Update(model);
             }
         }
 
