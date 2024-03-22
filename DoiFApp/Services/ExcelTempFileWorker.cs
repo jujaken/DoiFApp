@@ -79,18 +79,21 @@ namespace DoiFApp.Services
                     Wight = data.Cells[i, 9].GetCellValue<int>(),
                 };
 
-                var r = (await lessonRepo.GetWhere(l => l.Date == inputData.Date
-                        && l.Time == inputData.Time
-                        && l.Discipline == inputData.Discipline)).FirstOrDefault();
+                var existingLesson = await lessonRepo.GetWhere(l => l.Date == inputData.Date
+                      && l.Time == inputData.Time
+                      && l.Discipline == inputData.Discipline
+                      && l.Groups == inputData.Groups);
 
-                if (r == null)
+                if (existingLesson.Any())
+                {
+                    var r = existingLesson.First();
+                    r.Teachers.Add(inputData.Teachers.First());
+                    await lessonRepo.Update(r);
+                }
+                else
                 {
                     await lessonRepo.Create(inputData);
-                    continue;
                 }
-
-                r.Teachers.Add(inputData.Teachers.First());
-                await lessonRepo.Update(inputData);
             }
         }
 

@@ -163,10 +163,11 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
+
+                await Ioc.Default.GetRequiredService<ITempFileWorker>().ReadFile(fileDialog.FileName);
+                await page.LoadLessonData();
                 try
                 {
-                    await Ioc.Default.GetRequiredService<ITempFileWorker>().ReadFile(fileDialog.FileName);
-                    await page.LoadLessonData();
                 }
                 catch
                 {
