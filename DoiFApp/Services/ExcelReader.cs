@@ -5,7 +5,7 @@ using OfficeOpenXml;
 
 namespace DoiFApp.Services
 {
-    public class ExcelReader(AppDbContext context, IRepo<LessonModel> lessonRepo) : IExcelReader
+    public class ExcelReader(AppDbContext context, IRepo<LessonModel> lessonRepo) : IDataReader
     {
         private readonly AppDbContext context = context;
         private readonly IRepo<LessonModel> lessonRepo = lessonRepo;

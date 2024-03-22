@@ -59,7 +59,7 @@ namespace DoiFApp.ViewModels
 
             tools.Add(new ToolViewModel()
             {
-                Title = "Выгрузить во временный файл",
+                Title = "Выгрузить в temp-файл",
                 Description = "Выгружает таблицу excel в temp таблицу",
                 Command = ExtractToTempFileCommand
             });
@@ -126,7 +126,7 @@ namespace DoiFApp.ViewModels
             {
                 try
                 {
-                    await Ioc.Default.GetRequiredService<IExcelReader>().ReadToData(fileDialog.FileName);
+                    await Ioc.Default.GetRequiredService<IDataReader>().ReadToData(fileDialog.FileName);
                     await page.LoadLessonData();
                 }
                 catch
@@ -149,13 +149,80 @@ namespace DoiFApp.ViewModels
         [RelayCommand(CanExecute = nameof(NoTask))]
         public async Task LoadTempFile()
         {
-            await CommandWithProcess(() => { Thread.Sleep(2000); return Task.FromResult(true); });
+            var page = new DataPageViewModel();
+
+            var fileDialog = new OpenFileDialog
+            {
+                Filter = "excel file|*.xlsx"
+            };
+
+            fileDialog.ShowDialog();
+
+            if (string.IsNullOrEmpty(fileDialog.FileName))
+                return;
+
+            await CommandWithProcess(async () =>
+            {
+                try
+                {
+                    await Ioc.Default.GetRequiredService<ITempFileWorker>().ReadFile(fileDialog.FileName);
+                    await page.LoadLessonData();
+                }
+                catch
+                {
+                    return false;
+                }
+                return true;
+            },
+            async () => {
+                await Notify("Данные выгружены!", "Теперь, вы можете обновить файл и загрузить его с помощью команты \"Загрузить temp-файл\"!");
+                CurPage = page;
+                CanExtract = true;
+            },
+            async () =>
+            {
+                await Notify("Ошибка загрузки!", "Что-то пошло не так.", NotifyColorType.Error);
+            });
         }
 
         [RelayCommand(CanExecute = nameof(CanExtract))]
         public async Task ExtractToTempFile()
         {
-            await Notify("Данные выгружены!", "Посмотрите файл в директории!");
+            var page = new DataPageViewModel();
+
+            var defFileName = "temp.xlsx";
+            var fileDialog = new SaveFileDialog
+            {
+                Filter = "excel file|*.xlsx",
+                FileName = defFileName
+            };
+            fileDialog.ShowDialog();
+
+            if (string.IsNullOrEmpty(fileDialog.FileName) || fileDialog.FileName == defFileName)
+                return;
+
+            await CommandWithProcess(async () =>
+            {
+                try
+                {
+                    await Ioc.Default.GetRequiredService<ITempFileWorker>().WriteFile(fileDialog.FileName);
+                    await page.LoadLessonData();
+                }
+                catch
+                {
+                    return false;
+                }
+                return true;
+            },
+            async () => {
+                await Notify("Данные выгружены!", "Теперь, вы можете обновить файл и загрузить его с помощью команты \"Загрузить temp-файл\"!");
+                CurPage = page;
+                CanExtract = true;
+            },
+            async () =>
+            {
+                await Notify("Ошибка загрузки!", "Что-то пошло не так.", NotifyColorType.Error);
+            });
         }
 
         [RelayCommand(CanExecute = nameof(CanExtract))]
@@ -203,8 +270,7 @@ namespace DoiFApp.ViewModels
                 .WithRemove(Notifies.Remove)
                 .Build();
 
-            Notifies.Add(notify);
-
+            Notifies.Insert(0, notify);
             return Task.CompletedTask;
         }
     }

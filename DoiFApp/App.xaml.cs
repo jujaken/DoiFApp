@@ -30,7 +30,8 @@ namespace DoiFApp
                 .AddTransient<NotifyViewModel>()
                 .AddTransient<ToolViewModel>()
                 // services:
-                .AddTransient<IExcelReader, ExcelReader>()
+                .AddTransient<IDataReader, ExcelReader>()
+                .AddTransient<ITempFileWorker, ExcelTempFileWorker>()
                 .AddTransient<IRepo<LessonModel>, Repo<LessonModel>>() 
                 .AddTransient<NotifyBuilder>()
                 .BuildServiceProvider();

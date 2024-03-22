@@ -1,6 +1,6 @@
 ﻿namespace DoiFApp.Services
 {
-    public interface IExcelReader
+    public interface IDataReader
     {
         Task ReadToData(string path);
     }
