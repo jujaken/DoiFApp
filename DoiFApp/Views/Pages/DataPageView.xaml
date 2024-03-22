@@ -22,7 +22,8 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Date}"
-                                           Style="{StaticResource data1}"/>
+                                           Style="{StaticResource data1}"
+                                           TextWrapping="Wrap"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -31,7 +32,8 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Time}"
-                                           Style="{StaticResource data1}"/>
+                                           Style="{StaticResource data1}"
+                                           TextWrapping="Wrap"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -40,7 +42,8 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Groups}"
-                                           Style="{StaticResource data1}"/>
+                                           Style="{StaticResource data1}"
+                                           TextWrapping="Wrap"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -49,7 +52,8 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Discipline}"
-                                           Style="{StaticResource data1}"/>
+                                           Style="{StaticResource data1}"
+                                           TextWrapping="Wrap"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -58,7 +62,8 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Topic}"
-                                           Style="{StaticResource data1}"/>
+                                           Style="{StaticResource data1}"
+                                           TextWrapping="Wrap"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -67,7 +72,8 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding LessionType}"
-                                           Style="{StaticResource data1}"/>
+                                           Style="{StaticResource data1}"
+                                           TextWrapping="Wrap"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -76,7 +82,8 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Teachers}"
-                                           Style="{StaticResource data1}"/>
+                                           Style="{StaticResource data1}"
+                                           TextWrapping="Wrap"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -85,7 +92,8 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Auditoriums}"
-                                           Style="{StaticResource data1}"/>
+                                           Style="{StaticResource data1}"
+                                           TextWrapping="Wrap"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
