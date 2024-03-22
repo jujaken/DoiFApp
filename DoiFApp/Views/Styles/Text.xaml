@@ -33,8 +33,8 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
     </Style>
-    
-    <Style x:Key="data1" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+
+    <Style x:Key="data1" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -43,8 +43,17 @@
     <!-- Text Boxes -->
 
     <Style TargetType="TextBox">
-        <Setter Property="FontSize" Value="24"/>
-        <Setter Property="BorderThickness" Value="1.5"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <SolidColorBrush Color="Black"/>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="DataBox" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">

@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="PagesTamplate.xaml"/>
                 <ResourceDictionary Source="Views/Styles/Button.xaml"/>
                 <ResourceDictionary Source="Views/Styles/Text.xaml"/>
+                <ResourceDictionary Source="Views/Styles/ListBox.xaml"/>
 
             </ResourceDictionary.MergedDictionaries>
             

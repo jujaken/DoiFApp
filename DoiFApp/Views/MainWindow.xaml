@@ -25,7 +25,8 @@
         <Grid x:Name="ToolsZone" Grid.Column="0">
 
             <ListBox Background="Gray"
-                     ItemsSource="{Binding Tools}">
+                     ItemsSource="{Binding Tools}"
+                     Style="{StaticResource dynamiclist}">
 
                 <ListBox.ItemTemplate>
                     
@@ -50,7 +51,8 @@
 
         <Grid x:Name="NotifiesZone" Grid.Column="2">
 
-            <ListBox Background="Gray" ItemsSource="{Binding Notifies}">
+            <ListBox Background="Gray" ItemsSource="{Binding Notifies}"
+                     Style="{StaticResource dynamiclist}">
 
                 <ListBox.ItemTemplate>
 

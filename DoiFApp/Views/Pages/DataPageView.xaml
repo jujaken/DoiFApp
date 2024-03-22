@@ -11,19 +11,98 @@
 
     <Grid>
 
-        <ListBox ItemsSource="{Binding LessonViewModels}">
+        <ListView ItemsSource="{Binding LessonViewModels}" Style="{StaticResource dynamiclist}">
 
-            <ListBox.ItemTemplate>
+            <ListView.View>
 
-                <DataTemplate>
+                <GridView>
 
-                    <local:LessonView DataContext="{Binding}"/>
+                    <GridViewColumn Header="Дата">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Date}"
+                                           Style="{StaticResource data1}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    
+                    <GridViewColumn Header="Время">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Time}"
+                                           Style="{StaticResource data1}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    
+                    <GridViewColumn Header="Группы">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Groups}"
+                                           Style="{StaticResource data1}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    
+                    <GridViewColumn Header="Дисциплина">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Discipline}"
+                                           Style="{StaticResource data1}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    
+                    <GridViewColumn Header="Тема">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Topic}"
+                                           Style="{StaticResource data1}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    
+                    <GridViewColumn Header="Вид занятия">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding LessionType}"
+                                           Style="{StaticResource data1}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    
+                    <GridViewColumn Header="Преподаватели">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Teachers}"
+                                           Style="{StaticResource data1}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    
+                    <GridViewColumn Header="Аудитория">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Auditoriums}"
+                                           Style="{StaticResource data1}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    
+                    <GridViewColumn Header="Вес">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding Wight}"
+                                         Style="{StaticResource DataBox}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
 
-                </DataTemplate>
+                </GridView>
                 
-            </ListBox.ItemTemplate>
+            </ListView.View>
             
-        </ListBox>
+        </ListView>
         
     </Grid>
     
