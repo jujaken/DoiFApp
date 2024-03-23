@@ -17,22 +17,32 @@
 
                 <Grid.RowDefinitions>
 
-                    <RowDefinition Height="32"/>
-                    <RowDefinition Height="2"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="4"/>
                     <RowDefinition Height="*"/>
 
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0">
+                <Border Grid.Row="0">
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Content="{Binding Title}"
-                            HorizontalAlignment="Center"/>
+                    <Border.Background>
 
-                    <Button Content="×"
+                        <SolidColorBrush Color="{Binding Color}"/>
+
+                    </Border.Background>
+
+                    <Grid>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Content="{Binding Title}"
+                               Style="{StaticResource lnot}"
+                               HorizontalAlignment="Center"/>
+
+                        <Button Content="×"
                             Width="16"
                             Height="16"
                             Style="{StaticResource ExitButton}"
@@ -40,17 +50,15 @@
                             VerticalAlignment="Top"
                             HorizontalAlignment="Right"
                             Grid.Column="1"/>
-                </Grid>
-
-                <Grid Grid.Row="1">
-
-                    <Border Background="{Binding Color}"/>
-
-                </Grid>
+                        
+                    </Grid>
+                    
+                </Border>
 
                 <Grid Grid.Row="2">
 
                     <TextBlock TextWrapping="Wrap"
+                               Style="{StaticResource notify1}"
                                Text="{Binding Description}"/>
 
                 </Grid>
