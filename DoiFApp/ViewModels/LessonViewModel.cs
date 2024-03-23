@@ -10,6 +10,7 @@ namespace DoiFApp.ViewModels
     {
         private LessonModel? model;
 
+        public string Id => model is not null ? $"{model.Id}" : "-1";
         public string Date => model is not null ? $"{model.Date:dd.MM.yyyy}" : "00.00.0000";
         public string Time => model?.Time ?? "00:00-00:00";
         public string Discipline => model?.Discipline ?? "math";

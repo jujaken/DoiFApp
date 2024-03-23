@@ -18,6 +18,17 @@
 
                 <GridView>
 
+                    <GridViewColumn Header="ID">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Id}"
+                                           Style="{StaticResource data1}"
+                                           TextWrapping="Wrap"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+
                     <GridViewColumn Header="Дата">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
