@@ -33,7 +33,7 @@
                 <Trigger.EnterActions>
                     <BeginStoryboard>
                         <Storyboard>
-                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="MediumBlue" Duration="0:0:0.3">
+                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="RoyalBlue" Duration="0:0:0.3">
                                 <ColorAnimation.EasingFunction>
                                     <SineEase/>
                                 </ColorAnimation.EasingFunction>
