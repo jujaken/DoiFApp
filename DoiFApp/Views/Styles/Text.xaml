@@ -57,12 +57,12 @@
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="BorderBrush">
             <Setter.Value>
-                <SolidColorBrush Color="Black"/>
+                <SolidColorBrush Color="DimGray"/>
             </Setter.Value>
         </Setter>
     </Style>
 
-    <Style x:Key="DataBox" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+    <Style x:Key="dataBox" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
         <Setter Property="FontSize" Value="14"/>
     </Style>
     

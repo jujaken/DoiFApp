@@ -113,7 +113,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBox Text="{Binding Wight}"
-                                         Style="{StaticResource DataBox}"
+                                         Style="{StaticResource dataBox}"
                                          Width="50"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
