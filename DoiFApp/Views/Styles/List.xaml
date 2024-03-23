@@ -1,20 +1,13 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Style x:Key="dynamiclistitem" TargetType="ListBoxItem">
-        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-    </Style>
-
-    <Style x:Key="dynamiclist" TargetType="ListBox">
-        <Setter Property="ItemContainerStyle" Value="{StaticResource dynamiclistitem}"/>
+    <Style x:Key="dynamiclist" TargetType="ItemsControl">
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="VerticalAlignment" Value="Stretch"/>
         <Setter Property="Foreground" Value="Black"/>
-        <Setter Property="Background" Value="Snow"/>
+        <Setter Property="Background" Value="Transparent"/>
     </Style>
 
 </ResourceDictionary>

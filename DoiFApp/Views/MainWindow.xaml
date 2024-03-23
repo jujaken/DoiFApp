@@ -22,23 +22,23 @@
 
         </Grid.ColumnDefinitions>
 
-        <Grid x:Name="ToolsZone" Grid.Column="0">
+        <Grid x:Name="ToolsZone" Grid.Column="0" Background="Gray">
 
-            <ListBox Background="Gray"
-                     ItemsSource="{Binding Tools}"
-                     Style="{StaticResource dynamiclist}">
+            <ItemsControl ItemsSource="{Binding Tools}"
+                          Style="{StaticResource dynamiclist}"
+                          Margin="4">
 
-                <ListBox.ItemTemplate>
-                    
+                <ItemsControl.ItemTemplate>
+
                     <DataTemplate>
 
-                        <local:ToolView DataContext="{Binding}"/>
+                        <local:ToolView DataContext="{Binding}" Margin="1"/>
 
                     </DataTemplate>
 
-                </ListBox.ItemTemplate>
+                </ItemsControl.ItemTemplate>
 
-            </ListBox>
+            </ItemsControl>
 
         </Grid>
 
@@ -49,25 +49,28 @@
 
         </Grid>
 
-        <Grid x:Name="NotifiesZone" Grid.Column="2">
+        <Grid x:Name="NotifiesZone"
+              Grid.Column="2"
+              Background="Gray">
 
-            <ListBox Background="Gray" ItemsSource="{Binding Notifies}"
-                     Style="{StaticResource dynamiclist}">
+            <ItemsControl ItemsSource="{Binding Notifies}"
+                          Style="{StaticResource dynamiclist}"
+                          Margin="4">
 
-                <ListBox.ItemTemplate>
+                <ItemsControl.ItemTemplate>
 
                     <DataTemplate>
 
-                        <local:NotifyView DataContext="{Binding}" MaxWidth="150"/>
+                        <local:NotifyView DataContext="{Binding}" MaxWidth="150" Margin="1"/>
 
                     </DataTemplate>
 
-                </ListBox.ItemTemplate>
+                </ItemsControl.ItemTemplate>
 
-            </ListBox>
+            </ItemsControl>
 
         </Grid>
 
     </Grid>
-    
+
 </Window>
