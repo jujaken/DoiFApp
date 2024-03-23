@@ -19,7 +19,7 @@ namespace DoiFApp.ViewModels
         public string Groups => model is not null ? GetListStr(model.Groups, ',') : "666";
         public string Auditoriums => model is not null ? GetListStr(model.Groups, ',') : "777";
 
-        public int Wight
+        public double Wight
         {
             get => model?.Wight ?? 0;
             set
