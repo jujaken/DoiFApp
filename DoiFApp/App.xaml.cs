@@ -3,6 +3,7 @@ using DoiFApp.Data;
 using DoiFApp.Data.Models;
 using DoiFApp.Data.Repo;
 using DoiFApp.Services;
+using DoiFApp.Services.Excel;
 using DoiFApp.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using OfficeOpenXml;

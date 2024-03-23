@@ -3,7 +3,7 @@ using DoiFApp.Data.Models;
 using DoiFApp.Data.Repo;
 using OfficeOpenXml;
 
-namespace DoiFApp.Services
+namespace DoiFApp.Services.Excel
 {
     public class ExcelReader(AppDbContext context, IRepo<LessonModel> lessonRepo) : IDataReader
     {

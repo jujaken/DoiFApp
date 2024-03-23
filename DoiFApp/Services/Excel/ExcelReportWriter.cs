@@ -3,7 +3,7 @@ using DoiFApp.Data.Repo;
 using OfficeOpenXml;
 using System.IO;
 
-namespace DoiFApp.Services
+namespace DoiFApp.Services.Excel
 {
     public class ExcelReportWriter(IRepo<LessonModel> lessonRepo) : IReportWriter
     {

@@ -5,7 +5,7 @@ using OfficeOpenXml;
 using System.IO;
 using System.Text;
 
-namespace DoiFApp.Services
+namespace DoiFApp.Services.Excel
 {
     public class ExcelTempFileWorker(AppDbContext context, IRepo<LessonModel> lessonRepo) : ITempFileWorker
     {
