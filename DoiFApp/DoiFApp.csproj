@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\doif.ico" />
     <None Remove="Resources\loading.png" />
   </ItemGroup>
 
@@ -21,8 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\doif.ico" />
     <Resource Include="Resources\loading.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>b</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
 
