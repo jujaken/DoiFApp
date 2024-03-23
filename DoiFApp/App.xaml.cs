@@ -33,6 +33,7 @@ namespace DoiFApp
                 // services:
                 .AddTransient<IDataReader, ExcelReader>()
                 .AddTransient<ITempFileWorker, ExcelTempFileWorker>()
+                .AddTransient<IReportWriter, ExcelReportWriter>()
                 .AddTransient<IRepo<LessonModel>, Repo<LessonModel>>() 
                 .AddTransient<NotifyBuilder>()
                 .BuildServiceProvider();

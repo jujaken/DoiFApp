@@ -221,7 +221,7 @@ namespace DoiFApp.ViewModels
             },
             async () =>
             {
-                await Notify("Ошибка загрузки!", "Что-то пошло не так.", NotifyColorType.Error);
+                await Notify("Ошибка выгрузки!", "Что-то пошло не так.", NotifyColorType.Error);
             });
         }
 
@@ -234,7 +234,42 @@ namespace DoiFApp.ViewModels
         [RelayCommand(CanExecute = nameof(CanExtract))]
         public async Task ExctractReportTable()
         {
-            await Notify("Данные выгружены!", "Посмотрите файл в директории!");
+            var page = new DataPageViewModel();
+
+            var defFileName = "Отчёт по месяцам и дисциплинам.xlsx";
+            var fileDialog = new SaveFileDialog
+            {
+                Filter = "excel file|*.xlsx",
+                FileName = defFileName
+            };
+            fileDialog.ShowDialog();
+
+            if (string.IsNullOrEmpty(fileDialog.FileName) || fileDialog.FileName == defFileName)
+                return;
+
+            await CommandWithProcess(async () =>
+            {
+                await Ioc.Default.GetRequiredService<IReportWriter>().Write(fileDialog.FileName);
+                await page.LoadLessonData();
+                try
+                {
+                  
+                }
+                catch
+                {
+                    return false;
+                }
+                return true;
+            },
+            async () => {
+                await Notify("Данные выгружены!", "Отчёт готов, созданный файл!");
+                CurPage = page;
+                CanExtract = true;
+            },
+            async () =>
+            {
+                await Notify("Ошибка выгрузки!", "Что-то пошло не так.", NotifyColorType.Error);
+            });
         }
 
         private async Task CommandWithProcess(Func<Task<bool>> action, Action? onSucces = null, Action? onProblem = null)
