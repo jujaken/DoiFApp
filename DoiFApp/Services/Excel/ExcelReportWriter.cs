@@ -33,10 +33,10 @@ namespace DoiFApp.Services.Excel
             {
                 lession.Teachers.ForEach(teacher =>
                 {
-                    data.Cells[i, 1].Value = SwitchMonth(lession.Date.Month);
+                    data.Cells[i, 1].Value = lession.Month;
                     data.Cells[i, 2].Value = lession.Discipline;
                     data.Cells[i, 3].Value = lession.LessionType;
-                    data.Cells[i, 4].Value = GetListStr(lession.Groups, ',');
+                    data.Cells[i, 4].Value = lession.GroupsText;
                     data.Cells[i, 5].Value = teacher;
                     data.Cells[i, 6].Value = lession.Wight;
                     i++;
@@ -55,35 +55,6 @@ namespace DoiFApp.Services.Excel
             workbook.Save();
             workbook.Close();
             excelApp.Quit();
-        }
-
-        private string SwitchMonth(int num)
-            => num switch
-            {
-                1 => "январь",
-                2 => "февраль",
-                3 => "март",
-                4 => "апрель",
-                5 => "май",
-                6 => "июнь",
-                7 => "июль",
-                8 => "август",
-                9 => "сентябрь",
-                10 => "октябрь",
-                11 => "ноябрь",
-                12 => "декабрь",
-                _ => throw new Exception()
-            };
-
-        private string GetListStr(List<string> items, char v)
-        {
-            var strBuilder = new StringBuilder();
-
-            for (int i = 0; i < items.Count - 1; i++)
-                strBuilder.Append(items[i] + v);
-            strBuilder.Append(items[^1]);
-
-            return strBuilder.ToString();
         }
     }
 }

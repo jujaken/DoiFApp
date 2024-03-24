@@ -64,7 +64,7 @@ namespace DoiFApp.Services.Excel
             {
                 var inputData = new LessonModel
                 {
-                    Date = GetDateOnly(data.Cells[i, 1].GetCellValue<string>()),
+                    Date = LessonModel.GetDateOnly(data.Cells[i, 1].GetCellValue<string>()),
                     Time = data.Cells[i, 2].GetCellValue<string>(),
 
                     Discipline = data.Cells[i, 3].GetCellValue<string>(),
@@ -95,12 +95,6 @@ namespace DoiFApp.Services.Excel
                     await lessonRepo.Create(inputData);
                 }
             }
-        }
-
-        private DateOnly GetDateOnly(string str)
-        {
-            var s = str.Split('.');
-            return new DateOnly(Convert.ToInt32(s[2]), Convert.ToInt32(s[1]), Convert.ToInt32(s[0]));
         }
 
         private string GetListStr(List<string> items, char v)
