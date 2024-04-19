@@ -88,7 +88,7 @@ namespace DoiFApp.Services.Excel
                             var lessionsCell = worksheet.Cells[tableVerticalIndex, 2 + j];
                             lessionsCell.Value += SwitchClassId(lesson.Time) + " ";
 
-                            lessionsCell.Style.Fill.PatternType = ExcelFillStyle.DarkGrid;
+                            lessionsCell.Style.Fill.PatternType = ExcelFillStyle.Solid;
                             if (lesson.Auditoriums.First().Contains("к"))
                             {
                                 var color = SwitchColorByAuditorium(lesson.Auditoriums.First().Split("к/")[0]);
@@ -104,15 +104,15 @@ namespace DoiFApp.Services.Excel
             var startNoteX = teachersUnique.Count + 4;
             var startNoteY = 2;
 
-            worksheet.Cells[startNoteY, startNoteX].Style.Fill.PatternType = ExcelFillStyle.DarkGrid;
+            worksheet.Cells[startNoteY, startNoteX].Style.Fill.PatternType = ExcelFillStyle.Solid;
             worksheet.Cells[startNoteY, startNoteX].Style.Fill.BackgroundColor.SetColor(koptevoColor);
             worksheet.Cells[startNoteY, startNoteX + 1].Value = "Коптево";
 
-            worksheet.Cells[startNoteY + 1, startNoteX].Style.Fill.PatternType = ExcelFillStyle.DarkGrid;
+            worksheet.Cells[startNoteY + 1, startNoteX].Style.Fill.PatternType = ExcelFillStyle.Solid;
             worksheet.Cells[startNoteY + 1, startNoteX].Style.Fill.BackgroundColor.SetColor(volginoColor);
             worksheet.Cells[startNoteY + 1, startNoteX + 1].Value = "Волгино";
 
-            worksheet.Cells[startNoteY + 2, startNoteX].Style.Fill.PatternType = ExcelFillStyle.DarkGrid;
+            worksheet.Cells[startNoteY + 2, startNoteX].Style.Fill.PatternType = ExcelFillStyle.Solid;
             worksheet.Cells[startNoteY + 2, startNoteX].Style.Fill.BackgroundColor.SetColor(otherColor);
             worksheet.Cells[startNoteY + 2, startNoteX + 1].Value = "Др. площадки";
 
@@ -173,7 +173,7 @@ namespace DoiFApp.Services.Excel
             var rangeString = $"A{vIndex}:{GetEndSymbol(hIndex)}{vIndex}";
             var range = worksheet.Cells[rangeString];
 
-            range.Style.Fill.PatternType = ExcelFillStyle.DarkGrid;
+            range.Style.Fill.PatternType = ExcelFillStyle.Solid;
             range.Style.Fill.BackgroundColor.SetColor(color);
         }
 
