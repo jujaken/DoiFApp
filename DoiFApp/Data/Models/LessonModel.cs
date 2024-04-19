@@ -1,11 +1,13 @@
-﻿using System.Text;
+﻿using DoiFApp.Utils;
+using System.Text;
 
 namespace DoiFApp.Data.Models
 {
     public class LessonModel : Model
     {
         public DateOnly Date { get; set; }
-        public string Month => SwitchMonth(Date.Month);
+        public string Month => DateUtil.SwitchMonth(Date.Month);
+        public string DayOfWeek => DateUtil.SwitchDayOfWeek(Date.DayOfWeek);
 
         public string Time { get; set; } = string.Empty;
 
@@ -23,30 +25,11 @@ namespace DoiFApp.Data.Models
 
         public double Wight { get; set; } = 2;
 
-
         public static DateOnly GetDateOnly(string str)
         {
             var s = str.Split('.');
             return new DateOnly(Convert.ToInt32(s[2]), Convert.ToInt32(s[1]), Convert.ToInt32(s[0]));
         }
-
-        private static string SwitchMonth(int num)
-            => num switch
-            {
-                1 => "январь",
-                2 => "февраль",
-                3 => "март",
-                4 => "апрель",
-                5 => "май",
-                6 => "июнь",
-                7 => "июль",
-                8 => "август",
-                9 => "сентябрь",
-                10 => "октябрь",
-                11 => "ноябрь",
-                12 => "декабрь",
-                _ => throw new Exception()
-            };
 
         private static string GetListStr(List<string> items, string v)
         {

@@ -11,7 +11,7 @@ namespace DoiFApp.Services.Excel
     {
         private readonly IRepo<LessonModel> lessonRepo = lessonRepo;
 
-        private static string reportSimplePath = "Resources/reportsimple.xlsx";
+        private readonly static string reportSimplePath = "Resources/reportsimple.xlsx";
 
         public async Task Write(string path)
         {

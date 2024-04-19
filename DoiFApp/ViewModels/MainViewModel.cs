@@ -96,7 +96,8 @@ namespace DoiFApp.ViewModels
                 }
                 return true;
             },
-             async () => {
+             async () =>
+             {
                  await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
                  CurPage = page;
                  CanExtract = true;
@@ -135,7 +136,8 @@ namespace DoiFApp.ViewModels
                 }
                 return true;
             },
-            async () => {
+            async () =>
+            {
                 await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
                 CurPage = page;
                 CanExtract = true;
@@ -174,7 +176,8 @@ namespace DoiFApp.ViewModels
                 }
                 return true;
             },
-            async () => {
+            async () =>
+            {
                 await Notify("Данные выгружены!", "Теперь, вы можете обновить файл и загрузить его с помощью команты \"Загрузить temp-файл\"!");
                 CurPage = page;
                 CanExtract = true;
@@ -214,7 +217,8 @@ namespace DoiFApp.ViewModels
                 }
                 return true;
             },
-            async () => {
+            async () =>
+            {
                 await Notify("Данные выгружены!", "Теперь, вы можете обновить файл и загрузить его с помощью команты \"Загрузить temp-файл\"!");
                 CurPage = page;
                 CanExtract = true;
@@ -228,7 +232,43 @@ namespace DoiFApp.ViewModels
         [RelayCommand(CanExecute = nameof(CanExtract))]
         public async Task ExctractWorkloadTable()
         {
-            await Notify("Данные выгружены!", "Посмотрите файл в директории!");
+            var page = new DataPageViewModel();
+
+            var defFileName = "Загруженность.xlsx";
+            var fileDialog = new SaveFileDialog
+            {
+                Filter = "excel file|*.xlsx",
+                FileName = defFileName
+            };
+            fileDialog.ShowDialog();
+
+            if (string.IsNullOrEmpty(fileDialog.FileName) || fileDialog.FileName == defFileName)
+                return;
+
+            await CommandWithProcess(async () =>
+            {
+                await Ioc.Default.GetRequiredService<IWorkSchedule>().Write(fileDialog.FileName);
+                await page.LoadLessonData();
+                try
+                {
+         
+                }
+                catch
+                {
+                    return false;
+                }
+                return true;
+            },
+            async () =>
+            {
+                await Notify("Данные выгружены!", "График готов, файл создан!");
+                CurPage = page;
+                CanExtract = true;
+            },
+            async () =>
+            {
+                await Notify("Ошибка выгрузки!", "Что-то пошло не так.", NotifyColorType.Error);
+            });
         }
 
         [RelayCommand(CanExecute = nameof(CanExtract))]
@@ -249,11 +289,10 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
-                await Ioc.Default.GetRequiredService<IReportWriter>().Write(fileDialog.FileName);
-                await page.LoadLessonData();
                 try
                 {
-                  
+                    await Ioc.Default.GetRequiredService<IReportWriter>().Write(fileDialog.FileName);
+                    await page.LoadLessonData();
                 }
                 catch
                 {
@@ -261,8 +300,9 @@ namespace DoiFApp.ViewModels
                 }
                 return true;
             },
-            async () => {
-                await Notify("Данные выгружены!", "Отчёт готов, созданный файл!");
+            async () =>
+            {
+                await Notify("Данные выгружены!", "Отчёт готов, файл создан!");
                 CurPage = page;
                 CanExtract = true;
             },
