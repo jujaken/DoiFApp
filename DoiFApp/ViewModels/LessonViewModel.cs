@@ -18,7 +18,7 @@ namespace DoiFApp.ViewModels
         public string Topic => model?.Topic ?? "-";
         public string Teachers => model is not null ? GetListStr(model.Teachers, '\n') : "Ivanov I.I.";
         public string Groups => model is not null ? GetListStr(model.Groups, ',') : "666";
-        public string Auditoriums => model is not null ? GetListStr(model.Groups, ',') : "777";
+        public string Auditoriums => model is not null ? GetListStr(model.Auditoriums, ',') : "777";
 
         public double Wight
         {
