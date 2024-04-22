@@ -198,15 +198,8 @@ namespace DoiFApp.Services.Excel
                 "1" => volginoColor,
                 "2" => volginoColor,
                 "3" => volginoColor,
-                "4" => koptevoColor,
-                "5" => otherColor,
-                "6" => otherColor,
-                "7" => otherColor,
-                "8" => otherColor,
-                "9" => otherColor,
-                "10" => otherColor,
-                "11" => otherColor,
-                _ => throw new Exception()
+                "5" => koptevoColor,
+                _ => otherColor,
             };
     }
 }
