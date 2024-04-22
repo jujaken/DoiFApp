@@ -7,16 +7,12 @@ using OfficeOpenXml.Style;
 using System.Drawing;
 using DoiFApp.Utils;
 using System.Text;
-using System.Windows;
-using Microsoft.Office.Interop.Excel;
 
 namespace DoiFApp.Services.Excel
 {
-    public class ExcelWorkSchedule(AppDbContext context, IRepo<LessonModel> lessonRepo, ICaseComparator caseComparator) : IWorkSchedule
+    public class ExcelWorkSchedule(IRepo<LessonModel> lessonRepo) : IWorkSchedule
     {
-        private readonly AppDbContext context = context;
         private readonly IRepo<LessonModel> lessonRepo = lessonRepo;
-        private readonly ICaseComparator caseComparator = caseComparator;
 
         private readonly Color saturdayColor = Color.FromArgb(255, 255, 192, 203);
         private readonly Color sundayColor = Color.FromArgb(255, 255, 0, 0);
