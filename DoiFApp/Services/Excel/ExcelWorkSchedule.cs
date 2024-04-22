@@ -8,6 +8,7 @@ using System.Drawing;
 using DoiFApp.Utils;
 using System.Text;
 using System.Windows;
+using Microsoft.Office.Interop.Excel;
 
 namespace DoiFApp.Services.Excel
 {
@@ -99,8 +100,19 @@ namespace DoiFApp.Services.Excel
                 }
             }
 
-            // note
+            AddNote(teachersUnique, worksheet);
 
+            // view
+            DoSquare(worksheet, 1, 1, endDayNum - startDayNum, teachersUnique.Count - 2, (range) =>
+            {
+                range.AutoFitColumns();
+            });
+
+            package.Save();
+        }
+
+        private void AddNote(List<string> teachersUnique, ExcelWorksheet worksheet)
+        {
             var startNoteX = teachersUnique.Count + 4;
             var startNoteY = 2;
 
@@ -144,13 +156,6 @@ namespace DoiFApp.Services.Excel
             worksheet.Cells[startNoteY + 14, startNoteX].Value = "7";
             worksheet.Cells[startNoteY + 14, startNoteX + 1].Value = "20:00 - 21:30";
 
-            // view
-            DoSquare(worksheet, 1, 1, endDayNum - startDayNum, teachersUnique.Count - 2, (range) =>
-            {
-                range.AutoFitColumns();
-            });
-
-            package.Save();
         }
 
         private string SwitchClassId(string time)
