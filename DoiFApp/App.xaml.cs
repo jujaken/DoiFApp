@@ -34,7 +34,6 @@ namespace DoiFApp
                 .AddTransient<IDataReader, ExcelReader>()
                 .AddTransient<ITempFileWorker, ExcelTempFileWorker>()
                 .AddTransient<IReportWriter, ExcelReportWriter>()
-                .AddTransient<ICaseComparator, CaseComparator>()
                 .AddTransient<IWorkSchedule, ExcelWorkSchedule>()
                 .AddTransient<IRepo<LessonModel>, Repo<LessonModel>>()
                 .AddTransient<NotifyBuilder>()
