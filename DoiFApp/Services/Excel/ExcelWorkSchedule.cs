@@ -1,12 +1,12 @@
 ﻿using DoiFApp.Data.Models;
 using DoiFApp.Data.Repo;
-using DoiFApp.Data;
 using OfficeOpenXml;
 using System.IO;
 using OfficeOpenXml.Style;
 using System.Drawing;
 using DoiFApp.Utils;
 using System.Text;
+using System.Windows;
 
 namespace DoiFApp.Services.Excel
 {
@@ -14,12 +14,14 @@ namespace DoiFApp.Services.Excel
     {
         private readonly IRepo<LessonModel> lessonRepo = lessonRepo;
 
-        private readonly Color saturdayColor = Color.FromArgb(255, 255, 192, 203);
-        private readonly Color sundayColor = Color.FromArgb(255, 255, 0, 0);
+        private readonly Color saturdayColor = Color.FromArgb(255, 255, 192, 203); // low red
+        private readonly Color sundayColor = Color.FromArgb(255, 255, 0, 0); // red
 
-        private readonly Color koptevoColor = Color.FromArgb(255, 211, 211, 211);
-        private readonly Color volginoColor = Color.FromArgb(255, 169, 127, 211);
-        private readonly Color otherColor = Color.FromArgb(255, 245, 245, 222);
+        private readonly Color koptevoColor = Color.FromArgb(255, 199, 199, 199); // grey
+        private readonly Color volginoColor = Color.FromArgb(255, 255, 255, 111); // yellow
+        private readonly Color otherColor = Color.FromArgb(255, 255, 175, 100); // orange
+        private readonly Color transitionColor = Color.FromArgb(255, 100, 245, 100); // green
+        private readonly Color withoutColor = Color.FromArgb(255, 0, 200, 200); // blue
 
         public async Task Write(string path)
         {
@@ -42,11 +44,13 @@ namespace DoiFApp.Services.Excel
 
             teachersUnique.Sort();
 
+            (int start, int end) teacherLine = (3, teachersUnique.Count + 2);
+
             // header
             for (var i = 0; i < teachersUnique.Count; i++)
             {
                 var teacher = teachersUnique[i];
-                var tcell = worksheet.Cells[1, 2 + i];
+                var tcell = worksheet.Cells[1, teacherLine.start + i];
                 tcell.Value = teacher;
                 tcell.Style.Border.BorderAround(ExcelBorderStyle.Hair);
                 tcell.Style.TextRotation = 180;
@@ -65,10 +69,10 @@ namespace DoiFApp.Services.Excel
                 worksheet.Cells[tableVerticalIndex, 2].Value = curDay;
 
                 if (date.DayOfWeek == DayOfWeek.Saturday)
-                    DrawLine(worksheet, tableVerticalIndex, teachersUnique.Count, saturdayColor);
+                    DrawLine(worksheet, tableVerticalIndex, teacherLine.end, saturdayColor);
 
                 if (date.DayOfWeek == DayOfWeek.Sunday)
-                    DrawLine(worksheet, tableVerticalIndex, teachersUnique.Count, sundayColor);
+                    DrawLine(worksheet, tableVerticalIndex, teacherLine.end, sundayColor);
 
                 var lessons = data.Where(l => l.Date == date);
 
@@ -82,75 +86,71 @@ namespace DoiFApp.Services.Excel
                         var teacher = teachersUnique[j];
                         if (lesson.Teachers.Contains(teacher))
                         {
-                            var lessionsCell = worksheet.Cells[tableVerticalIndex, 2 + j];
+                            var lessionsCell = worksheet.Cells[tableVerticalIndex, teacherLine.start + j];
                             lessionsCell.Value += SwitchClassId(lesson.Time) + " ";
 
                             lessionsCell.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                            if (lesson.Auditoriums.First().Contains("к"))
-                            {
-                                var color = SwitchColorByAuditorium(lesson.Auditoriums.First().Split("к/")[0]);
-                                lessionsCell.Style.Fill.BackgroundColor.SetColor(color);
-                            }
+                            lessionsCell.Style.Fill.BackgroundColor.SetColor(SelectCellColor(lesson.Auditoriums));
                         }
                     }
                 }
             }
 
-            AddNote(teachersUnique, worksheet);
+            AddNotes(teacherLine.end + 1, worksheet);
 
             // view
-            DoSquare(worksheet, 1, 1, endDayNum - startDayNum, teachersUnique.Count - 2, (range) =>
+            DoSquare(worksheet, 1, 1, endDayNum - startDayNum + 1, teacherLine.end, (range) =>
             {
+                range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                range.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                range.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+                range.Style.Border.Top.Color.SetColor(Color.Black);
+                range.Style.Border.Bottom.Color.SetColor(Color.Black);
+                range.Style.Border.Left.Color.SetColor(Color.Black);
+                range.Style.Border.Right.Color.SetColor(Color.Black);
+
                 range.AutoFitColumns();
             });
 
             package.Save();
         }
 
-        private void AddNote(List<string> teachersUnique, ExcelWorksheet worksheet)
+        private void AddNotes(int startNoteX, ExcelWorksheet worksheet)
         {
-            var startNoteX = teachersUnique.Count + 4;
-            var startNoteY = 2;
+            int startNoteY = 2, i = 0;
 
-            worksheet.Cells[startNoteY, startNoteX].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            worksheet.Cells[startNoteY, startNoteX].Style.Fill.BackgroundColor.SetColor(koptevoColor);
-            worksheet.Cells[startNoteY, startNoteX + 1].Value = "Коптево";
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, koptevoColor, "Коптево");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, volginoColor, "Волгино");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, otherColor, "Др. площадки");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, withoutColor, "Без аудитории");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, transitionColor, "Переезд");
 
-            worksheet.Cells[startNoteY + 1, startNoteX].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            worksheet.Cells[startNoteY + 1, startNoteX].Style.Fill.BackgroundColor.SetColor(volginoColor);
-            worksheet.Cells[startNoteY + 1, startNoteX + 1].Value = "Волгино";
+            i++;
 
-            worksheet.Cells[startNoteY + 2, startNoteX].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            worksheet.Cells[startNoteY + 2, startNoteX].Style.Fill.BackgroundColor.SetColor(otherColor);
-            worksheet.Cells[startNoteY + 2, startNoteX + 1].Value = "Др. площадки";
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, "1", "09:00 - 10:30");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, "2", "10:45 - 12:15");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, "3", "12:30 - 14:00");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, "3к", "14:15 - 15:45");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, "4к", "15:00 - 16:30");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, "4", "16:00 - 17:30");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, "5", "16:40 - 18:10");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, "6", "18:20 - 19:50");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, "7", "20:00 - 21:30");
+        }
 
+        private void AddNote(ExcelWorksheet worksheet, int y, int x, object key, object value)
+        {
+            worksheet.Cells[y, x].Value = key;
+            worksheet.Cells[y, x + 1].Value = value;
+        }
 
-            worksheet.Cells[startNoteY + 6, startNoteX].Value = "1";
-            worksheet.Cells[startNoteY + 6, startNoteX + 1].Value = "09:00 - 10:30";
-
-            worksheet.Cells[startNoteY + 7, startNoteX].Value = "2";
-            worksheet.Cells[startNoteY + 7, startNoteX + 1].Value = "10:45 - 12:15";
-
-            worksheet.Cells[startNoteY + 8, startNoteX].Value = "3";
-            worksheet.Cells[startNoteY + 8, startNoteX + 1].Value = "12:30 - 14:00";
-
-            worksheet.Cells[startNoteY + 9, startNoteX].Value = "3к";
-            worksheet.Cells[startNoteY + 9, startNoteX + 1].Value = "14:15 - 15:45";
-
-            worksheet.Cells[startNoteY + 10, startNoteX].Value = "4к";
-            worksheet.Cells[startNoteY + 10, startNoteX + 1].Value = "15:00 - 16:30";
-
-            worksheet.Cells[startNoteY + 11, startNoteX].Value = "4";
-            worksheet.Cells[startNoteY + 11, startNoteX + 1].Value = "16:00 - 17:30";
-
-            worksheet.Cells[startNoteY + 12, startNoteX].Value = "5";
-            worksheet.Cells[startNoteY + 12, startNoteX + 1].Value = "16:40 - 18:10";
-
-            worksheet.Cells[startNoteY + 13, startNoteX].Value = "6";
-            worksheet.Cells[startNoteY + 13, startNoteX + 1].Value = "18:20 - 19:50";
-
-            worksheet.Cells[startNoteY + 14, startNoteX].Value = "7";
-            worksheet.Cells[startNoteY + 14, startNoteX + 1].Value = "20:00 - 21:30";
+        private void AddNote(ExcelWorksheet worksheet, int y, int x, Color key, object value)
+        {
+            worksheet.Cells[y, x].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            worksheet.Cells[y, x].Style.Fill.BackgroundColor.SetColor(key);
+            worksheet.Cells[y, x + 1].Value = value;
 
         }
 
@@ -179,17 +179,27 @@ namespace DoiFApp.Services.Excel
         }
 
         private void DoSquare(ExcelWorksheet worksheet, int vIndex1, int hIndex1, int vIndex2, int hIndex2, Action<ExcelRange> action)
-        {
-            var rangeString = $"{GetEndSymbol(hIndex1)}{vIndex1}:{GetEndSymbol(hIndex2)}{vIndex2}";
-            var range = worksheet.Cells[rangeString];
-            action(range);
-        }
+            => action(worksheet.Cells[$"{GetEndSymbol(hIndex1)}{vIndex1}:{GetEndSymbol(hIndex2)}{vIndex2}"]);
 
         private string GetEndSymbol(int hIndex)
         {
             var startByte = Encoding.ASCII.GetBytes("A");
-            startByte[0] += Convert.ToByte(hIndex + 2);
+            startByte[0] += Convert.ToByte(hIndex - 1);
             return Encoding.ASCII.GetString(startByte);
+        }
+
+        private Color SelectCellColor(List<string> auditoriums)
+        {
+            var auds = auditoriums.Where(a => a.Contains("к/"));
+
+            if (!auds.Any())
+                return withoutColor;
+
+            var suites = auds.Select(a => a.Split("к/")[0]).Distinct();
+            if (suites.Count() > 1)
+                return transitionColor;
+
+            return SwitchColorByAuditorium(suites.First());
         }
 
         private Color SwitchColorByAuditorium(string id)
@@ -203,3 +213,4 @@ namespace DoiFApp.Services.Excel
             };
     }
 }
+
