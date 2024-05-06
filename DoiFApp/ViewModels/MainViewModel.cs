@@ -247,11 +247,10 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
-                await Ioc.Default.GetRequiredService<IWorkSchedule>().Write(fileDialog.FileName);
-                await page.LoadLessonData();
                 try
                 {
-         
+                    await Ioc.Default.GetRequiredService<IWorkSchedule>().Write(fileDialog.FileName);
+                    await page.LoadLessonData();
                 }
                 catch
                 {
