@@ -113,7 +113,7 @@ namespace DoiFApp.Services.Excel
                 range.Style.Border.Left.Color.SetColor(Color.Black);
                 range.Style.Border.Right.Color.SetColor(Color.Black);
 
-                range.AutoFitColumns();
+                range.AutoFitColumns(worksheet.DefaultColWidth / 2);
             });
 
             package.Save();
