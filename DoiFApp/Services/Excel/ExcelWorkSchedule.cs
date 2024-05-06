@@ -6,7 +6,6 @@ using OfficeOpenXml.Style;
 using System.Drawing;
 using DoiFApp.Utils;
 using System.Text;
-using System.Windows;
 
 namespace DoiFApp.Services.Excel
 {
@@ -18,8 +17,8 @@ namespace DoiFApp.Services.Excel
         private readonly Color sundayColor = Color.FromArgb(255, 255, 0, 0); // red
 
         private readonly Color koptevoColor = Color.FromArgb(255, 199, 199, 199); // grey
-        private readonly Color volginoColor = Color.FromArgb(255, 255, 255, 111); // yellow
-        private readonly Color otherColor = Color.FromArgb(255, 255, 175, 100); // orange
+        private readonly Color volginoColor = Color.FromArgb(255, 255, 255, 230); // yellow
+        private readonly Color otherColor = Color.FromArgb(255, 255, 230, 200); // orange
         private readonly Color transitionColor = Color.FromArgb(255, 100, 245, 100); // green
         private readonly Color withoutColor = Color.FromArgb(255, 0, 200, 200); // blue
 
@@ -101,6 +100,9 @@ namespace DoiFApp.Services.Excel
             // view
             DoSquare(worksheet, 1, 1, endDayNum - startDayNum + 1, teacherLine.end, (range) =>
             {
+                range.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
                 range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
                 range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                 range.Style.Border.Left.Style = ExcelBorderStyle.Thin;
