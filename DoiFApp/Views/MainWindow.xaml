@@ -16,61 +16,75 @@
     </Window.DataContext>
 
     <Grid>
+        <Rectangle >
 
-        <Grid.ColumnDefinitions>
+            <Rectangle.Fill>
 
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="auto"/>
+                <ImageBrush ImageSource="pack://application:,,,/Resources/Bonny.png" TileMode="Tile"
+                    ViewportUnits="Absolute" Viewport="0 0 256 256"></ImageBrush>
 
-        </Grid.ColumnDefinitions>
+            </Rectangle.Fill>
 
-        <Grid x:Name="ToolsZone" Grid.Column="0" Background="Gray">
+        </Rectangle>
 
-            <ItemsControl ItemsSource="{Binding Tools}"
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+
+            </Grid.ColumnDefinitions>
+
+            <Grid x:Name="ToolsZone" Grid.Column="0" Background="#BE443339">
+
+                <ItemsControl ItemsSource="{Binding Tools}"
                           Style="{StaticResource dynamiclist}"
                           Margin="4">
 
-                <ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemTemplate>
 
-                    <DataTemplate>
+                        <DataTemplate>
 
-                        <local:ToolView DataContext="{Binding}" Margin="1"/>
+                            <local:ToolView DataContext="{Binding}" Margin="1"/>
 
-                    </DataTemplate>
+                        </DataTemplate>
 
-                </ItemsControl.ItemTemplate>
+                    </ItemsControl.ItemTemplate>
 
-            </ItemsControl>
+                </ItemsControl>
 
-        </Grid>
+            </Grid>
 
-        <Grid x:Name="PageZone" Grid.Column="1">
+            <Grid x:Name="PageZone" Grid.Column="1">
 
-            <Border Background="DarkGray"/>
-            <ContentControl Content="{Binding CurPage}"/>
+                <Border Background="#11111111"/>
+                <ContentControl Content="{Binding CurPage}"/>
 
-        </Grid>
+            </Grid>
 
-        <Grid x:Name="NotifiesZone"
-              Grid.Column="2"
-              Background="Gray">
+            <Grid x:Name="NotifiesZone"
+                  Grid.Column="2"
+                  Background="#BE443339">
 
-            <ItemsControl ItemsSource="{Binding Notifies}"
+                <ItemsControl ItemsSource="{Binding Notifies}"
                           Style="{StaticResource dynamiclist}"
                           Margin="4">
 
-                <ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemTemplate>
 
-                    <DataTemplate>
+                        <DataTemplate>
 
-                        <local:NotifyView DataContext="{Binding}" MaxWidth="150" Margin="1"/>
+                            <local:NotifyView DataContext="{Binding}" MaxWidth="150" Margin="1"/>
 
-                    </DataTemplate>
+                        </DataTemplate>
 
-                </ItemsControl.ItemTemplate>
+                    </ItemsControl.ItemTemplate>
 
-            </ItemsControl>
+                </ItemsControl>
+
+            </Grid>
 
         </Grid>
 

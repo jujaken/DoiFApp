@@ -18,10 +18,10 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="border" Property="Background" Value="#FF867F7A"/>
+                            <Setter TargetName="border" Property="Background" Value="#FF7E7E7E"/>
                             <Setter TargetName="border" Property="BorderBrush" Value="#101010"/>
                             <Setter Property="Foreground" Value="#101010"/>
-                            <Setter Property="Opacity" Value="0.5"/>
+                            <Setter Property="Opacity" Value="0.7"/>
                             <Setter Property="Cursor" Value="No"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
