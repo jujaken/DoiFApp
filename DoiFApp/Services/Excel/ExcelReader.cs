@@ -10,7 +10,7 @@ namespace DoiFApp.Services.Excel
         private readonly AppDbContext context = context;
         private readonly IRepo<LessonModel> lessonRepo = lessonRepo;
 
-        public Task ReadToData(string path)
+        public async Task ReadToData(string path)
         {
             context.Recreate();
 
@@ -32,16 +32,32 @@ namespace DoiFApp.Services.Excel
                     LessionType = data.Cells[i, 6].GetCellValue<string>(),
                     Topic = data.Cells[i, 7].GetCellValue<string?>(),
 
-                    Groups = data.Cells[i, 4].GetCellValue<string>().Split(',').Select(s => s.Trim()).ToList(),
-                    Teachers = data.Cells[i, 8].GetCellValue<string>().Split('\n').Select(s => s.Trim()).ToList(),
+                    Groups = data.Cells[i, 4].GetCellValue<string>()
+                        .Split(',').Select(s => s.Trim()).ToList(),
+                    Teachers = data.Cells[i, 8].GetCellValue<string>()
+                        .Split('\n').Select(s => s.Trim()).ToList(),
 
-                    Auditoriums = data.Cells[i, 9].GetCellValue<string>().Split(',').Select(s => s.Trim()).ToList()
+                    Auditoriums = (data.Cells[i, 9].GetCellValue<string?>() ?? "без аудитории")
+                        .Split(',').Select(s => s.Trim()).ToList()
                 };
 
-                lessonRepo.Create(inputData);
-            }
+                if (inputData.LessionType.Contains("зач", StringComparison.CurrentCultureIgnoreCase)
+                    || inputData.LessionType.Contains("экз", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    var lesson = (await lessonRepo.GetWhere(lesson => lesson.Date == inputData.Date
+                        && lesson.Topic == inputData.Topic
+                        && lesson.Discipline == inputData.Discipline)).FirstOrDefault();
 
-            return Task.CompletedTask;
+                    if (lesson != null)
+                    {
+                        lesson.Wight += 2;
+                        await lessonRepo.Update(lesson);
+                        continue;
+                    }
+                }
+
+                await lessonRepo.Create(inputData);
+            }
         }
     }
 }
