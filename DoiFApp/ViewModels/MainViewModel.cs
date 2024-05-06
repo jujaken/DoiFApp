@@ -45,8 +45,8 @@ namespace DoiFApp.ViewModels
 
             tools.Add(new ToolViewModel()
             {
-                Title = "Загрузить эксель",
-                Description = "Загружает таблицу excel и формирует необходимые данные для работы приложения",
+                Title = "Загрузить расписание",
+                Description = "Загружает таблицу excel с расписанием и формирует необходимые данные для работы приложения",
                 Command = LoadExcelCommand
             });
 
