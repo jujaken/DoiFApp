@@ -52,15 +52,15 @@ namespace DoiFApp.ViewModels
 
             tools.Add(new ToolViewModel()
             {
-                Title = "Загрузить temp-файл",
-                Description = "Загружает temp-файл для для просмотра",
+                Title = "Загрузить временный файл",
+                Description = "Загружает временный файл для для просмотра",
                 Command = LoadTempFileCommand
             });
 
             tools.Add(new ToolViewModel()
             {
-                Title = "Выгрузить в temp-файл",
-                Description = "Выгружает таблицу excel в temp таблицу",
+                Title = "Выгрузить во временный файл",
+                Description = "Выгружает таблицу excel во временный файл таблицу",
                 Command = ExtractToTempFileCommand
             });
 
@@ -178,7 +178,7 @@ namespace DoiFApp.ViewModels
             },
             async () =>
             {
-                await Notify("Данные выгружены!", "Теперь, вы можете обновить файл и загрузить его с помощью команты \"Загрузить temp-файл\"!");
+                await Notify("Данные выгружены!", "Теперь, вы можете обновить файл и загрузить его с помощью команты \"Загрузить временный файл\"!");
                 CurPage = page;
                 CanExtract = true;
             },
@@ -193,7 +193,7 @@ namespace DoiFApp.ViewModels
         {
             var page = new DataPageViewModel();
 
-            var defFileName = "temp.xlsx";
+            var defFileName = "временный файл.xlsx";
             var fileDialog = new SaveFileDialog
             {
                 Filter = "excel file|*.xlsx",
@@ -219,7 +219,7 @@ namespace DoiFApp.ViewModels
             },
             async () =>
             {
-                await Notify("Данные выгружены!", "Теперь, вы можете обновить файл и загрузить его с помощью команты \"Загрузить temp-файл\"!");
+                await Notify("Данные выгружены!", "Теперь, вы можете обновить файл и загрузить его с помощью команты \"Загрузить временный файл\"!");
                 CurPage = page;
                 CanExtract = true;
             },
