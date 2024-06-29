@@ -32,16 +32,7 @@ namespace DoiFApp.Services.Excel
 
             var data = await lessonRepo.GetAll();
 
-            // unique teachers
-            var teachersNotUnique = data.Select(l => l.Teachers);
-            var teachersUnique = new List<string>();
-
-            foreach (var teachers in teachersNotUnique)
-                foreach (var teacher in teachers)
-                    if (!teachersUnique.Contains(teacher))
-                        teachersUnique.Add(teacher);
-
-            teachersUnique.Sort();
+            var teachersUnique = DataUtil.GetTeachers(data);
 
             (int start, int end) teacherLine = (3, teachersUnique.Count + 2);
 
