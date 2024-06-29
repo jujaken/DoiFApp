@@ -32,6 +32,5 @@
                 DayOfWeek.Sunday => "воскресенье",
                 _ => throw new Exception()
             };
-
     }
 }
