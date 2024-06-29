@@ -4,6 +4,7 @@ using DoiFApp.Data.Models;
 using DoiFApp.Data.Repo;
 using DoiFApp.Services;
 using DoiFApp.Services.Excel;
+using DoiFApp.Services.Word;
 using DoiFApp.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using OfficeOpenXml;
@@ -23,9 +24,7 @@ namespace DoiFApp
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
-        private IServiceProvider ConfigureServices()
-        {
-            return new ServiceCollection()
+        private static ServiceProvider ConfigureServices() => new ServiceCollection()
                 .AddDbContext<AppDbContext>()
                 // view models:
                 .AddTransient<NotifyViewModel>()
@@ -35,9 +34,9 @@ namespace DoiFApp
                 .AddTransient<ITempFileWorker, ExcelTempFileWorker>()
                 .AddTransient<IReportWriter, ExcelReportWriter>()
                 .AddTransient<IWorkSchedule, ExcelWorkSchedule>()
+                .AddTransient<IIndividualPlanWriter, WordIndividualPlanWriter>()
                 .AddTransient<IRepo<LessonModel>, Repo<LessonModel>>()
                 .AddTransient<NotifyBuilder>()
                 .BuildServiceProvider();
-        }
     }
 }
