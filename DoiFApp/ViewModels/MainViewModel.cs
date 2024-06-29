@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using DoiFApp.Services;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
+using FolderBrowserEx;
 
 namespace DoiFApp.ViewModels
 {
@@ -31,7 +32,8 @@ namespace DoiFApp.ViewModels
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ExtractToTempFileCommand),
                                     nameof(ExctractWorkloadTableCommand),
-                                    nameof(ExctractReportTableCommand))]
+                                    nameof(ExctractReportTableCommand),
+                                    nameof(ExctractIndividualPlansCommand))]
         public bool canExtract;
 
         public MainViewModel()
@@ -76,6 +78,13 @@ namespace DoiFApp.ViewModels
                 Title = "Выдать отчёт",
                 Description = "Формирует таблицу-отчёт",
                 Command = ExctractReportTableCommand
+            });
+
+            tools.Add(new ToolViewModel()
+            {
+                Title = "Выдать инд. планы",
+                Description = "Выдаёт файлы индивидуальных планов",
+                Command = ExctractIndividualPlansCommand
             });
         }
 
@@ -302,6 +311,48 @@ namespace DoiFApp.ViewModels
             async () =>
             {
                 await Notify("Данные выгружены!", "Отчёт готов, файл создан!");
+                CurPage = page;
+                CanExtract = true;
+            },
+            async () =>
+            {
+                await Notify("Ошибка выгрузки!", "Что-то пошло не так.", NotifyColorType.Error);
+            });
+        }
+
+        private readonly string lastDirectory = Environment.CurrentDirectory;
+
+        [RelayCommand(CanExecute = nameof(CanExtract))]
+        public async Task ExctractIndividualPlans()
+        {
+            var page = new DataPageViewModel();
+
+            var dialog = new FolderBrowserDialog()
+            {
+                DefaultFolder = lastDirectory
+            };
+
+            dialog.ShowDialog();
+
+            if (string.IsNullOrEmpty(dialog.SelectedFolder))
+                return;
+
+            await CommandWithProcess(async () =>
+            {
+                try
+                {
+                    await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().MakePlans(dialog.SelectedFolder);
+                    await page.LoadLessonData();
+                }
+                catch
+                {
+                    return false;
+                }
+                return true;
+            },
+            async () =>
+            {
+                await Notify("Данные выгружены!", "Индивидуальные планы готовы, файлы создан!");
                 CurPage = page;
                 CanExtract = true;
             },
