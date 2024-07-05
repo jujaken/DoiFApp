@@ -2,7 +2,7 @@
 using DoiFApp.Data.Repo;
 using DoiFApp.Utils;
 using System.IO;
-using System.Windows.Forms;
+using Xceed.Document.NET;
 using Xceed.Words.NET;
 
 namespace DoiFApp.Services.Word
@@ -10,6 +10,8 @@ namespace DoiFApp.Services.Word
     public class WordIndividualPlanWriter(IRepo<LessonModel> lessonRepo) : IIndividualPlanWriter
     {
         private readonly IRepo<LessonModel> lessonRepo = lessonRepo;
+        private readonly string simpleDocName = "Resources/individualplansimple.docx";
+        private const int width = 26;
 
         public async Task MakePlans(string path)
         {
@@ -22,14 +24,59 @@ namespace DoiFApp.Services.Word
 
         private void CreateTeacher(string teacher, string path, List<LessonModel> data)
         {
-            using var doc = DocX.Create(Path.Combine(path, teacher + ".docx"));
+            using var simpleDoc = DocX.Load(simpleDocName);
+            var fileName = Path.Combine(path, teacher + ".docx");
+            simpleDoc.SaveAs(fileName);
+            simpleDoc.Dispose();
+
+            using var doc = DocX.Load(fileName);
             var lessons = data.Where(x => x.Teachers.Contains(teacher));
             var uniqueDisc = lessons.Select(x => x.Discipline).Distinct();
-            var width = 1 + uniqueDisc.Count();
-            var height = 26;
-            var table = doc.AddTable(width, height);
-            doc.InsertTable(table);
+            var tables = doc.Tables;
+            UpdateTables(teacher, tables, data);
             doc.Save();
+        }
+
+        private void UpdateTables(string teacher, List<Table> tables, List<LessonModel> data)
+        {
+            // уч работа
+
+            // план
+            // 1
+
+            // 2
+
+            // факт
+            // 1
+
+            // 2
+
+            // ежемесячные
+
+            // методическая
+            // 1
+
+            // 2
+
+            // наука
+            // 1
+
+            // 2
+
+            // воспитательная
+            // 1
+
+            // 2
+
+            // иностранцы
+            // 1
+
+            // 2
+
+            // другие
+            // 1
+
+            // 2
         }
     }
 }

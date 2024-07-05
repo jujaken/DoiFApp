@@ -339,9 +339,9 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
+                await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().MakePlans(dialog.SelectedFolder);
                 try
                 {
-                    await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().MakePlans(dialog.SelectedFolder);
                     await page.LoadLessonData();
                 }
                 catch
