@@ -324,7 +324,6 @@ namespace DoiFApp.ViewModels
         [RelayCommand]
         public async Task ExctractIndividualPlans()
         {
-            var page = new DataPageViewModel();
             var inputDialog = new OpenFileDialog
             {
                 Filter = "excel file|*.xlsx",
@@ -353,7 +352,6 @@ namespace DoiFApp.ViewModels
                 await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().MakePlans(data, outputDialog.SelectedFolder);
                 try
                 {
-                    await page.LoadLessonData();
                 }
                 catch
                 {
@@ -363,9 +361,7 @@ namespace DoiFApp.ViewModels
             },
             async () =>
             {
-                await Notify("Данные выгружены!", "Индивидуальные планы готовы, файлы создан!");
-                CurPage = page;
-                CanExtract = true;
+                await Notify("Данные выгружены!", "Индивидуальные планы готовы, файлы созданы!");
             },
             async () =>
             {

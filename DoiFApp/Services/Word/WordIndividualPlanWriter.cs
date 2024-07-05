@@ -43,7 +43,7 @@ namespace DoiFApp.Services.Word
             // план
             // 1
             var table = tables[0];
-            teacher.Works.ForEach(work =>
+            teacher.Works1.ForEach(work =>
             {
                 var row = table.InsertRow(1);
                 row.Cells[0].Paragraphs[0].Append(work.Name);
