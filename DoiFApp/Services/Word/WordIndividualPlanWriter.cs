@@ -37,13 +37,26 @@ namespace DoiFApp.Services.Word
             doc.Save();
         }
 
-        private void UpdateTables(string teacher, List<Table> tables, List<LessonModel> data)
+        private static void UpdateTables(string teacher, List<Table> tables, List<LessonModel> data)
         {
             // уч работа
 
+            var disciplines = data.Where(l => l.Teachers.Contains(teacher)).Select(l => l.Discipline).ToList();
+            disciplines.Sort();
+            disciplines.Reverse();
             // план
             // 1
-
+            var table = tables[0];
+            disciplines.ForEach(d =>
+            {
+                var row = table.InsertRow(1);
+                row.Cells[0].Paragraphs[0].Append(d);
+                foreach (var cell in row.Cells.Skip(1))
+                {
+                    cell.Paragraphs[0].Append("0.0");
+                }
+            });
+            table.Design = TableDesign.TableGrid;
             // 2
 
             // факт
