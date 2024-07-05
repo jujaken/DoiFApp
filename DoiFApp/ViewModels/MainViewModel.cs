@@ -32,8 +32,7 @@ namespace DoiFApp.ViewModels
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ExtractToTempFileCommand),
                                     nameof(ExctractWorkloadTableCommand),
-                                    nameof(ExctractReportTableCommand),
-                                    nameof(ExctractIndividualPlansCommand))]
+                                    nameof(ExctractReportTableCommand))]
         public bool canExtract;
 
         public MainViewModel()
@@ -322,24 +321,36 @@ namespace DoiFApp.ViewModels
 
         private readonly string lastDirectory = Environment.CurrentDirectory;
 
-        [RelayCommand(CanExecute = nameof(CanExtract))]
+        [RelayCommand]
         public async Task ExctractIndividualPlans()
         {
             var page = new DataPageViewModel();
+            var inputDialog = new OpenFileDialog
+            {
+                Filter = "excel file|*.xlsx",
+            };
+            inputDialog.ShowDialog();
+            if (string.IsNullOrEmpty(inputDialog.FileName))
+            {
+                await Notify("Неудалось загрузить!", "Вы не указали файл отчёта!", NotifyColorType.Warning);
+                return;
+            }
 
-            var dialog = new FolderBrowserDialog()
+            var outputDialog = new FolderBrowserDialog()
             {
                 DefaultFolder = lastDirectory
             };
-
-            dialog.ShowDialog();
-
-            if (string.IsNullOrEmpty(dialog.SelectedFolder))
+            outputDialog.ShowDialog();
+            if (string.IsNullOrEmpty(outputDialog.SelectedFolder))
+            {
+                await Notify("Неудалось выгрузить!", "Вы не указали путь парки для индивидуальных планов!", NotifyColorType.Warning);
                 return;
+            }
 
             await CommandWithProcess(async () =>
             {
-                await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().MakePlans(dialog.SelectedFolder);
+                var data = await Ioc.Default.GetRequiredService<IEducationReader>().ReadFromFile(inputDialog.FileName);
+                await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().MakePlans(data, outputDialog.SelectedFolder);
                 try
                 {
                     await page.LoadLessonData();

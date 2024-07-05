@@ -1,5 +1,5 @@
 ﻿using DoiFApp.Data.Models;
-using DoiFApp.Data.Repo;
+using DoiFApp.Models;
 using DoiFApp.Utils;
 using System.IO;
 using Xceed.Document.NET;
@@ -7,49 +7,46 @@ using Xceed.Words.NET;
 
 namespace DoiFApp.Services.Word
 {
-    public class WordIndividualPlanWriter(IRepo<LessonModel> lessonRepo) : IIndividualPlanWriter
+    public class WordIndividualPlanWriter : IIndividualPlanWriter
     {
-        private readonly IRepo<LessonModel> lessonRepo = lessonRepo;
         private readonly string simpleDocName = "Resources/individualplansimple.docx";
 
-        public async Task MakePlans(string path)
+        public Task MakePlans(List<EducationTeacherModel> data, string path)
         {
-            var data = await lessonRepo.GetAll();
+            data.AsParallel().ForAll(async teacher =>
+            {
+                await CreateTeacher(teacher, Path.Combine(path, teacher + ".docx"));
+            });
 
-            var teachersUnique = DataUtil.GetTeachers(data);
-            CreateTeacher(teachersUnique[0], path, data);
+            return Task.CompletedTask;
         }
 
 
-        private void CreateTeacher(string teacher, string path, List<LessonModel> data)
+        private Task CreateTeacher(EducationTeacherModel teacher, string fileName)
         {
             using var simpleDoc = DocX.Load(simpleDocName);
-            var fileName = Path.Combine(path, teacher + ".docx");
             simpleDoc.SaveAs(fileName);
             simpleDoc.Dispose();
 
             using var doc = DocX.Load(fileName);
-            var lessons = data.Where(x => x.Teachers.Contains(teacher));
-            var uniqueDisc = lessons.Select(x => x.Discipline).Distinct();
             var tables = doc.Tables;
-            UpdateTables(teacher, tables, data);
+            UpdateTables(teacher, tables);
             doc.Save();
+
+            return Task.CompletedTask;
         }
 
-        private static void UpdateTables(string teacher, List<Table> tables, List<LessonModel> data)
+        private static void UpdateTables(EducationTeacherModel teacher, List<Table> tables)
         {
             // уч работа
 
-            var disciplines = data.Where(l => l.Teachers.Contains(teacher)).Select(l => l.Discipline).ToList();
-            disciplines.Sort();
-            disciplines.Reverse();
             // план
             // 1
             var table = tables[0];
-            disciplines.ForEach(d =>
+            teacher.Works.ForEach(work =>
             {
                 var row = table.InsertRow(1);
-                row.Cells[0].Paragraphs[0].Append(d);
+                row.Cells[0].Paragraphs[0].Append(work.Name);
                 foreach (var cell in row.Cells.Skip(1))
                 {
                     cell.Paragraphs[0].Append("0.0");

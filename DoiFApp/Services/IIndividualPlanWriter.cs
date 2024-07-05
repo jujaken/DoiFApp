@@ -1,7 +1,9 @@
-﻿namespace DoiFApp.Services
+﻿using DoiFApp.Models;
+
+namespace DoiFApp.Services
 {
     public interface IIndividualPlanWriter
     {
-        Task MakePlans(string path);
+        Task MakePlans(List<EducationTeacherModel> data, string path);
     }
 }
