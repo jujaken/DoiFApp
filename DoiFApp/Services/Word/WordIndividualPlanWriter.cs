@@ -11,7 +11,6 @@ namespace DoiFApp.Services.Word
     {
         private readonly IRepo<LessonModel> lessonRepo = lessonRepo;
         private readonly string simpleDocName = "Resources/individualplansimple.docx";
-        private const int width = 26;
 
         public async Task MakePlans(string path)
         {
