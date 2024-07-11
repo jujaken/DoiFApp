@@ -1,5 +1,6 @@
 ﻿using DoiFApp.Models;
 using System.IO;
+using System.Windows;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
 
@@ -13,7 +14,7 @@ namespace DoiFApp.Services.Word
         {
             data.ForEach(async teacher =>
             {
-                await CreateTeacher(teacher, Path.Combine(path, teacher + ".docx"));
+                await CreateTeacher(teacher, Path.Combine(path, teacher.Name + ".docx"));
             });
 
             return Task.CompletedTask;
