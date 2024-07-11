@@ -13,7 +13,7 @@ namespace DoiFApp.Services.Word
 
         public Task MakePlans(List<EducationTeacherModel> data, string path)
         {
-            data.AsParallel().ForAll(async teacher =>
+            data.ForEach(async teacher =>
             {
                 await CreateTeacher(teacher, Path.Combine(path, teacher + ".docx"));
             });
@@ -43,15 +43,13 @@ namespace DoiFApp.Services.Word
             // план
             // 1
             var table = tables[0];
-            teacher.Works1.ForEach(work =>
+            foreach (var item in teacher.Works1)
             {
                 var row = table.InsertRow(1);
-                row.Cells[0].Paragraphs[0].Append(work.Name);
+                row.Cells[0].Paragraphs[0].Append(item.Key);
                 foreach (var cell in row.Cells.Skip(1))
-                {
-                    cell.Paragraphs[0].Append("0.0");
-                }
-            });
+                    cell.Paragraphs[0].Append(item.Value.ToString("0.00", System.Globalization.CultureInfo.GetCultureInfo("en-US")) ?? "0.0");
+            }
             table.Design = TableDesign.TableGrid;
             // 2
 
