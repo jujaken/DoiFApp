@@ -1,6 +1,4 @@
-﻿using DoiFApp.Data.Models;
-using DoiFApp.Models;
-using DoiFApp.Utils;
+﻿using DoiFApp.Models;
 using System.IO;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
