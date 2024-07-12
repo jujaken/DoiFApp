@@ -12,7 +12,7 @@ namespace DoiFApp.Services.Excel
 
         public async Task ReadToData(string path)
         {
-            context.Recreate();
+            context.RecreateLessons();
 
             using var package = new ExcelPackage(path);
 

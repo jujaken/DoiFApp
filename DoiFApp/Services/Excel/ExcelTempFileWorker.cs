@@ -55,7 +55,7 @@ namespace DoiFApp.Services.Excel
 
         public async Task ReadFile(string path)
         {
-            context.Recreate();
+            context.RecreateLessons();
 
             using var package = new ExcelPackage(path);
             var data = package.Workbook.Worksheets[0];
@@ -84,7 +84,7 @@ namespace DoiFApp.Services.Excel
                       && l.Discipline == inputData.Discipline
                       && l.Groups == inputData.Groups);
 
-                if (existingLesson.Any())
+                if (existingLesson.Count != 0)
                 {
                     var r = existingLesson.First();
                     r.Teachers.Add(inputData.Teachers.First());
@@ -97,7 +97,7 @@ namespace DoiFApp.Services.Excel
             }
         }
 
-        private string GetListStr(List<string> items, char v)
+        private static string GetListStr(List<string> items, char v)
         {
             var strBuilder = new StringBuilder();
 

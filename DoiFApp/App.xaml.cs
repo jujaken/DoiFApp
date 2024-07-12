@@ -37,6 +37,8 @@ namespace DoiFApp
                 .AddTransient<IEducationReader, ExcelEducationReader>()
                 .AddTransient<IIndividualPlanWriter, WordIndividualPlanWriter>()
                 .AddTransient<IRepo<LessonModel>, Repo<LessonModel>>()
+                .AddTransient<IRepo<EducationTeacherModel>, Repo<EducationTeacherModel>>()
+                .AddTransient<IRepo<EducationWorkModel>, Repo<EducationWorkModel>>()
                 .AddTransient<NotifyBuilder>()
                 .BuildServiceProvider();
     }

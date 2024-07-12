@@ -1,6 +1,6 @@
-﻿namespace DoiFApp.Models
+﻿namespace DoiFApp.Data.Models
 {
-    public class EducationTeacherModel(string name)
+    public class EducationTeacherModel(string name) : Model
     {
         public string Name { get; set; } = name;
         public List<EducationWorkModel> Works1 { get; set; } = []; // первое 

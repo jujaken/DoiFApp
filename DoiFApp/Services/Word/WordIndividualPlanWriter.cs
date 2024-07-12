@@ -1,29 +1,29 @@
-﻿using DoiFApp.Models;
+﻿using DoiFApp.Data.Models;
+using DoiFApp.Data.Repo;
 using System.IO;
-using System.Windows;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
 
 namespace DoiFApp.Services.Word
 {
-    public class WordIndividualPlanWriter : IIndividualPlanWriter
+    public class WordIndividualPlanWriter(IRepo<EducationTeacherModel> teacherRepo) : IIndividualPlanWriter
     {
-        private readonly string simpleDocName = "Resources/individualplansimple.docx";
+        private readonly IRepo<EducationTeacherModel> teacherRepo = teacherRepo;
 
-        public Task MakePlans(List<EducationTeacherModel> data, string path)
+        private const string SimpleDocName = "Resources/individualplansimple.docx";
+
+        // todo отдельно копируем последовательно а потом работаем с копиями
+        public async Task MakePlans(string path)
         {
-            data.ForEach(async teacher =>
+            (await teacherRepo.GetAll()).ForEach(async teacher =>
             {
                 await CreateTeacher(teacher, Path.Combine(path, teacher.Name + ".docx"));
             });
-
-            return Task.CompletedTask;
         }
 
-
-        private Task CreateTeacher(EducationTeacherModel teacher, string fileName)
+        private static Task CreateTeacher(EducationTeacherModel teacher, string fileName)
         {
-            using var simpleDoc = DocX.Load(simpleDocName);
+            using var simpleDoc = DocX.Load(SimpleDocName);
             simpleDoc.SaveAs(fileName);
             simpleDoc.Dispose();
 

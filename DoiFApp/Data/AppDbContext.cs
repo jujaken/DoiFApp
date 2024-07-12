@@ -6,14 +6,45 @@ namespace DoiFApp.Data
     public class AppDbContext : DbContext
     {
         public DbSet<LessonModel> Lessons { get; set; }
+        public DbSet<EducationTeacherModel> EducationTeachers { get; set; }
+        public DbSet<EducationWorkModel> EducationWorks{ get; set; }
+        public DbSet<EducationTypeAndHourModel> EducationTypesAndHours { get; set; }
 
-        public void Recreate()
+        public AppDbContext()
+        {
+            Database.EnsureCreated();
+        }
+
+        public void RecreateLessons()
         {
             foreach (var entity in ChangeTracker.Entries())
                 entity.State = EntityState.Detached;
 
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
+            try
+            {
+                Lessons.RemoveRange(Lessons);
+            }
+            catch
+            {
+            }
+
+            SaveChanges();
+        }
+
+        public void RecreateEducation()
+        {
+            foreach (var entity in ChangeTracker.Entries())
+                entity.State = EntityState.Detached;
+
+            try
+            {
+                EducationTeachers.RemoveRange(EducationTeachers);
+                EducationWorks.RemoveRange(EducationWorks);
+            }
+            catch
+            {
+            }
+   
             SaveChanges();
         }
 

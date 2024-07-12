@@ -1,9 +1,9 @@
-﻿using DoiFApp.Models;
+﻿using DoiFApp.Data.Models;
 
 namespace DoiFApp.Services
 {
     public interface IEducationReader
     {
-        Task<List<EducationTeacherModel>> ReadFromFile(string fileName);
+        Task ReadFromFile(string fileName);
     }
 }
