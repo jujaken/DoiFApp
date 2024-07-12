@@ -25,7 +25,12 @@ namespace DoiFApp.Services.Excel
                 for (int j = teacherId + 1; j < teacherRows[i + 1]; j++) // row
                 {
                     var work1 = GetWorkTeacher(data, 15, 2, j);
+                    if (work1 != null)
+                        teacher.Works1.Add(work1);
+
                     var work2 = GetWorkTeacher(data, 80, 67, j);
+                    if (work2 != null)
+                        teacher.Works2.Add(work2);
                 }
 
                 outData.Add(teacher);
