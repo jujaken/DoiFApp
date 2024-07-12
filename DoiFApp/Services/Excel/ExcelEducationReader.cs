@@ -1,6 +1,5 @@
 ﻿using DoiFApp.Models;
 using OfficeOpenXml;
-using System.Windows;
 
 namespace DoiFApp.Services.Excel
 {
@@ -28,13 +27,8 @@ namespace DoiFApp.Services.Excel
 
                 for (int j = teacherId + 1; j < teacherRows[i + 1]; j++) // row
                 {
-                    var work1 = GetWorkTeacher(data, 15, 2, j);
-                    if (work1 != null)
-                        teacher.Works1.Add(work1);
-
-                    var work2 = GetWorkTeacher(data, 80, 67, j);
-                    if (work2 != null)
-                        teacher.Works2.Add(work2);
+                    AddIfNeed(teacher.Works1, GetWorkTeacher(data, 15, 2, j));
+                    AddIfNeed(teacher.Works2, GetWorkTeacher(data, 80, 67, j));
                 }
 
                 outData.Add(teacher);
@@ -93,6 +87,20 @@ namespace DoiFApp.Services.Excel
                 workData.Add(tittle!, value);
             }
             return workData;
+        }
+
+        private static void AddIfNeed(List<EducationWorkModel> works, EducationWorkModel? work)
+        {
+            if (work == null) return;
+            var currentModel = works.Where(w => w.Name == work.Name).First();
+            if (currentModel == null)
+            {
+                works.Add(work);
+                return;
+            }
+
+            foreach (var data in work.TypesAndHours)
+                currentModel.TypesAndHours[data.Key] += data.Value;
         }
     }
 }
