@@ -92,7 +92,7 @@ namespace DoiFApp.Services.Excel
         private static void AddIfNeed(List<EducationWorkModel> works, EducationWorkModel? work)
         {
             if (work == null) return;
-            var currentModel = works.Where(w => w.Name == work.Name).First();
+            var currentModel = works.Where(w => w.Name == work.Name).FirstOrDefault();
             if (currentModel == null)
             {
                 works.Add(work);
