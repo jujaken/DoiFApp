@@ -41,16 +41,9 @@ namespace DoiFApp.Services.Word
 
             // план
             // 1
-            var table = tables[0];
-            foreach (var item in teacher.Works1)
-            {
-                var row = table.InsertRow(1);
-                row.Cells[0].Paragraphs[0].Append(item.Key);
-                foreach (var cell in row.Cells.Skip(1))
-                    cell.Paragraphs[0].Append(item.Value.ToString("0.00", System.Globalization.CultureInfo.GetCultureInfo("en-US")) ?? "0.0");
-            }
-            table.Design = TableDesign.TableGrid;
+            InsertData(tables[0], teacher.Works1);
             // 2
+            InsertData(tables[1], teacher.Works2);
 
             // факт
             // 1
@@ -83,6 +76,19 @@ namespace DoiFApp.Services.Word
             // 1
 
             // 2
+        }
+
+        private static void InsertData(Table table, List<EducationWorkModel> works)
+        {
+            foreach (var work in works)
+                foreach (var item in work.TypesAndHours)
+                {
+                    var row = table.InsertRow(1);
+                    row.Cells[0].Paragraphs[0].Append(work.Name);
+                    foreach (var cell in row.Cells.Skip(1))
+                        cell.Paragraphs[0].Append(item.Value.ToString("0.00", System.Globalization.CultureInfo.GetCultureInfo("en-US")) ?? "0.0");
+                }
+            table.Design = TableDesign.TableGrid;
         }
     }
 }

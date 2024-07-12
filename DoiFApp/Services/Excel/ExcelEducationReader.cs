@@ -13,22 +13,59 @@ namespace DoiFApp.Services.Excel
 
             var outData = new List<EducationTeacherModel>();
 
+            var (teacherRows, endId) = GetTeacherRows(data);
+            teacherRows.Add(endId);
+
+            for (int i = 0; i < teacherRows.Count - 1; i++) // row
+            {
+                var teacherId = teacherRows[i];
+                var teacherCell = data.Cells[teacherId, 2];
+                var teacher = new EducationTeacherModel(teacherCell.Value.ToString()!);
+
+                for (int j = teacherId + 1; j < teacherRows[i + 1]; j++) // row
+                {
+                    var work1 = GetWorkTeacher(data, 15, 2, j);
+                    var work2 = GetWorkTeacher(data, 80, 67, j);
+                }
+
+                outData.Add(teacher);
+            }
+
+            return Task.FromResult(outData);
+        }
+
+        private static (List<int>, int) GetTeacherRows(ExcelWorksheet data)
+        {
+            var teacherRows = new List<int>();
+            var endId = 0;
+
             var numsStr = Enumerable.Range(1, 99).Select(n => n.ToString());
 
             for (int i = 1; i <= data.Rows.Count(); i++)
             {
                 var cell = data.Cells[i, 1];
-                var id = numsStr.Intersect([cell.Value?.ToString() ?? ""]);
-                if (!id.Any()) continue;
-                var teacher = new EducationTeacherModel(data.Cells[i, 2].Value.ToString()!)
-                {
-                    Works1 = GetWorkData(data, 15, i),
-                    Works2 = GetWorkData(data, 80, i)
-                };
-                outData.Add(teacher);
+                var value = cell.Value?.ToString();
+                var id = numsStr.Intersect([value ?? ""]);
+                if (id.Any())
+                    teacherRows.Add(i);
+                if (value != null && value.Contains("итого:", StringComparison.CurrentCultureIgnoreCase))
+                    endId = i;
             }
+            return (teacherRows, endId);
+        }
 
-            return Task.FromResult(outData);
+        private static EducationWorkModel? GetWorkTeacher(ExcelWorksheet data, int startColumn, int workColumn, int valueRow)
+        {
+            var workCell = data.Cells[valueRow, workColumn];
+            if (workCell == null) return null;
+
+            var workName = data.Cells[valueRow, workColumn].Value?.ToString();
+            if (workName == null) return null;
+
+            return new EducationWorkModel(workName)
+            {
+                TypesAndHours = GetWorkData(data, startColumn, valueRow)
+            };
         }
 
         private const int TittleRow = 8;
@@ -42,12 +79,15 @@ namespace DoiFApp.Services.Excel
             {
                 var tittleCell = data.Cells[TittleRow, i];
                 if (tittleCell == null || tittleCell.Value == null) continue;
+
                 var tittle = tittleCell.Value.ToString();
                 if (!workStrSplit.Contains(tittle)) continue;
+
                 var valueCell = data.Cells[valueRow, i];
                 var value = valueCell == null || valueCell.Value == null ? 0 : (double)valueCell.Value;
                 workData.Add(tittle!, value);
-                File.AppendAllText("log.txt", $"R{valueRow}C{i} : {value}\n");
+
+                //File.AppendAllText("log.txt", $"R{valueRow}C{i} : {value}\n");
             }
             return workData;
         }
