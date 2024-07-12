@@ -1,11 +1,15 @@
 ﻿using DoiFApp.Models;
 using OfficeOpenXml;
-using System.IO;
+using System.Windows;
 
 namespace DoiFApp.Services.Excel
 {
     public class ExcelEducationReader : IEducationReader
     {
+        private const int TittleRow = 8;
+        private const string WorkStr = "лекции\tсеминары\tпрактические занятия в группе\tпрактические занятия в подгруппе\tучения, д/и, круглый стол\tконсультации перед экзаменами\tтекущие консультации\tвнеаудиторное чтение\tпрактика руководство\tВКР   руководство\tкурсовая работа\tконтрольная работа аудиторная\tконтрольная работа домашняя\tпроверка практикума, реферата\tпроверка лабораторной работы\tзащита практики\tзачет устный\tзачет письменный\tвступительные испытания\tэкзамены\tгосударственные экзамены\tвступительные и кандитатские экзамены (адъюнктура)\tруководство адъюнктами";
+        private static readonly IEnumerable<string> workStrSplit = WorkStr.Split('\t', StringSplitOptions.RemoveEmptyEntries & StringSplitOptions.TrimEntries);
+
         public Task<List<EducationTeacherModel>> ReadFromFile(string fileName)
         {
             using var package = new ExcelPackage(fileName);
@@ -73,10 +77,6 @@ namespace DoiFApp.Services.Excel
             };
         }
 
-        private const int TittleRow = 8;
-        private const string WorkStr = "лекции\tсеминары\tпрактические занятия в группе\tпрактические занятия в подгруппе\tучения, д/и, круглый стол\tконсультации перед экзаменами\tтекущие консультации\tвнеаудиторное чтение\tпрактика руководство\tВКР   руководство\tкурсовая работа\tконтрольная работа аудиторная\tконтрольная работа домашняя\tпроверка практикума, реферата\tпроверка лабораторной работы\tзащита практики\tзачет устный\tзачет письменный\tвступительные испытания\tэкзамены\tгосударственные экзамены\tвступительные и кандитатские экзамены (адъюнктура)\tруководство адъюнктами";
-        private static readonly IEnumerable<string> workStrSplit = WorkStr.Split('\t', StringSplitOptions.RemoveEmptyEntries & StringSplitOptions.TrimEntries);
-
         private static Dictionary<string, double> GetWorkData(ExcelWorksheet data, int startColumn, int valueRow)
         {
             var workData = new Dictionary<string, double>();
@@ -91,8 +91,6 @@ namespace DoiFApp.Services.Excel
                 var valueCell = data.Cells[valueRow, i];
                 var value = valueCell == null || valueCell.Value == null ? 0 : (double)valueCell.Value;
                 workData.Add(tittle!, value);
-
-                //File.AppendAllText("log.txt", $"R{valueRow}C{i} : {value}\n");
             }
             return workData;
         }
