@@ -97,12 +97,12 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
-#if DEBUG
+#if RELEASE
                 try
                 {
 #endif
                     await page.LoadLessonData();
-#if DEBUG
+#if RELEASE
                 }
                 catch
                 {
@@ -140,13 +140,13 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
-#if DEBUG
+#if RELEASE
                 try
                 {
 #endif
                     await Ioc.Default.GetRequiredService<IDataReader>().ReadToData(fileDialog.FileName);
                     await page.LoadLessonData();
-#if DEBUG
+#if RELEASE
                 }
                 catch
                 {
@@ -184,13 +184,13 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
-#if DEBUG
+#if RELEASE
                 try
                 {
 #endif
                     await Ioc.Default.GetRequiredService<ITempFileWorker>().ReadFile(fileDialog.FileName);
                     await page.LoadLessonData();
-#if DEBUG
+#if RELEASE
                 }
                 catch
                 {
@@ -229,13 +229,13 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
-#if DEBUG
+#if RELEASE
                 try
                 {
 #endif
                     await Ioc.Default.GetRequiredService<ITempFileWorker>().WriteFile(fileDialog.FileName);
                     await page.LoadLessonData();
-#if DEBUG
+#if RELEASE
                 }
                 catch
                 {
@@ -274,13 +274,13 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
-#if DEBUG
+#if RELEASE
                 try
                 {
 #endif
                     await Ioc.Default.GetRequiredService<IWorkSchedule>().Write(fileDialog.FileName);
                     await page.LoadLessonData();
-#if DEBUG
+#if RELEASE
                 }
                 catch
                 {
@@ -319,14 +319,14 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
-#if DEBUG
+#if RELEASE
                 try
                 {
 #endif
 
                     await Ioc.Default.GetRequiredService<IReportWriter>().Write(fileDialog.FileName);
                     await page.LoadLessonData();
-#if DEBUG
+#if RELEASE
                 }
                 catch
                 {
@@ -377,13 +377,13 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
-#if DEBUG
+#if RELEASE
                 try
                 {
 #endif
                     await Ioc.Default.GetRequiredService<IEducationReader>().ReadFromFile(inputDialog.FileName);
                     await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().MakePlans(path);
-#if DEBUG
+#if RELEASE
                 }
                 catch
                 {
