@@ -23,12 +23,11 @@ namespace DoiFApp.Data
             try
             {
                 Lessons.RemoveRange(Lessons);
+                SaveChanges();
             }
             catch
             {
             }
-
-            SaveChanges();
         }
 
         public void RecreateEducation()
@@ -40,12 +39,11 @@ namespace DoiFApp.Data
             {
                 EducationTeachers.RemoveRange(EducationTeachers);
                 EducationWorks.RemoveRange(EducationWorks);
+                SaveChanges();
             }
             catch
             {
             }
-   
-            SaveChanges();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

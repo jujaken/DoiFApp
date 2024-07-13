@@ -27,13 +27,16 @@ namespace DoiFApp.ViewModels
         [NotifyCanExecuteChangedFor(nameof(LoadSessionCommand),
                                    nameof(LoadExcelCommand),
                                    nameof(LoadTempFileCommand))]
-        public bool noTask = true;
+        private bool noTask = true;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ExtractToTempFileCommand),
                                     nameof(ExctractWorkloadTableCommand),
                                     nameof(ExctractReportTableCommand))]
-        public bool canExtract;
+        private bool canExtract;
+
+        [ObservableProperty]
+        private bool createSeparatFolder;
 
         public MainViewModel()
         {
@@ -350,11 +353,12 @@ namespace DoiFApp.ViewModels
                 await Notify("Неудалось выгрузить!", "Вы не указали путь парки для индивидуальных планов!", NotifyColorType.Warning);
                 return;
             }
+            var path = CreateSeparatFolder ? outputDialog.SelectedFolder + "/Индивидуальные планы/" : outputDialog.SelectedFolder;
 
             await CommandWithProcess(async () =>
             {
                 await Ioc.Default.GetRequiredService<IEducationReader>().ReadFromFile(inputDialog.FileName);
-                await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().MakePlans(outputDialog.SelectedFolder);
+                await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().MakePlans(path);
                 try
                 {
                 }

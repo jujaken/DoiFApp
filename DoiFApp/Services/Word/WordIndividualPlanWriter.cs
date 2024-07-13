@@ -15,6 +15,7 @@ namespace DoiFApp.Services.Word
         // todo отдельно копируем последовательно а потом работаем с копиями
         public async Task MakePlans(string path)
         {
+            Directory.CreateDirectory(path);
             (await teacherRepo.GetAll()).ForEach(async teacher =>
             {
                 await CreateTeacher(teacher, Path.Combine(path, teacher.Name + ".docx"));
