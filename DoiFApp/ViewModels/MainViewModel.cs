@@ -323,7 +323,6 @@ namespace DoiFApp.ViewModels
                 try
                 {
 #endif
-
                     await Ioc.Default.GetRequiredService<IReportWriter>().Write(fileDialog.FileName);
                     await page.LoadLessonData();
 #if RELEASE
