@@ -97,14 +97,18 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
-                await page.LoadLessonData();
+#if DEBUG
                 try
                 {
+#endif
+                await page.LoadLessonData();
+#if DEBUG
                 }
                 catch
                 {
                     return false;
                 }
+#endif
                 return true;
             },
              async () =>
@@ -136,16 +140,19 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
-                await Ioc.Default.GetRequiredService<IDataReader>().ReadToData(fileDialog.FileName);
-                await page.LoadLessonData();
+#if DEBUG
                 try
                 {
-             
+#endif
+                await Ioc.Default.GetRequiredService<IDataReader>().ReadToData(fileDialog.FileName);
+                await page.LoadLessonData();
+#if DEBUG
                 }
                 catch
                 {
                     return false;
                 }
+#endif
                 return true;
             },
             async () =>
@@ -177,16 +184,19 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
-                await Ioc.Default.GetRequiredService<ITempFileWorker>().ReadFile(fileDialog.FileName);
-                await page.LoadLessonData();
+#if DEBUG
                 try
                 {
-             
+#endif
+                await Ioc.Default.GetRequiredService<ITempFileWorker>().ReadFile(fileDialog.FileName);
+                await page.LoadLessonData();
+#if DEBUG
                 }
                 catch
                 {
                     return false;
                 }
+#endif
                 return true;
             },
             async () =>
@@ -219,16 +229,19 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
-
-                await Ioc.Default.GetRequiredService<ITempFileWorker>().WriteFile(fileDialog.FileName);
-                await page.LoadLessonData();
+#if DEBUG
                 try
                 {
+#endif
+                await Ioc.Default.GetRequiredService<ITempFileWorker>().WriteFile(fileDialog.FileName);
+                await page.LoadLessonData();
+#if DEBUG
                 }
                 catch
                 {
                     return false;
                 }
+#endif
                 return true;
             },
             async () =>
@@ -261,16 +274,19 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
-                await Ioc.Default.GetRequiredService<IWorkSchedule>().Write(fileDialog.FileName);
-                await page.LoadLessonData();
+#if DEBUG
                 try
                 {
-               
+#endif
+                await Ioc.Default.GetRequiredService<IWorkSchedule>().Write(fileDialog.FileName);
+                await page.LoadLessonData();
+#if DEBUG
                 }
                 catch
                 {
                     return false;
                 }
+#endif
                 return true;
             },
             async () =>
@@ -303,16 +319,20 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
-                await Ioc.Default.GetRequiredService<IReportWriter>().Write(fileDialog.FileName);
-                await page.LoadLessonData();
+#if DEBUG
                 try
                 {
-          
+#endif
+
+                await Ioc.Default.GetRequiredService<IReportWriter>().Write(fileDialog.FileName);
+                await page.LoadLessonData();
+#if DEBUG
                 }
                 catch
                 {
                     return false;
                 }
+#endif
                 return true;
             },
             async () =>
@@ -357,15 +377,19 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
-                await Ioc.Default.GetRequiredService<IEducationReader>().ReadFromFile(inputDialog.FileName);
-                await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().MakePlans(path);
+#if DEBUG
                 try
                 {
+#endif
+                await Ioc.Default.GetRequiredService<IEducationReader>().ReadFromFile(inputDialog.FileName);
+                await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().MakePlans(path);
+#if DEBUG
                 }
                 catch
                 {
                     return false;
                 }
+#endif
                 return true;
             },
             async () =>
