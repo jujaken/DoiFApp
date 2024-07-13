@@ -12,7 +12,6 @@ namespace DoiFApp.Services.Word
 
         private const string SimpleDocName = "Resources/individualplansimple.docx";
 
-        // todo отдельно копируем последовательно а потом работаем с копиями
         public async Task MakePlans(string path)
         {
             Directory.CreateDirectory(path);
@@ -82,13 +81,18 @@ namespace DoiFApp.Services.Word
         private static void InsertData(Table table, List<EducationWorkModel> works)
         {
             foreach (var work in works)
-                foreach (var item in work.TypesAndHours)
+            {
+                var row = table.InsertRow(1);
+                row.Cells[0].Paragraphs[0].Append(work.Name);
+                for (int i = 1; i < row.Cells.Count - 2; i++)
                 {
-                    var row = table.InsertRow(1);
-                    row.Cells[0].Paragraphs[0].Append(work.Name);
-                    foreach (var cell in row.Cells.Skip(1))
-                        cell.Paragraphs[0].Append(item.Value.ToString("0.00", System.Globalization.CultureInfo.GetCultureInfo("en-US")) ?? "0.0");
+                    var cell = row.Cells[i];
+                    var item = work.TypesAndHours[i - 1];
+                    var value = item.Value.ToString("0.0", System.Globalization.CultureInfo.GetCultureInfo("en-US")) ?? "0.0";
+                    cell.Paragraphs[0].Append(value);
                 }
+            }
+
             table.Design = TableDesign.TableGrid;
         }
     }
