@@ -85,7 +85,7 @@ namespace DoiFApp.ViewModels
             tools.Add(new ToolViewModel()
             {
                 Title = "Выдать инд. планы",
-                Description = "Выдаёт файлы индивидуальных планов",
+                Description = "Выдаёт файлы word индивидуальных планов",
                 Command = ExctractIndividualPlansCommand
             });
         }
@@ -101,7 +101,7 @@ namespace DoiFApp.ViewModels
                 try
                 {
 #endif
-                await page.LoadLessonData();
+                    await page.LoadLessonData();
 #if DEBUG
                 }
                 catch
@@ -144,8 +144,8 @@ namespace DoiFApp.ViewModels
                 try
                 {
 #endif
-                await Ioc.Default.GetRequiredService<IDataReader>().ReadToData(fileDialog.FileName);
-                await page.LoadLessonData();
+                    await Ioc.Default.GetRequiredService<IDataReader>().ReadToData(fileDialog.FileName);
+                    await page.LoadLessonData();
 #if DEBUG
                 }
                 catch
@@ -188,8 +188,8 @@ namespace DoiFApp.ViewModels
                 try
                 {
 #endif
-                await Ioc.Default.GetRequiredService<ITempFileWorker>().ReadFile(fileDialog.FileName);
-                await page.LoadLessonData();
+                    await Ioc.Default.GetRequiredService<ITempFileWorker>().ReadFile(fileDialog.FileName);
+                    await page.LoadLessonData();
 #if DEBUG
                 }
                 catch
@@ -233,8 +233,8 @@ namespace DoiFApp.ViewModels
                 try
                 {
 #endif
-                await Ioc.Default.GetRequiredService<ITempFileWorker>().WriteFile(fileDialog.FileName);
-                await page.LoadLessonData();
+                    await Ioc.Default.GetRequiredService<ITempFileWorker>().WriteFile(fileDialog.FileName);
+                    await page.LoadLessonData();
 #if DEBUG
                 }
                 catch
@@ -278,8 +278,8 @@ namespace DoiFApp.ViewModels
                 try
                 {
 #endif
-                await Ioc.Default.GetRequiredService<IWorkSchedule>().Write(fileDialog.FileName);
-                await page.LoadLessonData();
+                    await Ioc.Default.GetRequiredService<IWorkSchedule>().Write(fileDialog.FileName);
+                    await page.LoadLessonData();
 #if DEBUG
                 }
                 catch
@@ -324,8 +324,8 @@ namespace DoiFApp.ViewModels
                 {
 #endif
 
-                await Ioc.Default.GetRequiredService<IReportWriter>().Write(fileDialog.FileName);
-                await page.LoadLessonData();
+                    await Ioc.Default.GetRequiredService<IReportWriter>().Write(fileDialog.FileName);
+                    await page.LoadLessonData();
 #if DEBUG
                 }
                 catch
@@ -381,8 +381,8 @@ namespace DoiFApp.ViewModels
                 try
                 {
 #endif
-                await Ioc.Default.GetRequiredService<IEducationReader>().ReadFromFile(inputDialog.FileName);
-                await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().MakePlans(path);
+                    await Ioc.Default.GetRequiredService<IEducationReader>().ReadFromFile(inputDialog.FileName);
+                    await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().MakePlans(path);
 #if DEBUG
                 }
                 catch
