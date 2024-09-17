@@ -109,7 +109,7 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="Вес">
+                    <GridViewColumn Header="Часы">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBox Text="{Binding Wight}"
