@@ -124,6 +124,7 @@ namespace DoiFApp.Services.Excel
 
             AddNote(worksheet, startNoteY + i++, startNoteX + 1, "1", "09:00 - 10:30");
             AddNote(worksheet, startNoteY + i++, startNoteX + 1, "2", "10:45 - 12:15");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, "2к", "13:15 - 14:45");
             AddNote(worksheet, startNoteY + i++, startNoteX + 1, "3", "12:30 - 14:00");
             AddNote(worksheet, startNoteY + i++, startNoteX + 1, "3к", "14:15 - 15:45");
             AddNote(worksheet, startNoteY + i++, startNoteX + 1, "4к", "15:00 - 16:30");
@@ -159,7 +160,7 @@ namespace DoiFApp.Services.Excel
                 "16:40 - 18:10" => "5",
                 "18:20 - 19:50" => "6",
                 "20:00 - 21:30" => "7",
-                _ => throw new Exception()
+                _ => "n"
             };
 
         private void DrawLine(ExcelWorksheet worksheet, int vIndex, int hIndex, Color color)

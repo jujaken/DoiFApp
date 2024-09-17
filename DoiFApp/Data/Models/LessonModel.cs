@@ -19,7 +19,7 @@ namespace DoiFApp.Data.Models
         public string TeachersText => GetListStr(Teachers, "\n");
 
         public List<string> Groups { get; set; } = [];
-        public string GroupsText => GetListStr(Teachers, ", ");
+        public string GroupsText => GetListStr(Groups, ", ");
 
         public List<string> Auditoriums { get; set; } = [];
 
