@@ -36,7 +36,13 @@ namespace DoiFApp.ViewModels
         private bool canExtract;
 
         [ObservableProperty]
-        private bool createSeparatFolder;
+        [NotifyPropertyChangedFor(nameof(CalculationMessage))]
+        private string? calculationFilePath;
+        public string CalculationMessage => CalculationFilePath == null ? "Нет пути до расчёта" : CalculationFilePath!;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(FillIndividualPlanCommand))]
+        private bool relatedCalculationsCanBePerformed;
 
         public MainViewModel()
         {
@@ -63,6 +69,13 @@ namespace DoiFApp.ViewModels
 
             tools.Add(new ToolViewModel()
             {
+                Title = "Указать расчёт",
+                Description = "Сохраняет путь к файлу расчёта",
+                Command = UploadCalculationCommand
+            });
+
+            tools.Add(new ToolViewModel()
+            {
                 Title = "Выгрузить во временный файл",
                 Description = "Выгружает таблицу excel во временный файл таблицу",
                 Command = ExtractToTempFileCommand
@@ -78,15 +91,15 @@ namespace DoiFApp.ViewModels
             tools.Add(new ToolViewModel()
             {
                 Title = "Выдать отчёт",
-                Description = "Формирует таблицу-отчёт",
+                Description = "Формирует таблицу-отчёт по преподавателям",
                 Command = ExctractReportTableCommand
             });
 
             tools.Add(new ToolViewModel()
             {
-                Title = "Выдать инд. планы",
-                Description = "Выдаёт файлы word индивидуальных планов",
-                Command = ExctractIndividualPlansCommand
+                Title = "Заполнить инд. план",
+                Description = "Получает на вход файл word с индивидуальным планом и выдаёт его версию с заполненной таблицей",
+                Command = FillIndividualPlanCommand
             });
         }
 
@@ -101,7 +114,7 @@ namespace DoiFApp.ViewModels
                 try
                 {
 #endif
-                    await page.LoadLessonData();
+                await page.LoadLessonData();
 #if RELEASE
                 }
                 catch
@@ -144,8 +157,8 @@ namespace DoiFApp.ViewModels
                 try
                 {
 #endif
-                    await Ioc.Default.GetRequiredService<IDataReader>().ReadToData(fileDialog.FileName);
-                    await page.LoadLessonData();
+                await Ioc.Default.GetRequiredService<IDataReader>().ReadToData(fileDialog.FileName);
+                await page.LoadLessonData();
 #if RELEASE
                 }
                 catch
@@ -188,8 +201,8 @@ namespace DoiFApp.ViewModels
                 try
                 {
 #endif
-                    await Ioc.Default.GetRequiredService<ITempFileWorker>().ReadFile(fileDialog.FileName);
-                    await page.LoadLessonData();
+                await Ioc.Default.GetRequiredService<ITempFileWorker>().ReadFile(fileDialog.FileName);
+                await page.LoadLessonData();
 #if RELEASE
                 }
                 catch
@@ -209,6 +222,22 @@ namespace DoiFApp.ViewModels
             {
                 await Notify("Ошибка загрузки!", "Что-то пошло не так.", NotifyColorType.Error);
             });
+        }
+
+        [RelayCommand]
+        public async Task UploadCalculation()
+        {
+            var calculationFilePath = new OpenFileDialog { Filter = "word file|*.docx", };
+            calculationFilePath.ShowDialog();
+
+            if (string.IsNullOrEmpty(calculationFilePath.FileName))
+            {
+                await Notify("Неудалось выгрузить!", "Вы не указали путь парки для индивидуальных планов!", NotifyColorType.Warning);
+                return;
+            }
+
+            CalculationFilePath = calculationFilePath.FileName;
+            RelatedCalculationsCanBePerformed = true;
         }
 
         [RelayCommand(CanExecute = nameof(CanExtract))]
@@ -233,8 +262,8 @@ namespace DoiFApp.ViewModels
                 try
                 {
 #endif
-                    await Ioc.Default.GetRequiredService<ITempFileWorker>().WriteFile(fileDialog.FileName);
-                    await page.LoadLessonData();
+                await Ioc.Default.GetRequiredService<ITempFileWorker>().WriteFile(fileDialog.FileName);
+                await page.LoadLessonData();
 #if RELEASE
                 }
                 catch
@@ -278,8 +307,8 @@ namespace DoiFApp.ViewModels
                 try
                 {
 #endif
-                    await Ioc.Default.GetRequiredService<IWorkSchedule>().Write(fileDialog.FileName);
-                    await page.LoadLessonData();
+                await Ioc.Default.GetRequiredService<IWorkSchedule>().Write(fileDialog.FileName);
+                await page.LoadLessonData();
 #if RELEASE
                 }
                 catch
@@ -323,8 +352,8 @@ namespace DoiFApp.ViewModels
                 try
                 {
 #endif
-                    await Ioc.Default.GetRequiredService<IReportWriter>().Write(fileDialog.FileName);
-                    await page.LoadLessonData();
+                await Ioc.Default.GetRequiredService<IReportWriter>().Write(fileDialog.FileName);
+                await page.LoadLessonData();
 #if RELEASE
                 }
                 catch
@@ -346,14 +375,12 @@ namespace DoiFApp.ViewModels
             });
         }
 
-        private readonly string lastDirectory = Environment.CurrentDirectory;
-
-        [RelayCommand]
-        public async Task ExctractIndividualPlans()
+        [RelayCommand(CanExecute = nameof(RelatedCalculationsCanBePerformed))]
+        public async Task FillIndividualPlan()
         {
             var inputDialog = new OpenFileDialog
             {
-                Filter = "excel file|*.xlsx",
+                Filter = "word file|*.word",
             };
             inputDialog.ShowDialog();
             if (string.IsNullOrEmpty(inputDialog.FileName))
@@ -362,26 +389,14 @@ namespace DoiFApp.ViewModels
                 return;
             }
 
-            var outputDialog = new FolderBrowserDialog()
-            {
-                DefaultFolder = lastDirectory
-            };
-            outputDialog.ShowDialog();
-            if (string.IsNullOrEmpty(outputDialog.SelectedFolder))
-            {
-                await Notify("Неудалось выгрузить!", "Вы не указали путь парки для индивидуальных планов!", NotifyColorType.Warning);
-                return;
-            }
-            var path = CreateSeparatFolder ? outputDialog.SelectedFolder + "/Индивидуальные планы/" : outputDialog.SelectedFolder;
-
             await CommandWithProcess(async () =>
             {
 #if RELEASE
                 try
                 {
 #endif
-                    await Ioc.Default.GetRequiredService<IEducationReader>().ReadFromFile(inputDialog.FileName);
-                    await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().MakePlans(path);
+                //await Ioc.Default.GetRequiredService<IEducationReader>().ReadFromFile(inputDialog.FileName);
+                //await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().MakePlans(path);
 #if RELEASE
                 }
                 catch

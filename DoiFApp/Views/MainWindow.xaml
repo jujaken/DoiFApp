@@ -64,15 +64,9 @@
 
                 <Grid Grid.Row="2" Height="128" Margin="4" >
 
-                    <StackPanel VerticalAlignment="Bottom">
+                    <StackPanel VerticalAlignment="Bottom" Width="180">
 
-                        <ToggleButton Content="Создавать отдельную папку" VerticalContentAlignment="Center" IsChecked="{Binding CreateSeparatFolder}">
-
-                            <ToggleButton.ToolTip>
-                                <ToolTip Content="Отдельная папка для всех индивидуальных планов" Placement="Mouse"/>
-                            </ToggleButton.ToolTip>
-
-                        </ToggleButton>
+                        <TextBlock Text="{Binding CalculationMessage}" TextWrapping="Wrap"/>
 
                     </StackPanel>
 
