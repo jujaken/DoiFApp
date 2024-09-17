@@ -62,16 +62,6 @@
 
                 </ItemsControl>
 
-                <Grid Grid.Row="2" Height="128" Margin="4" >
-
-                    <StackPanel VerticalAlignment="Bottom" Width="180">
-
-                        <TextBlock Text="{Binding CalculationMessage}" TextWrapping="Wrap"/>
-
-                    </StackPanel>
-
-                </Grid>
-
             </Grid>
 
             <Grid x:Name="PageZone" Grid.Column="1">
