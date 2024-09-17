@@ -227,7 +227,7 @@ namespace DoiFApp.ViewModels
         [RelayCommand]
         public async Task UploadCalculation()
         {
-            var calculationFilePath = new OpenFileDialog { Filter = "word file|*.docx", };
+            var calculationFilePath = new OpenFileDialog { Filter = "excel file|*.xlsx", };
             calculationFilePath.ShowDialog();
 
             if (string.IsNullOrEmpty(calculationFilePath.FileName))
