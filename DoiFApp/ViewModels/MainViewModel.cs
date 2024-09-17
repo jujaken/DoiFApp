@@ -165,6 +165,7 @@ namespace DoiFApp.ViewModels
             async () =>
             {
                 await Notify("Данные загружены!", "Теперь вы можете заполнять индивидуальные планы и формировать отчёт!");
+                IsLoadCalculation = true;
             },
             async () =>
             {
@@ -257,8 +258,6 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
-                // todo
-
                 await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().FillPlan(TeacherName, path);
             },
             async () =>
