@@ -105,6 +105,7 @@ namespace DoiFApp.Services.Word
                 var audiWorkSum = work.TypesAndHours
                     .Where(x => auditoriumLoad.Contains(x.Key))
                     .Sum(x => x.Value);
+
                 doneList[row.Cells.Count - 2] = workSum;
                 row.Cells[^1].Paragraphs[0].Append(audiWorkSum.ToString("0.0", System.Globalization.CultureInfo.GetCultureInfo("en-US")));
             }

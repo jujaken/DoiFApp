@@ -20,8 +20,28 @@ namespace DoiFApp.Services.Excel
             context.RecreateEducation();
 
             using var package = new ExcelPackage(fileName);
-            var data = package.Workbook.Worksheets["Расчет"];
+            ParseData(package.Workbook.Worksheets["Расчет"],
+                (data, teacher, j) =>
+                {
+                    var work1 = GetWorkTeacher(data, 15, 2, j);
+                    AddIfNeed(teacher.Works1, work1);
+                    var work2 = GetWorkTeacher(data, 15, 2, j);
+                    AddIfNeed(teacher.Works2, work2);
+                },
+                (data, teacher, i) =>
+                {
+                    teacher.Works1.ForEach(w => workRepo.Create(w));
+                    teacher.Works2.ForEach(w => workRepo.Create(w));
+                    teacherRepo.Create(teacher);
+                });
 
+            return Task.FromResult(0);
+        }
+
+        private void ParseData(ExcelWorksheet data,
+            Action<ExcelWorksheet, EducationTeacherModel, int> jFunc,
+            Action<ExcelWorksheet, EducationTeacherModel, int> iFunc)
+        {
             var (teacherRows, endId) = GetTeacherRows(data);
             teacherRows.Add(endId);
 
@@ -32,19 +52,9 @@ namespace DoiFApp.Services.Excel
                 var teacher = new EducationTeacherModel(teacherCell.Value.ToString()!);
 
                 for (int j = teacherId + 1; j < teacherRows[i + 1]; j++) // row
-                {
-                    var work1 = GetWorkTeacher(data, 15, 2, j);
-                    AddIfNeed(teacher.Works1, work1);
-                    var work2 = GetWorkTeacher(data, 15, 2, j);
-                    AddIfNeed(teacher.Works2, work2);
-                }
-
-                teacher.Works1.ForEach(w => workRepo.Create(w));
-                teacher.Works2.ForEach(w => workRepo.Create(w));
-                teacherRepo.Create(teacher);
+                    jFunc(data, teacher, j);
+                iFunc(data, teacher, i);
             }
-
-            return Task.FromResult(0);
         }
 
         private static (List<int>, int) GetTeacherRows(ExcelWorksheet data)
@@ -99,7 +109,6 @@ namespace DoiFApp.Services.Excel
             return workData;
         }
 
-        // стак данных
         private static void AddIfNeed(List<EducationWorkModel> works, EducationWorkModel? work)
         {
             if (work == null) return;
