@@ -3,7 +3,6 @@ using DoiFApp.Data.Repo;
 using System.IO;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
-using static OfficeOpenXml.ExcelErrorValue;
 
 namespace DoiFApp.Services.Word
 {
@@ -12,6 +11,18 @@ namespace DoiFApp.Services.Word
         private readonly IRepo<EducationTeacherModel> teacherRepo = teacherRepo;
 
         private const string SimpleDocName = "Resources/individualplansimple.docx";
+
+        public async Task FillPlan(string teacherName, string path)
+        {
+            var teacher = (await teacherRepo.GetAll()).FirstOrDefault(t => t.Name.ToLower().Contains(teacherName.ToLower()));
+            if (teacher == null)
+                throw new Exception("teacher is null");
+
+            using var doc = DocX.Load(path);
+            var tables = doc.Tables;
+
+            UpdateTables(teacher, tables);
+        }
 
         public async Task MakePlans(string path)
         {

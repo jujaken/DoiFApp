@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DoiFApp.Views"
-        xmlns:vm="clr-namespace:DoiFApp.ViewModels"
+        xmlns:vm="clr-namespace:DoiFApp.ViewModels" xmlns:controls="clr-namespace:DoiFApp.Views.Controlls"
         mc:Ignorable="d"
         Title="DoiFApp"
         Icon="pack://application:,,,/Resources/doif.ico"
@@ -61,6 +61,22 @@
                     </ItemsControl.ItemTemplate>
 
                 </ItemsControl>
+
+                <Grid Grid.Row="2" Height="128" Margin="4">
+
+                    <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
+
+                        <AdornerDecorator HorizontalAlignment="Stretch">
+                            <TextBox x:Name="SearchTextBox" Text="{Binding TeacherName}" HorizontalAlignment="Stretch">
+                                <controls:WatermarkService.Watermark>
+                                    <TextBlock Text="Фамилия преподавателя" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </controls:WatermarkService.Watermark>
+                            </TextBox>
+                        </AdornerDecorator>
+
+                    </StackPanel>
+
+                </Grid>
 
             </Grid>
 

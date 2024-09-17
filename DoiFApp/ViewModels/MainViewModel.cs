@@ -2,9 +2,8 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using DoiFApp.Services;
-using Microsoft.Win32;
 using System.Collections.ObjectModel;
-using FolderBrowserEx;
+using System.Windows.Forms;
 
 namespace DoiFApp.ViewModels
 {
@@ -36,13 +35,11 @@ namespace DoiFApp.ViewModels
         private bool canExtract;
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(CalculationMessage))]
-        private string? calculationFilePath;
-        public string CalculationMessage => CalculationFilePath == null ? "Нет пути до расчёта" : CalculationFilePath!;
+        [NotifyCanExecuteChangedFor(nameof(FillIndividualPlanCommand))]
+        private bool isLoadCalculation;
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(FillIndividualPlanCommand))]
-        private bool relatedCalculationsCanBePerformed;
+        private string? teacherName;
 
         public MainViewModel()
         {
@@ -107,33 +104,7 @@ namespace DoiFApp.ViewModels
         public async Task LoadSession()
         {
             var page = new DataPageViewModel();
-
-            await CommandWithProcess(async () =>
-            {
-#if RELEASE
-                try
-                {
-#endif
-                await page.LoadLessonData();
-#if RELEASE
-                }
-                catch
-                {
-                    return false;
-                }
-#endif
-                return true;
-            },
-             async () =>
-             {
-                 await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
-                 CurPage = page;
-                 CanExtract = true;
-             },
-             async () =>
-             {
-                 await Notify("Ошибка загрузки!", "Что-то пошло не так.", NotifyColorType.Error);
-             });
+            await CommandWithProcessAndLoad(page.LoadLessonData, page);
         }
 
         [RelayCommand(CanExecute = nameof(NoTask))]
@@ -141,43 +112,19 @@ namespace DoiFApp.ViewModels
         {
             var page = new DataPageViewModel();
 
-            var fileDialog = new OpenFileDialog
+            var path = GetFile("excel file|*.xlsx");
+
+            if (string.IsNullOrEmpty(path))
             {
-                Filter = "excel file|*.xlsx"
-            };
-
-            fileDialog.ShowDialog();
-
-            if (string.IsNullOrEmpty(fileDialog.FileName))
+                await NoHasFileMessage();
                 return;
+            }
 
-            await CommandWithProcess(async () =>
+            await CommandWithProcessAndLoad(async () =>
             {
-#if RELEASE
-                try
-                {
-#endif
-                await Ioc.Default.GetRequiredService<IDataReader>().ReadToData(fileDialog.FileName);
+                await Ioc.Default.GetRequiredService<IDataReader>().ReadToData(path);
                 await page.LoadLessonData();
-#if RELEASE
-                }
-                catch
-                {
-                    return false;
-                }
-#endif
-                return true;
-            },
-            async () =>
-            {
-                await Notify("Данные загружены!", "Теперь, вы можете использывать другие команды!");
-                CurPage = page;
-                CanExtract = true;
-            },
-            async () =>
-            {
-                await Notify("Ошибка загрузки!", "Что-то пошло не так.", NotifyColorType.Error);
-            });
+            }, page);
         }
 
         [RelayCommand(CanExecute = nameof(NoTask))]
@@ -185,104 +132,67 @@ namespace DoiFApp.ViewModels
         {
             var page = new DataPageViewModel();
 
-            var fileDialog = new OpenFileDialog
+            var path = GetFile("excel file|*.xlsx");
+
+            if (string.IsNullOrEmpty(path))
             {
-                Filter = "excel file|*.xlsx"
-            };
-
-            fileDialog.ShowDialog();
-
-            if (string.IsNullOrEmpty(fileDialog.FileName))
+                await NoHasFileMessage();
                 return;
+            }
 
-            await CommandWithProcess(async () =>
+            await CommandWithProcessAndLoad(async () =>
             {
-#if RELEASE
-                try
-                {
-#endif
-                await Ioc.Default.GetRequiredService<ITempFileWorker>().ReadFile(fileDialog.FileName);
+                await Ioc.Default.GetRequiredService<ITempFileWorker>().ReadFile(path);
                 await page.LoadLessonData();
-#if RELEASE
-                }
-                catch
-                {
-                    return false;
-                }
-#endif
-                return true;
-            },
-            async () =>
-            {
-                await Notify("Данные выгружены!", "Теперь, вы можете обновить файл и загрузить его с помощью команты \"Загрузить временный файл\"!");
-                CurPage = page;
-                CanExtract = true;
-            },
-            async () =>
-            {
-                await Notify("Ошибка загрузки!", "Что-то пошло не так.", NotifyColorType.Error);
-            });
+            }, page);
         }
 
         [RelayCommand]
         public async Task UploadCalculation()
         {
-            var calculationFilePath = new OpenFileDialog { Filter = "excel file|*.xlsx", };
-            calculationFilePath.ShowDialog();
+            var path = GetFile("excel file|*.xlsx");
 
-            if (string.IsNullOrEmpty(calculationFilePath.FileName))
+            if (string.IsNullOrEmpty(path))
             {
-                await Notify("Неудалось выгрузить!", "Вы не указали путь парки для индивидуальных планов!", NotifyColorType.Warning);
+                await NoHasFileMessage();
                 return;
             }
 
-            CalculationFilePath = calculationFilePath.FileName;
-            RelatedCalculationsCanBePerformed = true;
-        }
-
-        [RelayCommand(CanExecute = nameof(CanExtract))]
-        public async Task ExtractToTempFile()
-        {
-            var page = new DataPageViewModel();
-
-            var defFileName = "временный файл.xlsx";
-            var fileDialog = new SaveFileDialog
-            {
-                Filter = "excel file|*.xlsx",
-                FileName = defFileName
-            };
-            fileDialog.ShowDialog();
-
-            if (string.IsNullOrEmpty(fileDialog.FileName) || fileDialog.FileName == defFileName)
-                return;
-
             await CommandWithProcess(async () =>
             {
-#if RELEASE
-                try
-                {
-#endif
-                await Ioc.Default.GetRequiredService<ITempFileWorker>().WriteFile(fileDialog.FileName);
-                await page.LoadLessonData();
-#if RELEASE
-                }
-                catch
-                {
-                    return false;
-                }
-#endif
-                return true;
+                await Ioc.Default.GetRequiredService<IEducationReader>().ReadFromFile(path);
             },
             async () =>
             {
-                await Notify("Данные выгружены!", "Теперь, вы можете обновить файл и загрузить его с помощью команты \"Загрузить временный файл\"!");
-                CurPage = page;
-                CanExtract = true;
+                await Notify("Данные загружены!", "Теперь вы можете заполнять индивидуальные планы и формировать отчёт!");
             },
             async () =>
             {
                 await Notify("Ошибка выгрузки!", "Что-то пошло не так.", NotifyColorType.Error);
             });
+        }
+
+        [RelayCommand(CanExecute = nameof(CanExtract))]
+        public async Task ExtractToTempFile()
+        {
+            var path = GetFile("excel file|*.xlsx", "временный файл.xlsx");
+            if (string.IsNullOrEmpty(path))
+            {
+                await NoHasFileMessage();
+                return;
+            }
+
+            var page = new DataPageViewModel();
+
+            await CommandWithProcessAndLoad(async () =>
+            {
+#if RELEASE
+                try
+                {
+#endif
+                await Ioc.Default.GetRequiredService<ITempFileWorker>().WriteFile(path);
+                await page.LoadLessonData();
+            }, page, "Теперь, вы можете обновить файл и загрузить его с помощью команты \"Загрузить временный файл\"!");
         }
 
         [RelayCommand(CanExecute = nameof(CanExtract))]
@@ -301,33 +211,11 @@ namespace DoiFApp.ViewModels
             if (string.IsNullOrEmpty(fileDialog.FileName) || fileDialog.FileName == defFileName)
                 return;
 
-            await CommandWithProcess(async () =>
+            await CommandWithProcessAndLoad(async () =>
             {
-#if RELEASE
-                try
-                {
-#endif
                 await Ioc.Default.GetRequiredService<IWorkSchedule>().Write(fileDialog.FileName);
                 await page.LoadLessonData();
-#if RELEASE
-                }
-                catch
-                {
-                    return false;
-                }
-#endif
-                return true;
-            },
-            async () =>
-            {
-                await Notify("Данные выгружены!", "График готов, файл создан!");
-                CurPage = page;
-                CanExtract = true;
-            },
-            async () =>
-            {
-                await Notify("Ошибка выгрузки!", "Что-то пошло не так.", NotifyColorType.Error);
-            });
+            }, page, "График готов, файл создан!");
         }
 
         [RelayCommand(CanExecute = nameof(CanExtract))]
@@ -335,76 +223,43 @@ namespace DoiFApp.ViewModels
         {
             var page = new DataPageViewModel();
 
-            var defFileName = "Отчёт по месяцам и дисциплинам.xlsx";
-            var fileDialog = new SaveFileDialog
-            {
-                Filter = "excel file|*.xlsx",
-                FileName = defFileName
-            };
-            fileDialog.ShowDialog();
+            var path = GetFile("excel file|*.xlsx", "Отчёт по месяцам и дисциплинам.xlsx");
 
-            if (string.IsNullOrEmpty(fileDialog.FileName) || fileDialog.FileName == defFileName)
+            if (string.IsNullOrEmpty(path))
+            {
+                await NoHasFileMessage();
                 return;
+            }
 
-            await CommandWithProcess(async () =>
+            await CommandWithProcessAndLoad(async () =>
             {
-#if RELEASE
-                try
-                {
-#endif
-                await Ioc.Default.GetRequiredService<IReportWriter>().Write(fileDialog.FileName);
+                await Ioc.Default.GetRequiredService<IReportWriter>().Write(path);
                 await page.LoadLessonData();
-#if RELEASE
-                }
-                catch
-                {
-                    return false;
-                }
-#endif
-                return true;
-            },
-            async () =>
-            {
-                await Notify("Данные выгружены!", "Отчёт готов, файл создан!");
-                CurPage = page;
-                CanExtract = true;
-            },
-            async () =>
-            {
-                await Notify("Ошибка выгрузки!", "Что-то пошло не так.", NotifyColorType.Error);
-            });
+            }, page, "Отчёт готов, файл создан!");
         }
 
-        [RelayCommand(CanExecute = nameof(RelatedCalculationsCanBePerformed))]
+        [RelayCommand(CanExecute = nameof(IsLoadCalculation))]
         public async Task FillIndividualPlan()
         {
-            var inputDialog = new OpenFileDialog
+            var path = GetFile("word file|*.docx");
+            
+            if (string.IsNullOrEmpty(path))
             {
-                Filter = "word file|*.word",
-            };
-            inputDialog.ShowDialog();
-            if (string.IsNullOrEmpty(inputDialog.FileName))
+                await NoHasFileMessage();
+                return;
+            }
+
+            if (TeacherName ==  null)
             {
-                await Notify("Неудалось загрузить!", "Вы не указали файл отчёта!", NotifyColorType.Warning);
+                await Notify("Нет имени преподавателя!", "Установите его в левом нижнем углу.", NotifyColorType.Error);
                 return;
             }
 
             await CommandWithProcess(async () =>
             {
-#if RELEASE
-                try
-                {
-#endif
-                //await Ioc.Default.GetRequiredService<IEducationReader>().ReadFromFile(inputDialog.FileName);
-                //await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().MakePlans(path);
-#if RELEASE
-                }
-                catch
-                {
-                    return false;
-                }
-#endif
-                return true;
+                // todo
+
+                await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().FillPlan(TeacherName, path);
             },
             async () =>
             {
@@ -415,13 +270,57 @@ namespace DoiFApp.ViewModels
                 await Notify("Ошибка выгрузки!", "Что-то пошло не так.", NotifyColorType.Error);
             });
         }
+        private static string? GetFile(string filter, string? defaultFileName = null)
+        {
+            var calculationFilePath = new OpenFileDialog { Filter = filter };
 
-        private async Task CommandWithProcess(Func<Task<bool>> action, Action? onSucces = null, Action? onProblem = null)
+            if (defaultFileName != null)
+                calculationFilePath.FileName = defaultFileName;
+
+            calculationFilePath.ShowDialog();
+            return defaultFileName != calculationFilePath.FileName ? calculationFilePath.FileName : null;
+        }
+
+        private async Task CommandWithProcessAndLoad(Func<Task> action, object? page = null, string msg = "Теперь, вы можете использывать другие команды!")
+        {
+            await CommandWithProcessAndError(action, async () =>
+            {
+                await Notify("Данные загружены!", msg);
+                CurPage = page;
+                CanExtract = true;
+            });
+        }
+
+        private async Task CommandWithProcessAndError(Func<Task> action, Action? onSucces = null)
+        {
+            await CommandWithProcess(action, onSucces, async () =>
+            {
+                await Notify("Ошибка загрузки!", "Что-то пошло не так.", NotifyColorType.Error);
+            });
+        }
+
+        private async Task CommandWithProcess(Func<Task> action, Action? onSucces = null, Action? onProblem = null)
         {
             var lp = new LoadingPageViewModel();
             CurPage = lp;
 
-            var task = Task.Run(action);
+            var task = Task.Run(() =>
+            {
+
+#if RELEASE
+                try
+                {
+#endif
+                action.Invoke();
+#if RELEASE
+                }
+                catch
+                {
+                    return false;
+                }
+#endif
+                return true;
+            });
 
             CurTask = task;
             NoTask = false;
@@ -439,6 +338,12 @@ namespace DoiFApp.ViewModels
             CurTask = null;
             NoTask = true;
         }
+
+        private async Task NoHasFileMessage()
+            => await Notify("Неудалось выгрузить!", "Вы не указали путь до файла!", NotifyColorType.Warning);
+
+        private async Task NoHasDirrectoryMessage()
+            => await Notify("Неудалось выгрузить!", "Вы не указали путь до файла!", NotifyColorType.Warning);
 
         private Task Notify(string title, string desc, NotifyColorType colorType = NotifyColorType.Info)
         {
