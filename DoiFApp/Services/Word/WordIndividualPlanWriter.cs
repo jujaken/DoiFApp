@@ -20,8 +20,8 @@ namespace DoiFApp.Services.Word
 
             using var doc = DocX.Load(path);
             var tables = doc.Tables;
-
             UpdateTables(teacher, tables);
+            doc.Save();
         }
 
         public async Task MakePlans(string path)
