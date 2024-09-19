@@ -21,7 +21,11 @@ namespace DoiFApp.ViewModels
             LessonViewModels = new((await Ioc.Default.GetRequiredService<IRepo<LessonModel>>().GetAll())
                 .Select(l => new LessonViewModel(l)));
 
-            EducationTeacherModel = new((await Ioc.Default.GetRequiredService<IRepo<EducationTeacherModel>>().GetAll())
+            EducationTeacherModel = new((await Ioc.Default.GetRequiredService<IRepo<EducationTeacherModel>>()
+                    .Include(at => at.Works1)
+                    .Include(at => at.Works2)
+                    .Include(at => at.ReallyWorks1)
+                    .Include(at => at.ReallyWorks2).GetAll())
                 .Select(l => new EducationTeacherViewModel(l)));
         }
     }

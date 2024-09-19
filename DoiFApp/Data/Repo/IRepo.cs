@@ -1,5 +1,4 @@
-﻿using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace DoiFApp.Data.Repo
 {

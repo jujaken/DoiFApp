@@ -17,7 +17,7 @@ namespace DoiFApp.Data.Repo
         }
 
         public Task<List<T>> GetAll()
-            => Task.FromResult(Set.AsEnumerable().ToList());
+            => Task.FromResult(query.AsEnumerable().ToList());
 
         public Task<List<T>> GetWhere(Func<T, bool> condition)
             => Task.FromResult(query.Where(condition).ToList());
