@@ -12,11 +12,17 @@ namespace DoiFApp.ViewModels
         [ObservableProperty]
         private ObservableCollection<LessonViewModel> lessonViewModels = [];
 
+        [ObservableProperty]
+        private ObservableCollection<EducationTeacherViewModel> educationTeacherModel = [];
+
         [RelayCommand]
         public async Task LoadLessonData()
         {
             LessonViewModels = new((await Ioc.Default.GetRequiredService<IRepo<LessonModel>>().GetAll())
                 .Select(l => new LessonViewModel(l)));
+
+            EducationTeacherModel = new((await Ioc.Default.GetRequiredService<IRepo<EducationTeacherModel>>().GetAll())
+                .Select(l => new EducationTeacherViewModel(l)));
         }
     }
 }
