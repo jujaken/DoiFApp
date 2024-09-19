@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.Linq.Expressions;
 
 namespace DoiFApp.Data.Repo
 {
@@ -6,6 +8,7 @@ namespace DoiFApp.Data.Repo
     {
         private readonly AppDbContext context = context;
         protected DbSet<T> Set => context.Set<T>();
+        private IQueryable<T> query = context.Set<T>();
 
         public async Task Create(T model)
         {
@@ -17,7 +20,7 @@ namespace DoiFApp.Data.Repo
             => Task.FromResult(Set.AsEnumerable().ToList());
 
         public Task<List<T>> GetWhere(Func<T, bool> condition)
-            => Task.FromResult(Set.Where(condition).ToList());
+            => Task.FromResult(query.Where(condition).ToList());
 
         public async Task<T?> GetById(int id)
             => await Set.FindAsync(id);
@@ -33,5 +36,12 @@ namespace DoiFApp.Data.Repo
             Set.Remove(model);
             await context.SaveChangesAsync();
         }
+
+        public IRepo<T> Include<TProperty>(Expression<Func<T, TProperty>> navigationPropertyPath)
+        {
+            query = query.Include(navigationPropertyPath);
+            return this;
+        }
+
     }
 }
