@@ -1,4 +1,5 @@
 ﻿using DoiFApp.Data.Models;
+using DoiFApp.Utils;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
 
@@ -17,48 +18,17 @@ namespace DoiFApp.Services.Word
 
         private static void UpdateTables(EducationTeacherModel teacher, List<Table> tables)
         {
-            // уч работа
-
-            // план
-            // 1
+            // ПЛАНИРУЕМАЯ НА 1 ПОЛУГОДИЕ
             InsertData(tables[0], teacher.Works1);
-            // 2
-            InsertData(tables[1], teacher.Works2);
+            // ПЛАНИРУЕМАЯ НА 2 ПОЛУГОДИЕ
 
-            // факт
-            // 1
+            // ФАКТИЧЕСКИ ВЫПОЛНЕННАЯ В 1 ПОЛУГОДИИ
 
-            // 2
+            // ФАКТИЧЕСКИ ВЫПОЛНЕННАЯ В 2 ПОЛУГОДИИ
 
-            // ежемесячные
+            // ЕЖЕМЕСЯЧНЫЙ УЧЁТ ВЫПОЛНЕНИЯ УЧЕБНОЙ НАГРУЗКИ 
 
-            // методическая
-            // 1
-
-            // 2
-
-            // наука
-            // 1
-
-            // 2
-
-            // воспитательная
-            // 1
-
-            // 2
-
-            // иностранцы
-            // 1
-
-            // 2
-
-            // другие
-            // 1
-
-            // 2
         }
-        private const string AuditoriumLoadStr = "практические занятия в подгруппе\tучения, д/и, круглый стол\tконсультации перед экзаменами\tзащита практики\tзачет устный\tвступительные испытания\tэкзамены\tгосударственные экзамены\tвступительные и кандитатские экзамены (адъюнктура)";
-        private static readonly IEnumerable<string> auditoriumLoad = AuditoriumLoadStr.Split('\t', StringSplitOptions.RemoveEmptyEntries & StringSplitOptions.TrimEntries);
 
         private static void InsertData(Table table, List<EducationWorkModel> works)
         {
@@ -78,11 +48,12 @@ namespace DoiFApp.Services.Word
 
                 var workSum = work.TypesAndHours
                     .Sum(x => x.Value);
+                
                 doneList[row.Cells.Count - 3] = workSum;
                 row.Cells[^2].Paragraphs[0].Append(workSum.ToString("0.0", System.Globalization.CultureInfo.GetCultureInfo("en-US")));
 
                 var audiWorkSum = work.TypesAndHours
-                    .Where(x => auditoriumLoad.Contains(x.Key))
+                    .Where(x => TableDataUtil.GetEquivalent(x.Key) != null)
                     .Sum(x => x.Value);
 
                 doneList[row.Cells.Count - 2] = workSum;
