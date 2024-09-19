@@ -187,10 +187,6 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcessAndLoad(async () =>
             {
-#if RELEASE
-                try
-                {
-#endif
                 await Ioc.Default.GetRequiredService<ITempFileWorker>().WriteFile(path);
                 await page.LoadLessonData();
             }, page, "Теперь, вы можете обновить файл и загрузить его с помощью команты \"Загрузить временный файл\"!");
