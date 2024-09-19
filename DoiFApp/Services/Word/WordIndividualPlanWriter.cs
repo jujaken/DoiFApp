@@ -1,49 +1,20 @@
 ﻿using DoiFApp.Data.Models;
-using DoiFApp.Data.Repo;
-using System.IO;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
 
 namespace DoiFApp.Services.Word
 {
-    public class WordIndividualPlanWriter(IRepo<EducationTeacherModel> teacherRepo) : IIndividualPlanWriter
+    public class WordIndividualPlanWriter : IIndividualPlanWriter
     {
-        private readonly IRepo<EducationTeacherModel> teacherRepo = teacherRepo;
 
         private const string SimpleDocName = "Resources/individualplansimple.docx";
 
-        public async Task FillPlan(string teacherName, string path)
+        public Task FillPlan(EducationTeacherModel teacher, string path)
         {
-            var teacher = (await teacherRepo.GetAll()).FirstOrDefault(t => t.Name.ToLower().Contains(teacherName.ToLower()));
-            if (teacher == null)
-                throw new Exception("teacher is null");
-
             using var doc = DocX.Load(path);
             var tables = doc.Tables;
             UpdateTables(teacher, tables);
             doc.Save();
-        }
-
-        public async Task MakePlans(string path)
-        {
-            Directory.CreateDirectory(path);
-            (await teacherRepo.GetAll()).ForEach(async teacher =>
-            {
-                await CreateTeacher(teacher, Path.Combine(path, teacher.Name + ".docx"));
-            });
-        }
-
-        private static Task CreateTeacher(EducationTeacherModel teacher, string fileName)
-        {
-            using var simpleDoc = DocX.Load(SimpleDocName);
-            simpleDoc.SaveAs(fileName);
-            simpleDoc.Dispose();
-
-            using var doc = DocX.Load(fileName);
-            var tables = doc.Tables;
-            UpdateTables(teacher, tables);
-            doc.Save();
-
             return Task.CompletedTask;
         }
 

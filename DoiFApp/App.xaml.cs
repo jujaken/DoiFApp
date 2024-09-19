@@ -36,6 +36,7 @@ namespace DoiFApp
                 .AddTransient<IWorkSchedule, ExcelWorkSchedule>()
                 .AddTransient<IEducationReader, ExcelEducationReader>()
                 .AddTransient<IIndividualPlanWriter, WordIndividualPlanWriter>()
+                .AddTransient<ITeacherFinder, TeacherFinder>()
                 .AddTransient<IRepo<LessonModel>, Repo<LessonModel>>()
                 .AddTransient<IRepo<EducationTeacherModel>, Repo<EducationTeacherModel>>()
                 .AddTransient<IRepo<EducationWorkModel>, Repo<EducationWorkModel>>()

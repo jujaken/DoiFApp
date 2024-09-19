@@ -239,14 +239,14 @@ namespace DoiFApp.ViewModels
         public async Task FillIndividualPlan()
         {
             var path = GetFile("word file|*.docx");
-            
+
             if (string.IsNullOrEmpty(path))
             {
                 await NoHasFileMessage();
                 return;
             }
 
-            if (TeacherName ==  null)
+            if (TeacherName == null)
             {
                 await Notify("Нет имени преподавателя!", "Установите его в левом нижнем углу.", NotifyColorType.Error);
                 return;
@@ -254,11 +254,15 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
-                await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().FillPlan(TeacherName, path);
+                var teacher = await Ioc.Default.GetRequiredService<ITeacherFinder>().FindByPart(TeacherName);
+                if (teacher == null)
+                    throw new Exception("teacher not found");
+                MessageBox.Show(teacher.Name);
+                await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().FillPlan(teacher, path);
             },
             async () =>
             {
-                await Notify("Данные выгружены!", "Индивидуальные планы готовы, файлы созданы!");
+                await Notify("Данные выгружены!", "Индивидуальный план готов, файлы созданы!");
             },
             async () =>
             {
@@ -301,7 +305,6 @@ namespace DoiFApp.ViewModels
 
             var task = Task.Run(() =>
             {
-
 #if RELEASE
                 try
                 {
