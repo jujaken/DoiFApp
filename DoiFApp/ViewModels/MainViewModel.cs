@@ -24,8 +24,9 @@ namespace DoiFApp.ViewModels
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(LoadSessionCommand),
-                                   nameof(LoadExcelCommand),
-                                   nameof(LoadTempFileCommand))]
+                                    nameof(LoadExcelCommand),
+                                    nameof(LoadTempFileCommand),
+                                    nameof(LoadCalculationCommand))]
         private bool noTask = true;
 
         [ObservableProperty]
@@ -66,9 +67,9 @@ namespace DoiFApp.ViewModels
 
             tools.Add(new ToolViewModel()
             {
-                Title = "Указать расчёт",
-                Description = "Сохраняет путь к файлу расчёта",
-                Command = UploadCalculationCommand
+                Title = "Загрузить расчёт",
+                Description = "Загружает в сессию расчёт",
+                Command = LoadCalculationCommand
             });
 
             tools.Add(new ToolViewModel()
@@ -105,6 +106,7 @@ namespace DoiFApp.ViewModels
         {
             var page = new DataPageViewModel();
             await CommandWithProcessAndLoad(page.LoadLessonData, page);
+            IsLoadCalculation = true;
         }
 
         [RelayCommand(CanExecute = nameof(NoTask))]
@@ -147,8 +149,8 @@ namespace DoiFApp.ViewModels
             }, page);
         }
 
-        [RelayCommand]
-        public async Task UploadCalculation()
+        [RelayCommand(CanExecute = nameof(NoTask))]
+        public async Task LoadCalculation()
         {
             var path = GetFile("excel file|*.xlsx");
 
