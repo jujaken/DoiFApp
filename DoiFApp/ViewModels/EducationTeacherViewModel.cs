@@ -26,6 +26,5 @@ namespace DoiFApp.ViewModels
             OnPropertyChanged(nameof(ReallyWorks1));
             OnPropertyChanged(nameof(ReallyWorks2));
         }
-
     }
 }
