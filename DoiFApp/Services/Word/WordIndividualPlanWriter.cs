@@ -6,9 +6,6 @@ namespace DoiFApp.Services.Word
 {
     public class WordIndividualPlanWriter : IIndividualPlanWriter
     {
-
-        private const string SimpleDocName = "Resources/individualplansimple.docx";
-
         public Task FillPlan(EducationTeacherModel teacher, string path)
         {
             using var doc = DocX.Load(path);

@@ -9,8 +9,13 @@ namespace DoiFApp.Services
 
         public async Task<EducationTeacherModel?> FindByPart(string part)
         {
-            return (await teacherRepo.GetAll()).FirstOrDefault(t 
-                => t.Name.Contains(part, StringComparison.CurrentCultureIgnoreCase));
+            return (await teacherRepo
+                    .Include(at => at.Works1)
+                    .Include(at => at.Works2)
+                    .Include(at => at.ReallyWorks1)
+                    .Include(at => at.ReallyWorks2)
+                .GetWhere(t => t.Name.Contains(part, StringComparison.CurrentCultureIgnoreCase)))
+                .FirstOrDefault();
         }
     }
 }
