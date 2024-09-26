@@ -1,6 +1,7 @@
 ﻿using DoiFApp.Data;
 using DoiFApp.Data.Models;
 using DoiFApp.Data.Repo;
+using DoiFApp.Utils;
 using OfficeOpenXml;
 
 namespace DoiFApp.Services.Excel
@@ -12,20 +13,21 @@ namespace DoiFApp.Services.Excel
         private readonly IRepo<EducationWorkModel> workRepo = workRepo;
 
         private const int TittleRow = 8;
-        private const string WorkStr = "лекции\tсеминары\tпрактические занятия в группе\tпрактические занятия в подгруппе\tучения, д/и, круглый стол\tконсультации перед экзаменами\tтекущие консультации\tвнеаудиторное чтение\tпрактика руководство\tВКР   руководство\tкурсовая работа\tконтрольная работа аудиторная\tконтрольная работа домашняя\tпроверка практикума, реферата\tпроверка лабораторной работы\tзащита практики\tзачет устный\tзачет письменный\tвступительные испытания\tэкзамены\tгосударственные экзамены\tвступительные и кандитатские экзамены (адъюнктура)\tруководство адъюнктами";
-        private static readonly IEnumerable<string> workStrSplit = WorkStr.Split('\t', StringSplitOptions.RemoveEmptyEntries & StringSplitOptions.TrimEntries);
+        private static readonly IEnumerable<string> headers = TableDataUtil.GetHeaders(TableDataUtil.InputCommonTableHeaders);
 
         public Task ReadFromFile(string fileName)
         {
             context.RecreateEducation();
 
             using var package = new ExcelPackage(fileName);
-            ParseData(package.Workbook.Worksheets["Расчет"],
+            var worksheet = package.Workbook.Worksheets.Where(w => w.Name.ToLower().Contains("расч")).FirstOrDefault();
+            if (worksheet == null) throw new Exception("worksheet not found");
+            ParseData(worksheet,
                 (data, teacher, j) =>
                 {
                     var work1 = GetWorkTeacher(data, 15, 2, j);
                     AddIfNeed(teacher.Works1, work1);
-                    var work2 = GetWorkTeacher(data, 15, 2, j);
+                    var work2 = GetWorkTeacher(data, 77, 2, j);
                     AddIfNeed(teacher.Works2, work2);
                 },
                 (data, teacher, i) =>
@@ -49,6 +51,7 @@ namespace DoiFApp.Services.Excel
             {
                 var teacherId = teacherRows[i];
                 var teacherCell = data.Cells[teacherId, 2];
+                if (teacherCell.Value == null) continue;
                 var teacher = new EducationTeacherModel(teacherCell.Value.ToString()!);
 
                 for (int j = teacherId + 1; j < teacherRows[i + 1]; j++) // row
@@ -94,13 +97,13 @@ namespace DoiFApp.Services.Excel
         private static List<EducationTypeAndHourModel> GetWorkData(ExcelWorksheet data, int startColumn, int valueRow)
         {
             var workData = new List<EducationTypeAndHourModel>();
-            for (int i = startColumn; workData.Count != workStrSplit.Count(); i++)
+            for (int i = startColumn; workData.Count != headers.Count(); i++)
             {
                 var tittleCell = data.Cells[TittleRow, i];
                 if (tittleCell == null || tittleCell.Value == null) continue;
 
                 var tittle = tittleCell.Value.ToString();
-                if (!workStrSplit.Contains(tittle)) continue;
+                if (tittle == null || !headers.Contains(tittle)) continue;
 
                 var valueCell = data.Cells[valueRow, i];
                 var value = valueCell == null || valueCell.Value == null ? 0 : (double)valueCell.Value;
