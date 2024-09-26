@@ -1,5 +1,6 @@
 ﻿using DoiFApp.Data.Models;
 using DoiFApp.Data.Repo;
+using Microsoft.EntityFrameworkCore;
 
 namespace DoiFApp.Services
 {
@@ -9,13 +10,19 @@ namespace DoiFApp.Services
 
         public async Task<EducationTeacherModel?> FindByPart(string part)
         {
-            return (await teacherRepo
+            var teacher = (await teacherRepo.GetWhere(t => t.Name.Contains(part, StringComparison.CurrentCultureIgnoreCase))).FirstOrDefault();
+            if (teacher == null) return null;
+
+            return await teacherRepo.Set
                     .Include(at => at.Works1)
+                        .ThenInclude(w => w.TypesAndHours)
                     .Include(at => at.Works2)
+                        .ThenInclude(w => w.TypesAndHours)
                     .Include(at => at.ReallyWorks1)
+                        .ThenInclude(w => w.TypesAndHours)
                     .Include(at => at.ReallyWorks2)
-                .GetWhere(t => t.Name.Contains(part, StringComparison.CurrentCultureIgnoreCase)))
-                .FirstOrDefault();
+                        .ThenInclude(w => w.TypesAndHours)
+                .Where(t => teacher.Id == t.Id).FirstOrDefaultAsync();
         }
     }
 }

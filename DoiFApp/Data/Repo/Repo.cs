@@ -1,19 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Linq.Expressions;
 
 namespace DoiFApp.Data.Repo
 {
     public class Repo<T>(AppDbContext context) : IRepo<T> where T : class
     {
-        private readonly AppDbContext context = context;
-        protected DbSet<T> Set => context.Set<T>();
+        public AppDbContext Db { get; } = context;
+        public DbSet<T> Set => Db.Set<T>();
+
         private IQueryable<T> query = context.Set<T>();
 
         public async Task Create(T model)
         {
             await Set.AddAsync(model);
-            await context.SaveChangesAsync();
+            await Db.SaveChangesAsync();
         }
 
         public Task<List<T>> GetAll()
@@ -22,19 +22,16 @@ namespace DoiFApp.Data.Repo
         public Task<List<T>> GetWhere(Func<T, bool> condition)
             => Task.FromResult(query.Where(condition).ToList());
 
-        public async Task<T?> GetById(int id)
-            => await Set.FindAsync(id);
-
         public async Task Update(T model)
         {
             Set.Update(model);
-            await context.SaveChangesAsync();
+            await Db.SaveChangesAsync();
         }
 
         public async Task Delete(T model)
         {
             Set.Remove(model);
-            await context.SaveChangesAsync();
+            await Db.SaveChangesAsync();
         }
 
         public IRepo<T> Include<TProperty>(Expression<Func<T, TProperty>> navigationPropertyPath)
@@ -42,6 +39,5 @@ namespace DoiFApp.Data.Repo
             query = query.Include(navigationPropertyPath);
             return this;
         }
-
     }
 }

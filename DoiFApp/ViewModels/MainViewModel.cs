@@ -259,7 +259,6 @@ namespace DoiFApp.ViewModels
                 var teacher = await Ioc.Default.GetRequiredService<ITeacherFinder>().FindByPart(TeacherName);
                 if (teacher == null)
                     throw new Exception("teacher not found");
-                MessageBox.Show(teacher.Name);
                 await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().FillPlan(teacher, path);
             },
             async () =>
