@@ -77,9 +77,9 @@ namespace DoiFApp.Services.Word
             if (lastDones != null)
             {
                 var yearRow = table.Rows[^1];
-                for (int i = 1; i < lastRow.Cells.Count; i++)
+                for (int i = 1; i < yearRow.Cells.Count; i++)
                 {
-                    var cell = lastRow.Cells[i];
+                    var cell = yearRow.Cells[i];
                     cell.Paragraphs[0].RemoveText(0);
                     cell.Paragraphs[0].Append((dones[i - 1] + lastDones[i - 1]).ToString("0.0", System.Globalization.CultureInfo.GetCultureInfo("en-US")));
                 }
