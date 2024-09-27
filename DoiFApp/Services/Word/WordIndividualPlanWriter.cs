@@ -30,12 +30,13 @@ namespace DoiFApp.Services.Word
 
         private static double[] InsertData(Table table, List<EducationWorkModel> works, double[]? lastDones = null)
         {
-            for (int i = table.Rows.Count - (lastDones == null ? 2 : 3); i < works.Count; i++)
+            var activeWorks = works.Where(w => w.TypesAndHours.Sum(t => t.Value) != 0);
+            for (int i = table.Rows.Count - (lastDones == null ? 2 : 3); i < activeWorks.Count(); i++)
                 table.InsertRow(1);
 
             var dones = new double[50];
             var ri = 0;
-            foreach (var work in works)
+            foreach (var work in activeWorks)
             {
                 var row = table.Rows[++ri];
                 row.Cells[0].Paragraphs[0].RemoveText(0);
