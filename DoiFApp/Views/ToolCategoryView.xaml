@@ -4,19 +4,26 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DoiFApp.Views"
+             xmlns:con="clr-namespace:DoiFApp.Views.Converters"
              xmlns:vm="clr-namespace:DoiFApp.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance vm:ToolCategoryViewModel, IsDesignTimeCreatable=True}">
 
+    <UserControl.Resources>
+        <con:BoolToHeightConverter x:Key="boolToHeightConverter"/>
+    </UserControl.Resources>
+
     <Grid>
+        
         <StackPanel>
-            
-            <Label Style="{StaticResource l1}" Content="{Binding Name}"/>
+
+            <ToggleButton x:Name="CategoryToggle" Style="{StaticResource CategoryToggleButton}" Content="{Binding Name}"/>
             
             <ItemsControl ItemsSource="{Binding Tools}"
-                  Style="{StaticResource dynamiclist}"
-                  Margin="4">
+                          Style="{StaticResource dynamiclist}"
+                          Height="{Binding IsChecked, ElementName=CategoryToggle, Converter={StaticResource boolToHeightConverter}}"
+                          Margin="4">
 
                 <ItemsControl.ItemTemplate>
 
