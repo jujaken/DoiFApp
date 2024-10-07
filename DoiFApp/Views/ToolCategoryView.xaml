@@ -15,11 +15,11 @@
     </UserControl.Resources>
 
     <Grid>
-        
+
         <StackPanel>
 
             <ToggleButton x:Name="CategoryToggle" Style="{StaticResource CategoryToggleButton}" Content="{Binding Name}"/>
-            
+
             <ItemsControl ItemsSource="{Binding Tools}"
                           Style="{StaticResource dynamiclist}"
                           Height="{Binding IsChecked, ElementName=CategoryToggle, Converter={StaticResource boolToHeightConverter}}"
@@ -36,9 +36,9 @@
                 </ItemsControl.ItemTemplate>
 
             </ItemsControl>
-            
+
         </StackPanel>
-        
+
     </Grid>
-    
+
 </UserControl>

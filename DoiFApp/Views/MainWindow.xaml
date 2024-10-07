@@ -40,44 +40,25 @@
 
             <Grid x:Name="ToolsZone" Grid.Column="0" Background="#BE443339">
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition/>
-                    <RowDefinition Height="auto"/>
-                    
-                </Grid.RowDefinitions>
+                <ScrollViewer  HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
 
-                <ItemsControl ItemsSource="{Binding ToolsCategories}"
+                    <ItemsControl ItemsSource="{Binding ToolsCategories}"
                           Style="{StaticResource dynamiclist}"
                           Margin="4">
 
-                    <ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemTemplate>
 
-                        <DataTemplate>
+                            <DataTemplate>
 
-                            <local:ToolCategoryView DataContext="{Binding}" Margin="1"/>
+                                <local:ToolCategoryView DataContext="{Binding}" Margin="1"/>
 
-                        </DataTemplate>
+                            </DataTemplate>
 
-                    </ItemsControl.ItemTemplate>
+                        </ItemsControl.ItemTemplate>
 
-                </ItemsControl>
+                    </ItemsControl>
 
-                <Grid Grid.Row="2" Height="128" Margin="4">
-
-                    <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
-
-                        <AdornerDecorator HorizontalAlignment="Stretch">
-                            <TextBox x:Name="SearchTextBox" Text="{Binding TeacherName}" HorizontalAlignment="Stretch">
-                                <controls:WatermarkService.Watermark>
-                                    <TextBlock Text="Фамилия преподавателя" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </controls:WatermarkService.Watermark>
-                            </TextBox>
-                        </AdornerDecorator>
-
-                    </StackPanel>
-
-                </Grid>
+                </ScrollViewer>
 
             </Grid>
 

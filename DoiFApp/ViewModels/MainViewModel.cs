@@ -45,7 +45,7 @@ namespace DoiFApp.ViewModels
 
         public MainViewModel()
         {
-            ToolsHelper.AddLatest(this, toolsCategories);
+            ToolsHelper.AddDefaults(this, toolsCategories);
         }
 
         [RelayCommand(CanExecute = nameof(NoTask))]
