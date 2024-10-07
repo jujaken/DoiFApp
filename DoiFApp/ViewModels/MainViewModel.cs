@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using DoiFApp.Services;
+using DoiFApp.Utils;
 using System.Collections.ObjectModel;
 using System.Windows.Forms;
 
@@ -10,7 +11,7 @@ namespace DoiFApp.ViewModels
     public partial class MainViewModel : ObservableObject
     {
         [ObservableProperty]
-        private ObservableCollection<ToolViewModel> tools = [];
+        private ObservableCollection<ToolCategoryViewModel> toolsCategories = [];
 
         [ObservableProperty]
         private ObservableCollection<NotifyViewModel> notifies = [];
@@ -44,61 +45,7 @@ namespace DoiFApp.ViewModels
 
         public MainViewModel()
         {
-            tools.Add(new ToolViewModel()
-            {
-                Title = "Загрузить из сессии",
-                Description = "Загружает таблицу excel и формирует необходимые данные для работы приложения",
-                Command = LoadSessionCommand
-            });
-
-            tools.Add(new ToolViewModel()
-            {
-                Title = "Загрузить расписание",
-                Description = "Загружает таблицу excel с расписанием и формирует необходимые данные для работы приложения",
-                Command = LoadExcelCommand
-            });
-
-            tools.Add(new ToolViewModel()
-            {
-                Title = "Загрузить временный файл",
-                Description = "Загружает временный файл для для просмотра",
-                Command = LoadTempFileCommand
-            });
-
-            tools.Add(new ToolViewModel()
-            {
-                Title = "Загрузить расчёт",
-                Description = "Загружает в сессию расчёт",
-                Command = LoadCalculationCommand
-            });
-
-            tools.Add(new ToolViewModel()
-            {
-                Title = "Выгрузить во временный файл",
-                Description = "Выгружает таблицу excel во временный файл таблицу",
-                Command = ExtractToTempFileCommand
-            });
-
-            tools.Add(new ToolViewModel()
-            {
-                Title = "Выдать загруженность",
-                Description = "Формирует таблицу загруженности",
-                Command = ExctractWorkloadTableCommand
-            });
-
-            tools.Add(new ToolViewModel()
-            {
-                Title = "Выдать отчёт",
-                Description = "Формирует таблицу-отчёт по преподавателям",
-                Command = ExctractReportTableCommand
-            });
-
-            tools.Add(new ToolViewModel()
-            {
-                Title = "Заполнить инд. план",
-                Description = "Получает на вход файл word с индивидуальным планом и выдаёт его версию с заполненной таблицей",
-                Command = FillIndividualPlanCommand
-            });
+            ToolsHelper.AddDefaults(this, toolsCategories);
         }
 
         [RelayCommand(CanExecute = nameof(NoTask))]
@@ -256,9 +203,8 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcess(async () =>
             {
-                var teacher = await Ioc.Default.GetRequiredService<ITeacherFinder>().FindByPart(TeacherName);
-                if (teacher == null)
-                    throw new Exception("teacher not found");
+                var teacher = await Ioc.Default.GetRequiredService<ITeacherFinder>().FindByPart(TeacherName)
+                    ?? throw new Exception("teacher not found");
                 await Ioc.Default.GetRequiredService<IIndividualPlanWriter>().FillPlan(teacher, path);
             },
             async () =>

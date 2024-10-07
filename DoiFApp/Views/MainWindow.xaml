@@ -16,7 +16,8 @@
     </Window.DataContext>
 
     <Grid>
-        <Rectangle >
+        
+        <Rectangle>
 
             <Rectangle.Fill>
 
@@ -46,7 +47,7 @@
                     
                 </Grid.RowDefinitions>
 
-                <ItemsControl ItemsSource="{Binding Tools}"
+                <ItemsControl ItemsSource="{Binding ToolsCategories}"
                           Style="{StaticResource dynamiclist}"
                           Margin="4">
 
@@ -54,7 +55,7 @@
 
                         <DataTemplate>
 
-                            <local:ToolView DataContext="{Binding}" Margin="1"/>
+                            <local:ToolCategoryView DataContext="{Binding}" Margin="1"/>
 
                         </DataTemplate>
 

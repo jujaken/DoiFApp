@@ -29,6 +29,7 @@ namespace DoiFApp
                 // view models:
                 .AddTransient<NotifyViewModel>()
                 .AddTransient<ToolViewModel>()
+                .AddTransient<ToolCategoryViewModel>()
                 // services:
                 .AddTransient<IDataReader, ExcelReader>()
                 .AddTransient<ITempFileWorker, ExcelTempFileWorker>()
