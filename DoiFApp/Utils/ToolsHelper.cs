@@ -8,6 +8,15 @@ namespace DoiFApp.Utils
     {
         public static void AddDefaults(MainViewModel main, ObservableCollection<ToolCategoryViewModel> tools)
         {
+         
+            tools.Add(new ToolCategoryViewModel("Индивидуальный план"));
+            tools.Add(new ToolCategoryViewModel("Фактическая нагрузка"));
+            tools.Add(new ToolCategoryViewModel("Отчётная документация"));
+            tools.Add(new ToolCategoryViewModel("Загруженность преподавателей"));
+        }
+
+        public static void AddLatest(MainViewModel main, ObservableCollection<ToolCategoryViewModel> tools)
+        {
             var loadSession = new ToolViewModel()
             {
                 Title = "Загрузить из сессии",
@@ -64,10 +73,15 @@ namespace DoiFApp.Utils
                 Command = main.FillIndividualPlanCommand
             };
 
-            tools.Add(new ToolCategoryViewModel(loadSession, loadExcelSchedule, loadTempFile, loadCalculation)
-            {
-                Name = "Временное"
-            });
+            tools.Add(new ToolCategoryViewModel("DoiF Old",
+                loadSession,
+                loadExcelSchedule,
+                loadTempFile,
+                loadCalculation,
+                extractTempFile,
+                exctractWorkload,
+                exctractReport,
+                fillIndividualPlan));
         }
     }
 }

@@ -10,12 +10,17 @@ namespace DoiFApp.ViewModels
         [ObservableProperty]
         private ObservableCollection<ToolViewModel> tools = [];
 
-        public ToolCategoryViewModel(IEnumerable<ToolViewModel> vms) : this()
+        public ToolCategoryViewModel(string name) : this()
+        {
+            this.name = name;
+        }
+
+        public ToolCategoryViewModel(string name, IEnumerable<ToolViewModel> vms) : this(name)
         {
             foreach (var vm in vms)
                 tools.Add(vm);
         }
 
-        public ToolCategoryViewModel(params ToolViewModel[] vms) : this(vms.AsEnumerable()) { }
+        public ToolCategoryViewModel(string name, params ToolViewModel[] vms) : this(name, vms.AsEnumerable()) { }
     }
 }
