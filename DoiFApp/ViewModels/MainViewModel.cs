@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using DoiFApp.Services;
 using DoiFApp.Utils;
+using DoiFApp.ViewModels.Pages;
 using System.Collections.ObjectModel;
 using System.Windows.Forms;
 

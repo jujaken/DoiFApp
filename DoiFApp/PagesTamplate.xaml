@@ -1,14 +1,17 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:v="clr-namespace:DoiFApp.Views.Pages"
-                    xmlns:vm="clr-namespace:DoiFApp.ViewModels">
+                    xmlns:pv="clr-namespace:DoiFApp.Views.Pages"
+                    xmlns:vm="clr-namespace:DoiFApp.ViewModels"
+                    xmlns:pvm="clr-namespace:DoiFApp.ViewModels.Pages">
 
-        <DataTemplate DataType="{x:Type vm:DataPageViewModel}">
-            <v:DataPageView/>
-        </DataTemplate>
 
-        <DataTemplate DataType="{x:Type vm:LoadingPageViewModel}">
-            <v:LoadingPageView/>
-        </DataTemplate>
+    <DataTemplate DataType="{x:Type pvm:DataPageViewModel}">
+        <pv:DataPageView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type pvm:LoadingPageViewModel}">
+        <pv:LoadingPageView/>
+    </DataTemplate>
 
 </ResourceDictionary>

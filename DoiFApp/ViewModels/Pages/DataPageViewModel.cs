@@ -5,7 +5,7 @@ using DoiFApp.Data.Models;
 using DoiFApp.Data.Repo;
 using System.Collections.ObjectModel;
 
-namespace DoiFApp.ViewModels
+namespace DoiFApp.ViewModels.Pages
 {
     public partial class DataPageViewModel : ObservableObject
     {
