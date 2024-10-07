@@ -2,9 +2,7 @@
 using DoiFApp.Data;
 using DoiFApp.Data.Models;
 using DoiFApp.Data.Repo;
-using DoiFApp.Services;
-using DoiFApp.Services.Excel;
-using DoiFApp.Services.Word;
+using DoiFApp.Services.Builders;
 using DoiFApp.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using OfficeOpenXml;
@@ -31,13 +29,6 @@ namespace DoiFApp
                 .AddTransient<ToolViewModel>()
                 .AddTransient<ToolCategoryViewModel>()
                 // services:
-                .AddTransient<IDataReader, ExcelReader>()
-                .AddTransient<ITempFileWorker, ExcelTempFileWorker>()
-                .AddTransient<IReportWriter, ExcelReportWriter>()
-                .AddTransient<IWorkSchedule, ExcelWorkSchedule>()
-                .AddTransient<IEducationReader, ExcelEducationReader>()
-                .AddTransient<IIndividualPlanWriter, WordIndividualPlanWriter>()
-                .AddTransient<ITeacherFinder, TeacherFinder>()
                 .AddTransient<IRepo<LessonModel>, Repo<LessonModel>>()
                 .AddTransient<IRepo<EducationTeacherModel>, Repo<EducationTeacherModel>>()
                 .AddTransient<IRepo<EducationWorkModel>, Repo<EducationWorkModel>>()

@@ -1,13 +1,22 @@
 ﻿using DoiFApp.Data.Models;
+using DoiFApp.Services.Data;
 using DoiFApp.Utils;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
 
-namespace DoiFApp.Services.Word
+namespace DoiFApp.Services.IndividualPlan
 {
-    public class WordIndividualPlanWriter : IIndividualPlanWriter
+    public abstract class AbstractIndividualPlanWriter<T> : IDataWriter<T> where T : AbstractIndividualPlanData
     {
-        public Task FillPlan(EducationTeacherModel teacher, string path)
+        public async Task<bool> Write(T data, string path)
+        {
+            if (!data.IsHolistic) return false;
+
+            await FillPlan(data.TeacherModel!, path);
+            return true;
+        }
+
+        protected Task FillPlan(EducationTeacherModel teacher, string path)
         {
             using var doc = DocX.Load(path);
             var tables = doc.Tables;
@@ -16,19 +25,9 @@ namespace DoiFApp.Services.Word
             return Task.CompletedTask;
         }
 
-        private static void UpdateTables(EducationTeacherModel teacher, List<Table> tables)
-        {
-            // ПЛАНИРУЕМАЯ НА 1 ПОЛУГОДИЕ
-            var w1Dones = InsertData(tables[0], teacher.Works1);
-            // ПЛАНИРУЕМАЯ НА 2 ПОЛУГОДИЕ
-            InsertData(tables[1], teacher.Works2, w1Dones);
-            // ФАКТИЧЕСКИ ВЫПОЛНЕННАЯ В 1 ПОЛУГОДИИ
-            // ФАКТИЧЕСКИ ВЫПОЛНЕННАЯ В 2 ПОЛУГОДИИ
-            // ЕЖЕМЕСЯЧНЫЙ УЧЁТ ВЫПОЛНЕНИЯ УЧЕБНОЙ НАГРУЗКИ 
+        protected abstract void UpdateTables(EducationTeacherModel teacher, List<Table> tables);
 
-        }
-
-        private static double[] InsertData(Table table, List<EducationWorkModel> works, double[]? lastDones = null)
+        protected static double[] InsertData(Table table, List<EducationWorkModel> works, double[]? lastDones = null)
         {
             var activeWorks = works.Where(w => w.TypesAndHours.Sum(t => t.Value) != 0);
             for (int i = table.Rows.Count - (lastDones == null ? 2 : 3); i < activeWorks.Count(); i++)

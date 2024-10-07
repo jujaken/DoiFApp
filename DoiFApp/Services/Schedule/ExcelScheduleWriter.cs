@@ -1,19 +1,18 @@
-﻿using DoiFApp.Data.Models;
-using DoiFApp.Data.Repo;
+﻿using DoiFApp.Services.Data;
 using OfficeOpenXml;
 using System.IO;
 using ExcelIn = Microsoft.Office.Interop.Excel;
 
-namespace DoiFApp.Services.Excel
+namespace DoiFApp.Services.Schedule
 {
-    public class ExcelReportWriter(IRepo<LessonModel> lessonRepo) : IReportWriter
+    public class ExcelScheduleWriter : IDataWriter<ScheduleData>
     {
-        private readonly IRepo<LessonModel> lessonRepo = lessonRepo;
-
         private readonly static string reportSimplePath = "Resources/reportsimple.xlsx";
 
-        public async Task Write(string path)
+        public Task<bool> Write(ScheduleData modelData, string path)
         {
+            if (!modelData.IsHolistic) return Task.FromResult(false);
+
             File.Copy(reportSimplePath, path, true);
 
             using var package = new ExcelPackage(path);
@@ -28,19 +27,19 @@ namespace DoiFApp.Services.Excel
             data.Cells[1, 6].Value = "Часы";
 
             int i = 2;
-            (await lessonRepo.GetAll()).ForEach(lession =>
+            foreach(var lesson in modelData.Lessons!)
             {
-                lession.Teachers.ForEach(teacher =>
+                lesson.Teachers.ForEach(teacher =>
                 {
-                    data.Cells[i, 1].Value = lession.Month;
-                    data.Cells[i, 2].Value = lession.Discipline;
-                    data.Cells[i, 3].Value = lession.LessionType;
-                    data.Cells[i, 4].Value = lession.GroupsText;
+                    data.Cells[i, 1].Value = lesson.Month;
+                    data.Cells[i, 2].Value = lesson.Discipline;
+                    data.Cells[i, 3].Value = lesson.LessionType;
+                    data.Cells[i, 4].Value = lesson.GroupsText;
                     data.Cells[i, 5].Value = teacher;
-                    data.Cells[i, 6].Value = lession.Wight;
+                    data.Cells[i, 6].Value = lesson.Wight;
                     i++;
                 });
-            });
+            };
 
             package.Save();
 
@@ -54,6 +53,8 @@ namespace DoiFApp.Services.Excel
             workbook.Save();
             workbook.Close();
             excelApp.Quit();
+
+            return Task.FromResult(true);
         }
     }
 }

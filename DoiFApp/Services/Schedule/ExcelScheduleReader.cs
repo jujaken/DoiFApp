@@ -1,22 +1,17 @@
-﻿using DoiFApp.Data;
-using DoiFApp.Data.Models;
-using DoiFApp.Data.Repo;
+﻿using DoiFApp.Data.Models;
+using DoiFApp.Services.Data;
 using OfficeOpenXml;
 
-namespace DoiFApp.Services.Excel
+namespace DoiFApp.Services.Schedule
 {
-    public class ExcelReader(AppDbContext context, IRepo<LessonModel> lessonRepo) : IDataReader
+    public class ExcelScheduleReader : IDataReader<ScheduleData>
     {
-        private readonly AppDbContext context = context;
-        private readonly IRepo<LessonModel> lessonRepo = lessonRepo;
-
-        public async Task ReadToData(string path)
+        public Task<ScheduleData> Read(string path)
         {
-            context.RecreateLessons();
-
             using var package = new ExcelPackage(path);
-
             var data = package.Workbook.Worksheets[1];
+
+            var lessons = new List<LessonModel>();
 
             for (int i = 5; i < data.Dimension.End.Row; i++)
             {
@@ -44,20 +39,19 @@ namespace DoiFApp.Services.Excel
                 if (inputData.LessionType.Contains("зач", StringComparison.CurrentCultureIgnoreCase)
                     || inputData.LessionType.Contains("экз", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    var lesson = (await lessonRepo.GetWhere(lesson => lesson.Date == inputData.Date
+                    var lesson = lessons.Where(lesson => lesson.Date == inputData.Date
                         && lesson.Topic == inputData.Topic
-                        && lesson.Discipline == inputData.Discipline)).FirstOrDefault();
+                        && lesson.Discipline == inputData.Discipline).FirstOrDefault();
 
                     if (lesson != null)
                     {
                         lesson.Wight += 2;
-                        await lessonRepo.Update(lesson);
                         continue;
                     }
                 }
-
-                await lessonRepo.Create(inputData);
             }
+
+            return Task.FromResult(new ScheduleData() { Lessons = lessons.Count > 0 ? lessons : null });
         }
     }
 }

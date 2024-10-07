@@ -1,48 +1,53 @@
-﻿using DoiFApp.Data;
-using DoiFApp.Data.Models;
-using DoiFApp.Data.Repo;
+﻿using DoiFApp.Data.Models;
+using DoiFApp.Services.Data;
 using DoiFApp.Utils;
 using OfficeOpenXml;
 
-namespace DoiFApp.Services.Excel
+namespace DoiFApp.Services.Education
 {
-    public class ExcelEducationReader(AppDbContext context, IRepo<EducationTeacherModel> teacherRepo, IRepo<EducationWorkModel> workRepo) : IEducationReader
+    public class ExcelEducationReader : IDataReader<EducationData>
     {
-        private readonly AppDbContext context = context;
-        private readonly IRepo<EducationTeacherModel> teacherRepo = teacherRepo;
-        private readonly IRepo<EducationWorkModel> workRepo = workRepo;
-
         private const int TittleRow = 8;
         private static readonly IEnumerable<string> headers = TableDataUtil.GetHeaders(TableDataUtil.InputCommonTableHeaders);
 
-        public Task ReadFromFile(string fileName)
+        public Task<EducationData> Read(string path)
         {
-            context.RecreateEducation();
+            using var package = new ExcelPackage(path);
+            var worksheet = package.Workbook.Worksheets.Where(w => w.Name.Contains("расч", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault()
+                ?? throw new Exception("worksheet not found");
 
-            using var package = new ExcelPackage(fileName);
-            var worksheet = package.Workbook.Worksheets.Where(w => w.Name.ToLower().Contains("расч")).FirstOrDefault();
-            if (worksheet == null) throw new Exception("worksheet not found");
+            var teachers = new List<EducationTeacherModel>();
+            var typeAndHours = new List<EducationTypeAndHourModel>();
+            var works = new List<EducationWorkModel>();
+
             ParseData(worksheet,
                 (data, teacher, j) =>
                 {
                     var work1 = GetWorkTeacher(data, 15, 2, j);
-                    AddIfNeed(teacher.Works1, work1);
+                    if (work1 != null)
+                    {
+                        work1.TypesAndHours.ForEach(t => typeAndHours.Add(t));
+                        works.Add(work1);
+                    }
                     var work2 = GetWorkTeacher(data, 77, 2, j);
-                    AddIfNeed(teacher.Works2, work2);
-                },
-                (data, teacher, i) =>
-                {
-                    teacher.Works1.ForEach(w => workRepo.Create(w));
-                    teacher.Works2.ForEach(w => workRepo.Create(w));
-                    teacherRepo.Create(teacher);
+                    if (work2 != null)
+                    {
+                        work2.TypesAndHours.ForEach(t => typeAndHours.Add(t));
+                        works.Add(work2);
+                    }
+                    teachers.Add(teacher);
                 });
 
-            return Task.FromResult(0);
+            return Task.FromResult(new EducationData()
+            {
+                TeacherModels = teachers,
+                TypeAndHourModels = typeAndHours,
+                WorkModels = works
+            });
         }
 
-        private void ParseData(ExcelWorksheet data,
-            Action<ExcelWorksheet, EducationTeacherModel, int> jFunc,
-            Action<ExcelWorksheet, EducationTeacherModel, int> iFunc)
+        private static void ParseData(ExcelWorksheet data,
+            Action<ExcelWorksheet, EducationTeacherModel, int> jFunc)
         {
             var (teacherRows, endId) = GetTeacherRows(data);
             teacherRows.Add(endId);
@@ -56,7 +61,6 @@ namespace DoiFApp.Services.Excel
 
                 for (int j = teacherId + 1; j < teacherRows[i + 1]; j++) // row
                     jFunc(data, teacher, j);
-                iFunc(data, teacher, i);
             }
         }
 
@@ -112,24 +116,24 @@ namespace DoiFApp.Services.Excel
             return workData;
         }
 
-        private static void AddIfNeed(List<EducationWorkModel> works, EducationWorkModel? work)
-        {
-            if (work == null) return;
-            works.Add(work);
-        }
+        //private static void AddIfNeed(List<EducationWorkModel> works, EducationWorkModel? work)
+        //{
+        //    if (work == null) return;
+        //    works.Add(work);
+        //}
 
-        private static void AddIfNeedLatest(List<EducationWorkModel> works, EducationWorkModel? work)
-        {
-            if (work == null) return;
-            var currentModel = works.Where(w => w.Name == work.Name).FirstOrDefault();
-            if (currentModel == null)
-            {
-                works.Add(work);
-                return;
-            }
+        //private static void AddIfNeedLatest(List<EducationWorkModel> works, EducationWorkModel? work)
+        //{
+        //    if (work == null) return;
+        //    var currentModel = works.Where(w => w.Name == work.Name).FirstOrDefault();
+        //    if (currentModel == null)
+        //    {
+        //        works.Add(work);
+        //        return;
+        //    }
 
-            foreach (var data in work.TypesAndHours)
-                currentModel.TypesAndHours.Where(t => t.Key == data.Key).First().Value += data.Value;
-        }
+        //    foreach (var data in work.TypesAndHours)
+        //        currentModel.TypesAndHours.Where(t => t.Key == data.Key).First().Value += data.Value;
+        //}
     }
 }

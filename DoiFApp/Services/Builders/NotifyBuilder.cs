@@ -1,7 +1,7 @@
 ﻿using DoiFApp.ViewModels;
 using System.Windows.Media;
 
-namespace DoiFApp.Services
+namespace DoiFApp.Services.Builders
 {
     public class NotifyBuilder : IBuilder<NotifyViewModel>
     {
