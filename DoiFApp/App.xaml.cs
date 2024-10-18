@@ -61,6 +61,7 @@ namespace DoiFApp
                 .AddTransient<IDataWriter<WorkloadData>, ExcelWorkloadWriter>()
                 // other services
                 .AddTransient<ITeacherFinder, TeacherFinder>()
+                .AddTransient<IDbCopier, SqliteDbCopy>()
                 .BuildServiceProvider();
     }
 }

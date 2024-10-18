@@ -2,10 +2,12 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using DoiFApp.Data;
+using DoiFApp.Services;
 using DoiFApp.Services.Builders;
 using DoiFApp.Services.Data;
 using DoiFApp.Services.Schedule;
 using DoiFApp.ViewModels.Pages;
+using Microsoft.Data.Sqlite;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Forms;
@@ -161,7 +163,7 @@ namespace DoiFApp.ViewModels
             {
                 Title = "Загрузить файл сессии",
                 Description = "Загружает файл сессии",
-                Command = noCommand
+                Command = ImportSessionCommand
             };
 
             var exportSession = new ToolViewModel()
@@ -224,6 +226,26 @@ namespace DoiFApp.ViewModels
                 await Notify("Данные очищены", "Данные сессии очищены!");
                 return string.Empty; // это небольшой костыль, лучше бы исправить
             });
+        }
+
+        [RelayCommand(CanExecute = nameof(NoTask))]
+        private async Task ImportSession()
+        {
+            var path = GetFile("session file|*.db");
+
+            if (string.IsNullOrEmpty(path))
+            {
+                await NoHasFileMessage();
+                return;
+            }
+
+            var page = new DataPageViewModel();
+
+            await CommandWithProcessAndLoad(async () =>
+            {
+                await Ioc.Default.GetRequiredService<IDbCopier>().Copy(path, "doifapp.db");
+                await page.LoadLessonData();
+            }, page);
         }
 
         [RelayCommand(CanExecute = nameof(NoTask))]
