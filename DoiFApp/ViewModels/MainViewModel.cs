@@ -114,9 +114,40 @@ namespace DoiFApp.ViewModels
                 otherWork
                 ));
 
-            // todo fact logic
+            var loadReport = new ToolViewModel()
+            {
+                Title = "Загрузить отчёт",
+                Description = "Загружает отчёт из excel файла",
+                Command = noCommand
+            };
 
-            toolsCategories.Add(new ToolCategoryViewModel("Фактическая нагрузка"));
+            var exportReportToIP = new ToolViewModel()
+            {
+                Title = "Выгрузить отчёт в индивидуальный план",
+                Description = "Загружает отчёт в word файл",
+                Command = noCommand
+            };
+
+            var formReportByMW = new ToolViewModel()
+            {
+                Title = "Выгрузить отчёт в по месячн. нагрузке",
+                Description = "Загружает отчёт по месяцам в word файл",
+                Command = noCommand
+            };
+
+            var fillReportMW = new ToolViewModel()
+            {
+                Title = "Заполнить ежемес. нагрузку",
+                Description = "Заполняет ежемесячную нагрузку",
+                Command = noCommand
+            };
+
+            toolsCategories.Add(new ToolCategoryViewModel("Фактическая нагрузка",
+                loadReport,
+                exportReportToIP,
+                loadSchedule,
+                formReportByMW,
+                fillReportMW));
 
             var fromReport = new ToolViewModel()
             {
