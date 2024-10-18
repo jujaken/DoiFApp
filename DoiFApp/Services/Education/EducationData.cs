@@ -12,5 +12,9 @@ namespace DoiFApp.Services.Education
         public bool IsHolistic => TeacherModels != null
             && TypeAndHourModels != null
             && WorkModels != null;
+
+        public IEnumerable<object> AllObjects => TeacherModels!.Cast<object>()
+                                                .Union(TypeAndHourModels!.Cast<object>())
+                                                .Union(WorkModels!.Cast<object>());
     }
 }

@@ -6,7 +6,7 @@ namespace DoiFApp.Services.Schedule
 {
     public class SessionScheduleSaver(IRepo<LessonModel> repo) : AbstractSessionDataSaver<LessonModel, ScheduleData>(repo)
     {
-        public override async Task<bool> Save(IData data)
+        public override async Task<bool> Save(ScheduleData data)
         {
             repo.Db.RecreateLessons();
             return await base.Save(data);

@@ -9,11 +9,12 @@ namespace DoiFApp.Services.Data
     {
         protected readonly IRepo<TModel> repo = repo;
 
-        public virtual async Task<bool> Save(IData data)
+        public virtual async Task<bool> Save(TData data)
         {
             if (data.IsHolistic)
             {
-                await repo.Db.AddRangeAsync(data);
+                await repo.Db.AddRangeAsync(data.AllObjects);
+                await repo.Db.SaveChangesAsync();
                 return true;
             }
             return false;

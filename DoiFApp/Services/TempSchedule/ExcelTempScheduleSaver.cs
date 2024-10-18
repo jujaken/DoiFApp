@@ -6,7 +6,7 @@ namespace DoiFApp.Services.TempSchedule
 {
     public class ExcelTempScheduleSaver(IRepo<LessonModel> repo) : AbstractSessionDataSaver<LessonModel, TempScheduleData>(repo)
     {
-        public override async Task<bool> Save(IData data)
+        public override async Task<bool> Save(TempScheduleData data)
         {
             repo.Db.RecreateLessons();
             return await base.Save(data);

@@ -7,5 +7,7 @@ namespace DoiFApp.Services.IndividualPlan
     {
         public EducationTeacherModel? TeacherModel { get; init; }
         public bool IsHolistic => TeacherModel != null;
+
+        public IEnumerable<object> AllObjects => [TeacherModel!];
     }
 }

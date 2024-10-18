@@ -7,5 +7,7 @@ namespace DoiFApp.Services.Schedule
     {
         public IEnumerable<LessonModel>? Lessons { get; init; }
         public bool IsHolistic => Lessons != null;
+
+        public IEnumerable<object> AllObjects => Lessons!;
     }
 }

@@ -7,6 +7,6 @@
         /// </summary>
         /// <param name="data"></param>
         /// <returns>получилось ли сохранить данные</returns>
-        Task<bool> Save(IData data);
+        Task<bool> Save(T data);
     }
 }

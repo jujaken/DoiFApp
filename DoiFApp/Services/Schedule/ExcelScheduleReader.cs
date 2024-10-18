@@ -49,6 +49,8 @@ namespace DoiFApp.Services.Schedule
                         continue;
                     }
                 }
+                else
+                    lessons.Add(inputData);
             }
 
             return Task.FromResult(new ScheduleData() { Lessons = lessons.Count > 0 ? lessons : null });
