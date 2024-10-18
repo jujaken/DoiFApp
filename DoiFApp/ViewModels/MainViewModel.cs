@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using DoiFApp.Data;
 using DoiFApp.Services.Builders;
 using DoiFApp.Services.Data;
 using DoiFApp.Services.Schedule;
@@ -8,6 +9,7 @@ using DoiFApp.ViewModels.Pages;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Forms;
+using System.Windows.Shapes;
 
 namespace DoiFApp.ViewModels
 {
@@ -146,14 +148,14 @@ namespace DoiFApp.ViewModels
             {
                 Title = "Загрузить предыдущую сессию",
                 Description = "Загружает сессию из файла doifapp.db",
-                Command = noCommand
+                Command = LoadLastSessionCommand
             };
 
             var clearSession = new ToolViewModel()
             {
                 Title = "Очистить сессию",
                 Description = "Очищает все собранные данные из сессии",
-                Command = noCommand
+                Command = ClearSessionCommand
             };
 
             var importSession = new ToolViewModel()
@@ -203,9 +205,39 @@ namespace DoiFApp.ViewModels
         }
 
         [RelayCommand(CanExecute = nameof(NoTask))]
+        private async Task ClearSession()
+        {
+            var result = MessageBox.Show("Вы уверены, что хотите очистить сессию?", "Подтверждение", MessageBoxButtons.YesNo);
+            if (result != DialogResult.Yes)
+            {
+                await Notify("Отмена очистки", "Сессия не была очищена");
+                return;
+            }
+
+            await CommandWithProcessAndError(async () =>
+            {
+                var db = Ioc.Default.GetRequiredService<AppDbContext>();
+                db.RecreateLessons();
+                db.RecreateEducation();
+                await db.SaveChangesAsync();
+            }, async () =>
+            {
+                await Notify("Данные очищены", "Данные сессии очищены!");
+                return string.Empty;
+            });
+        }
+
+        [RelayCommand(CanExecute = nameof(NoTask))]
+        private async Task LoadLastSession()
+        {
+            var page = new DataPageViewModel();
+            await CommandWithProcessAndLoad(page.LoadLessonData, page);
+        }
+
+        [RelayCommand(CanExecute = nameof(NoTask))]
         private async Task ExportSession()
         {
-            var path = SaveFile("database|*.db", "doifdb.db");
+            var path = SaveFile("database|*.db", "doifapp-session.db");
 
             if (string.IsNullOrEmpty(path))
             {
@@ -215,9 +247,7 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcessAndError(() =>
             {
-                if (File.Exists(path))
-                    File.Delete(path);
-
+                File.Delete(path);
                 File.Copy("doifapp.db", path);
 
                 return Task.CompletedTask;
