@@ -204,6 +204,8 @@ namespace DoiFApp.ViewModels
             }, page);
         }
 
+        #region DoiF Commands
+
         [RelayCommand(CanExecute = nameof(NoTask))]
         private async Task ClearSession()
         {
@@ -228,6 +230,13 @@ namespace DoiFApp.ViewModels
         }
 
         [RelayCommand(CanExecute = nameof(NoTask))]
+        private async Task LoadLastSession()
+        {
+            var page = new DataPageViewModel();
+            await CommandWithProcessAndLoad(page.LoadLessonData, page);
+        }
+
+        [RelayCommand(CanExecute = nameof(NoTask))]
         private async Task ImportSession()
         {
             var path = GetFile("session file|*.db");
@@ -245,13 +254,6 @@ namespace DoiFApp.ViewModels
                 await Ioc.Default.GetRequiredService<IDbCopier>().Copy(path, "doifapp.db");
                 await page.LoadLessonData();
             }, page);
-        }
-
-        [RelayCommand(CanExecute = nameof(NoTask))]
-        private async Task LoadLastSession()
-        {
-            var page = new DataPageViewModel();
-            await CommandWithProcessAndLoad(page.LoadLessonData, page);
         }
 
         [RelayCommand(CanExecute = nameof(NoTask))]
@@ -277,6 +279,8 @@ namespace DoiFApp.ViewModels
                 return null;
             });
         }
+
+        #endregion
 
         #region File Tools
 
