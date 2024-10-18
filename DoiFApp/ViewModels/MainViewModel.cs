@@ -222,7 +222,7 @@ namespace DoiFApp.ViewModels
             }, async () =>
             {
                 await Notify("Данные очищены", "Данные сессии очищены!");
-                return string.Empty;
+                return string.Empty; // это небольшой костыль, лучше бы исправить
             });
         }
 
