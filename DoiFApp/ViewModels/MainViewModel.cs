@@ -7,7 +7,6 @@ using DoiFApp.Services.Builders;
 using DoiFApp.Services.Data;
 using DoiFApp.Services.Schedule;
 using DoiFApp.ViewModels.Pages;
-using Microsoft.Data.Sqlite;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Forms;
