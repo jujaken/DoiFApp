@@ -6,6 +6,7 @@ using DoiFApp.Services.Data;
 using DoiFApp.Services.Schedule;
 using DoiFApp.ViewModels.Pages;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows.Forms;
 
 namespace DoiFApp.ViewModels
@@ -36,6 +37,8 @@ namespace DoiFApp.ViewModels
 
         public MainViewModel()
         {
+            var noCommand = new RelayCommand(() => { }, () => false);
+
             var loadSchedule = new ToolViewModel()
             {
                 Title = "Загрузить расписание",
@@ -47,56 +50,56 @@ namespace DoiFApp.ViewModels
             {
                 Title = "Проверить расписание",
                 Description = "Позволяет просмотреть виды занятия и правильности их обозначения",
-                Command = null
+                Command = noCommand
             };
 
             var fillIndividualPlan = new ToolViewModel()
             {
                 Title = "Заполнить инд. план",
                 Description = "Позволяет выбрать преподавателя и заполняет данный word файл",
-                Command = null
+                Command = noCommand
             };
 
             var loadCalculation = new ToolViewModel()
             {
                 Title = "Загрузить расчёт уч. нагрузки",
                 Description = "Позволяет выбрать преподавателя и заполняет данный word файл",
-                Command = null
+                Command = noCommand
             };
 
             var loadMethodicalWork = new ToolViewModel()
             {
                 Title = "Загрузить метод. работу",
                 Description = "Загружает методическую работу из word файла",
-                Command = null
+                Command = noCommand
             };
 
             var loadScientificWork = new ToolViewModel()
             {
                 Title = "Загрузить науч. работу",
                 Description = "Загружает научную работу из word файла",
-                Command = null
+                Command = noCommand
             };
 
             var moralMentalWork = new ToolViewModel()
             {
                 Title = "Загрузить мор.-псих. работу",
                 Description = "Загружает морально-психологическую работу из word файла",
-                Command = null
+                Command = noCommand
             };
 
             var foreignersWork = new ToolViewModel()
             {
                 Title = "Загруз. работу с иностранн. слуш.",
                 Description = "Загружает работу с иностранными слушателями из word файла",
-                Command = null
+                Command = noCommand
             };
 
             var otherWork = new ToolViewModel()
             {
                 Title = "Загрузить другую работу",
                 Description = "Загружает иные виды работ из word файла",
-                Command = null
+                Command = noCommand
             };
 
             toolsCategories.Add(new ToolCategoryViewModel("Индивидуальный план",
@@ -117,7 +120,7 @@ namespace DoiFApp.ViewModels
             {
                 Title = "Сформировать отчёт",
                 Description = "Формулирует и выгружает данные для отчёта в excel",
-                Command = null
+                Command = noCommand
             };
 
             toolsCategories.Add(new ToolCategoryViewModel("Отчётная документация",
@@ -130,7 +133,7 @@ namespace DoiFApp.ViewModels
             {
                 Title = "Выдать загруженность",
                 Description = "Формирует таблицу загруженности",
-                Command = null
+                Command = noCommand
             };
 
             toolsCategories.Add(new ToolCategoryViewModel("Загруженность преподавателей",
@@ -143,47 +146,39 @@ namespace DoiFApp.ViewModels
             {
                 Title = "Загрузить предыдущую сессию",
                 Description = "Загружает сессию из файла doifapp.db",
-                Command = null
-            };
-
-            var exitSession = new ToolViewModel()
-            {
-                Title = "Выйти из сессии",
-                Description = "Выходит из сессии",
-                Command = null
+                Command = noCommand
             };
 
             var clearSession = new ToolViewModel()
             {
                 Title = "Очистить сессию",
                 Description = "Очищает все собранные данные из сессии",
-                Command = null
+                Command = noCommand
             };
 
             var importSession = new ToolViewModel()
             {
                 Title = "Загрузить файл сессии",
                 Description = "Загружает файл сессии",
-                Command = null
+                Command = noCommand
             };
 
             var exportSession = new ToolViewModel()
             {
                 Title = "Выгрузить файл сессии",
                 Description = "Выгружает файл сессии",
-                Command = null
+                Command = ExportSessionCommand
             };
 
             toolsCategories.Add(new ToolCategoryViewModel("DoiF",
                 loadLastSession,
-                exitSession,
                 clearSession,
                 importSession,
                 exportSession
                 ));
         }
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(NoTask))]
         private async Task LoadSchedule()
         {
             var path = GetFile("excel file|*.xlsx");
@@ -207,6 +202,34 @@ namespace DoiFApp.ViewModels
             }, page);
         }
 
+        [RelayCommand(CanExecute = nameof(NoTask))]
+        private async Task ExportSession()
+        {
+            var path = SaveFile("database|*.db", "doifdb.db");
+
+            if (string.IsNullOrEmpty(path))
+            {
+                await NoHasFileMessage();
+                return;
+            }
+
+            await CommandWithProcessAndError(() =>
+            {
+                if (File.Exists(path))
+                    File.Delete(path);
+
+                File.Copy("doifapp.db", path);
+
+                return Task.CompletedTask;
+            }, async () =>
+            {
+                await Notify("Сессия выгружена", "Данные из сессии успешно скопированы в отдельный файл");
+                return null;
+            });
+        }
+
+        #region File Tools
+
         private static string? GetFile(string filter, string? defaultFileName = null)
         {
             var calculationFilePath = new OpenFileDialog { Filter = filter };
@@ -217,6 +240,19 @@ namespace DoiFApp.ViewModels
             calculationFilePath.ShowDialog();
             return defaultFileName != calculationFilePath.FileName ? calculationFilePath.FileName : null;
         }
+
+        private static string? SaveFile(string filter, string? defaultFileName = null)
+        {
+            var calculationFilePath = new SaveFileDialog { Filter = filter };
+
+            if (defaultFileName != null)
+                calculationFilePath.FileName = defaultFileName;
+
+            calculationFilePath.ShowDialog();
+            return defaultFileName != calculationFilePath.FileName ? calculationFilePath.FileName : null;
+        }
+
+        #endregion
 
         #region Command Tools
 
@@ -234,7 +270,7 @@ namespace DoiFApp.ViewModels
         {
             await CommandWithProcess(action, onSucces, async () =>
             {
-                await Notify("Ошибка загрузки!", "Что-то пошло не так.", NotifyColorType.Error);
+                await Notify("Ошибка!", "Что-то пошло не так.", NotifyColorType.Error);
                 return null;
             });
         }
@@ -248,8 +284,8 @@ namespace DoiFApp.ViewModels
             try
             {
 #endif
-                await Task.Run(action.Invoke);
-                CurPage = onSucces == null ? null : await onSucces.Invoke();
+            await Task.Run(action.Invoke);
+            CurPage = onSucces == null ? null : await onSucces.Invoke() ?? oldPage;
 #if RELEASE
             }
             catch
