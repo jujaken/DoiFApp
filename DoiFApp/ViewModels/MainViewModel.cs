@@ -9,7 +9,6 @@ using DoiFApp.ViewModels.Pages;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Forms;
-using System.Windows.Shapes;
 
 namespace DoiFApp.ViewModels
 {
