@@ -17,6 +17,5 @@ namespace DoiFApp.Utils
             teachersUnique.Sort();
             return teachersUnique;
         }
-
     }
 }
