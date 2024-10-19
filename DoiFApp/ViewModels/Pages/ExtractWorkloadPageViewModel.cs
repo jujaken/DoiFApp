@@ -35,22 +35,21 @@ namespace DoiFApp.ViewModels.Pages
                 month.IsSelected = true;
         }
 
-        // ниже вы видете отход от MVVM
-        // произошло это потому, что по какой-то причине делегаты/ивенты не работают
-        // если ты это исправишь, чел, ты лучший.
+        public event Action? OnCancel;
 
         [RelayCommand]
         public void Cancel()
         {
-            var mvm = App.Current.MainWindow.DataContext as MainViewModel;
-            mvm!.CurPage = null;
+            OnCancel?.Invoke();
         }
+
+        public event Func<int[], Task>? OnOk;
 
         [RelayCommand]
         public async Task Ok()
         {
-            var mvm = App.Current.MainWindow.DataContext as MainViewModel;
-            await mvm!.ExtractWorkload([.. Months.Where(m => m.IsSelected).Select(m => m.Id)]);
+            if (OnOk != null)
+                await OnOk.Invoke([.. Months.Where(m => m.IsSelected).Select(m => m.Id)]);
         }
     }
 }

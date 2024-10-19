@@ -46,6 +46,7 @@ namespace DoiFApp.ViewModels
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ExtractTempScheduleCommand))]
         [NotifyCanExecuteChangedFor(nameof(ExtractWorkloadCommand))]
+        [NotifyCanExecuteChangedFor(nameof(CheckScheduleCommand))]
         public bool scheduleIsLoad = false;
 
         [ObservableProperty]
@@ -68,7 +69,7 @@ namespace DoiFApp.ViewModels
             {
                 Title = "Проверить расписание",
                 Description = "Позволяет просмотреть виды занятия и правильности их обозначения",
-                Command = noCommand
+                Command = CheckScheduleCommand
             };
 
             var fillIndividualPlan = new ToolViewModel()
@@ -277,6 +278,28 @@ namespace DoiFApp.ViewModels
                 ScheduleIsLoad = true;
         }
 
+        [RelayCommand(CanExecute = nameof(ScheduleIsLoad))]
+        private async Task CheckSchedule()
+        {
+            var page = new CheckSchedulePageViewModel();
+            page.OnCancel += () => CurPage = null;
+            page.OnOk += async (lessonTypeTranslations) =>
+            {
+                var dataPage = new DataPageViewModel();
+                await CommandWithProcessAndLoad(async () =>
+                {
+                    var repo = Ioc.Default.GetRequiredService<IRepo<LessonModel>>();
+                    (await repo.GetAll()).ForEach(l =>
+                    {
+                        l.LessionType = lessonTypeTranslations.FirstOrDefault(t => t.CurrentName == l.LessionType)!.NewName;
+                        repo.Update(l);
+                    });
+                    await dataPage.LoadLessonData();
+                }, dataPage, "Вы можете редактировать");
+            };
+            await CommandWithProcessAndLoad(page.Update, page, "Вы можете редактировать");
+        }
+
         #region Загруженность преподавателей
 
         [RelayCommand(CanExecute = nameof(ScheduleIsLoad))]
@@ -329,7 +352,13 @@ namespace DoiFApp.ViewModels
             var res = MessageBox.Show("Желаете выбрать месяцы?", "Режим вывода", MessageBoxButtons.YesNo);
 
             if (res == DialogResult.Yes)
-                CurPage = new ExtractWorkloadPageViewModel();
+            {
+                var page = new ExtractWorkloadPageViewModel();
+                page.OnCancel += () => CurPage = null;
+                page.OnOk += ExtractWorkload;
+                CurPage = page;
+            }
+
             else
                 await ExtractWorkload(Enumerable.Range(1, 12).ToArray());
         }
