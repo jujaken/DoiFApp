@@ -14,6 +14,7 @@ using DoiFApp.ViewModels.Pages;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Forms;
+using System.Windows.Shapes;
 
 namespace DoiFApp.ViewModels
 {
@@ -47,6 +48,7 @@ namespace DoiFApp.ViewModels
         [NotifyCanExecuteChangedFor(nameof(ExtractTempScheduleCommand))]
         [NotifyCanExecuteChangedFor(nameof(ExtractWorkloadCommand))]
         [NotifyCanExecuteChangedFor(nameof(CheckScheduleCommand))]
+        [NotifyCanExecuteChangedFor(nameof(FromReportCommand))]
         public bool scheduleIsLoad = false;
 
         [ObservableProperty]
@@ -63,13 +65,6 @@ namespace DoiFApp.ViewModels
                 Title = "Загрузить расписание",
                 Description = "Загружает таблицу excel с расписанием и формирует необходимые данные для работы приложения",
                 Command = LoadScheduleCommand,
-            };
-
-            var checkSchedule = new ToolViewModel()
-            {
-                Title = "Проверить расписание",
-                Description = "Позволяет просмотреть виды занятия и правильности их обозначения",
-                Command = CheckScheduleCommand
             };
 
             var fillIndividualPlan = new ToolViewModel()
@@ -166,11 +161,18 @@ namespace DoiFApp.ViewModels
                 formReportByMW,
                 fillReportMW));
 
+            var checkSchedule = new ToolViewModel()
+            {
+                Title = "Проверить расписание",
+                Description = "Позволяет просмотреть виды занятия и правильности их обозначения",
+                Command = CheckScheduleCommand
+            };
+
             var fromReport = new ToolViewModel()
             {
                 Title = "Сформировать отчёт",
                 Description = "Формулирует и выгружает данные для отчёта в excel",
-                Command = noCommand
+                Command = FromReportCommand
             };
 
             toolsCategories.Add(new ToolCategoryViewModel("Отчётная документация",
@@ -278,6 +280,8 @@ namespace DoiFApp.ViewModels
                 ScheduleIsLoad = true;
         }
 
+        #region Отчётная документация
+
         [RelayCommand(CanExecute = nameof(ScheduleIsLoad))]
         private async Task CheckSchedule()
         {
@@ -299,6 +303,28 @@ namespace DoiFApp.ViewModels
             };
             await CommandWithProcessAndLoad(page.Update, page, "Вы можете редактировать");
         }
+
+        [RelayCommand(CanExecute = nameof(ScheduleIsLoad))]
+        private async Task FromReport()
+        {
+            var path = SaveFile("excel file|*.xlsx", "Отчёт по месяцам и дисциплинам.xlsx");
+            if (string.IsNullOrEmpty(path))
+            {
+                await NoHasFileMessage();
+                return;
+            }
+
+            var page = new DataPageViewModel();
+
+            await CommandWithProcessAndLoad(async () =>
+            {
+                var data = await Ioc.Default.GetRequiredService<IRepo<LessonModel>>().GetAll();
+                await Ioc.Default.GetRequiredService<IDataWriter<ScheduleData>>().Write(new() { Lessons = data }, path);
+                await page.LoadLessonData();
+            }, page, "Отчёт готов, файл создан!");
+        }
+
+        #endregion
 
         #region Загруженность преподавателей
 
