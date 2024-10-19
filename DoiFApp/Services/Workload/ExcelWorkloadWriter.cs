@@ -36,6 +36,8 @@ namespace DoiFApp.Services.Workload
 
             var index = 2;
             var lastDate = data.Lessons.First().Date;
+            
+            // возможно, пропускются отпуски
 
             foreach (var lesson in data.Lessons)
             {
