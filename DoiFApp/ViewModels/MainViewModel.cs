@@ -2,10 +2,13 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using DoiFApp.Data;
+using DoiFApp.Data.Models;
+using DoiFApp.Data.Repo;
 using DoiFApp.Services;
 using DoiFApp.Services.Builders;
 using DoiFApp.Services.Data;
 using DoiFApp.Services.Schedule;
+using DoiFApp.Services.TempSchedule;
 using DoiFApp.ViewModels.Pages;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -39,6 +42,13 @@ namespace DoiFApp.ViewModels
         [NotifyCanExecuteChangedFor(nameof(RemoveDbCommand))]
         public bool canRemoveDb = true;
 
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(ExtractTempScheduleCommand))]
+        public bool scheduleIsLoad = false;
+
+        [ObservableProperty]
+        public bool educationIsLoad = false;
+        
         #endregion
 
         public MainViewModel()
@@ -166,6 +176,20 @@ namespace DoiFApp.ViewModels
                 fromReport
                 ));
 
+            var extractTempSchedule = new ToolViewModel()
+            {
+                Title = "Выдать редакт. расписание",
+                Description = "Выгружает из сессии имеющееся расписание, позволяет отредактировать его вручную в excel",
+                Command = ExtractTempScheduleCommand
+            };
+
+            var loadTempSchedule = new ToolViewModel()
+            {
+                Title = "Загр. редакт. расписание",
+                Description = "Загружает excel файл с отредактированным расписанием",
+                Command = LoadTempScheduleCommand
+            };
+
             var extractWorkload = new ToolViewModel()
             {
                 Title = "Выдать загруженность",
@@ -176,6 +200,8 @@ namespace DoiFApp.ViewModels
             toolsCategories.Add(new ToolCategoryViewModel("Загруженность преподавателей",
                 loadSchedule,
                 checkSchedule,
+                extractTempSchedule,
+                loadTempSchedule,
                 extractWorkload
                 ));
 
@@ -245,7 +271,58 @@ namespace DoiFApp.ViewModels
                 await Ioc.Default.GetRequiredService<IDataSaver<ScheduleData>>().Save(data);
                 await page.LoadLessonData();
             }, page);
+
+            if (page.LessonViewModels.Any())
+                ScheduleIsLoad = true;
         }
+
+        #region Загруженность преподавателей
+
+        [RelayCommand(CanExecute = nameof(ScheduleIsLoad))]
+        public async Task ExtractTempSchedule()
+        {
+            var path = SaveFile("excel file|*.xlsx", "редактируемое расписание.xlsx");
+            if (string.IsNullOrEmpty(path))
+            {
+                await NoHasFileMessage();
+                return;
+            }
+
+            var page = new DataPageViewModel();
+
+            await CommandWithProcessAndLoad(async () =>
+            {
+                var scheduleData = await Ioc.Default.GetRequiredService<IRepo<LessonModel>>().GetAll();
+                await Ioc.Default.GetRequiredService<IDataWriter<TempScheduleData>>().Write(new() { Lessons = scheduleData }, path);
+            }, page, "Теперь, вы можете обновить файл и загрузить его с помощью команты \"Загр. редакт. расписание\"!");
+        }
+
+        [RelayCommand(CanExecute = nameof(NoTask))]
+        public async Task LoadTempSchedule()
+        {
+            var path = GetFile("excel file|*.xlsx", "редактируемое расписание.xlsx");
+            if (string.IsNullOrEmpty(path))
+            {
+                await NoHasFileMessage();
+                return;
+            }
+
+            var page = new DataPageViewModel();
+
+            await CommandWithProcessAndLoad(async () =>
+            {
+                var data = await Ioc.Default.GetRequiredService<IDataReader<TempScheduleData>>().Read(path);
+                if (data.Lessons == null || !data.Lessons.Any())
+                    throw new Exception("Data not found");
+
+                await Ioc.Default.GetRequiredService<IDataSaver<TempScheduleData>>().Save(data);
+            }, page, "Данные из редактируемого расписания были загружены");
+
+            if (page.LessonViewModels.Any())
+                ScheduleIsLoad = true;
+        }
+
+        #endregion
 
         #region DoiF Commands
 
@@ -288,6 +365,12 @@ namespace DoiFApp.ViewModels
                 return;
             }
             await CommandWithProcessAndLoad(page.LoadLessonData, page);
+
+            if (page.LessonViewModels.Any())
+                ScheduleIsLoad = true;
+
+            if (page.EducationTeacherModel.Any())
+                EducationIsLoad = true;
         }
 
         [RelayCommand(CanExecute = nameof(NoTask))]

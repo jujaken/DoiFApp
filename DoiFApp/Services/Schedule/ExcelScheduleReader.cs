@@ -12,11 +12,10 @@ namespace DoiFApp.Services.Schedule
             var data = package.Workbook.Worksheets[1];
 
             var lessons = new List<LessonModel>();
-
             for (int i = 5; i < data.Dimension.End.Row; i++)
             {
-                if (data.Cells[i, 1].GetCellValue<string>() == null)
-                    break;
+                if (string.IsNullOrEmpty(data.Cells[i, 1].GetCellValue<string>()))
+                    continue;
 
                 var inputData = new LessonModel
                 {
@@ -48,9 +47,12 @@ namespace DoiFApp.Services.Schedule
                         lesson.Wight += 2;
                         continue;
                     }
+
+                    lessons.Add(inputData);
                 }
                 else
                     lessons.Add(inputData);
+
             }
 
             return Task.FromResult(new ScheduleData() { Lessons = lessons.Count > 0 ? lessons : null });
