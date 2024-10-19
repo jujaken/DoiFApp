@@ -14,4 +14,8 @@
         <pv:LoadingPageView/>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type pvm:ExtractWorkloadPageViewModel}">
+        <pv:ExtractWorkloadPageView/>
+    </DataTemplate>
+
 </ResourceDictionary>

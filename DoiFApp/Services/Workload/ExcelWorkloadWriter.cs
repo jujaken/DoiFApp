@@ -12,7 +12,7 @@ namespace DoiFApp.Services.Workload
     {
         public Task<bool> Write(WorkloadData data, string path)
         {
-            if (!data.IsHolistic) return Task.FromResult(false);
+            if (!data.IsHolistic || data.Lessons == null) return Task.FromResult(false);
 
             if (File.Exists(path))
                 File.Delete(path);
@@ -20,7 +20,7 @@ namespace DoiFApp.Services.Workload
             using var package = new ExcelPackage(path);
             var worksheet = package.Workbook.Worksheets.Add("График");
 
-            var teachersUnique = DataUtil.GetTeachers(data.Lessons!);
+            var teachersUnique = DataUtil.GetTeachers(data.Lessons);
 
             (int start, int end) = (3, teachersUnique.Count + 2);
 
@@ -34,42 +34,39 @@ namespace DoiFApp.Services.Workload
                 tcell.Style.TextRotation = 180;
             }
 
-            var startDayNum = data.Lessons!.First().Date.DayNumber;
-            var endDayNum = data.Lessons!.Last().Date.DayNumber;
+            var index = 2;
+            var lastDate = data.Lessons.First().Date;
 
-            for (var i = startDayNum; i < endDayNum; i++)
+            foreach (var lesson in data.Lessons)
             {
-                var date = DateOnly.FromDayNumber(i);
-                var tableVerticalIndex = 2 + i - startDayNum;
-                worksheet.Cells[tableVerticalIndex, 1].Value = date;
+                if (lastDate != lesson.Date)
+                {
+                    lastDate = lesson.Date;
+                    index++;
+                }
 
-                var curDay = DateUtil.SwitchDayOfWeek(date.DayOfWeek);
+                var tableVerticalIndex = index;
+                worksheet.Cells[tableVerticalIndex, 1].Value = lesson.Date;
+
+                var curDay = DateUtil.SwitchDayOfWeek(lesson.Date.DayOfWeek);
                 worksheet.Cells[tableVerticalIndex, 2].Value = curDay;
 
-                if (date.DayOfWeek == DayOfWeek.Saturday)
+                if (lesson.Date.DayOfWeek == DayOfWeek.Saturday)
                     DrawRow(worksheet, tableVerticalIndex, 2, end, WorkloadHelper.SaturdayColor);
 
-                if (date.DayOfWeek == DayOfWeek.Sunday)
+                if (lesson.Date.DayOfWeek == DayOfWeek.Sunday)
                     DrawRow(worksheet, tableVerticalIndex, 2, end, WorkloadHelper.SundayColor);
 
-                var lessons = data.Lessons!.Where(l => l.Date == date);
-
-                if (lessons == null)
-                    continue;
-
-                foreach (var lesson in lessons)
+                for (var j = 0; j < teachersUnique.Count; j++)
                 {
-                    for (var j = 0; j < teachersUnique.Count; j++)
+                    var teacher = teachersUnique[j];
+                    if (lesson.Teachers.Contains(teacher))
                     {
-                        var teacher = teachersUnique[j];
-                        if (lesson.Teachers.Contains(teacher))
-                        {
-                            var lessionsCell = worksheet.Cells[tableVerticalIndex, start + j];
-                            lessionsCell.Value += SwitchClassId(lesson.Time) + " ";
+                        var lessionsCell = worksheet.Cells[tableVerticalIndex, start + j];
+                        lessionsCell.Value += SwitchClassId(lesson.Time) + " ";
 
-                            lessionsCell.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                            lessionsCell.Style.Fill.BackgroundColor.SetColor(WorkloadHelper.SelectCellColor(lesson.Auditoriums));
-                        }
+                        lessionsCell.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        lessionsCell.Style.Fill.BackgroundColor.SetColor(WorkloadHelper.SelectCellColor(lesson.Auditoriums));
                     }
                 }
             }
@@ -77,7 +74,7 @@ namespace DoiFApp.Services.Workload
             AddNotes(end + 1, worksheet);
 
             // view
-            DoSquare(worksheet, 1, 1, endDayNum - startDayNum + 1, end, (range) =>
+            DoSquare(worksheet, 1, 1, index, end, (range) =>
             {
                 range.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
                 range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;

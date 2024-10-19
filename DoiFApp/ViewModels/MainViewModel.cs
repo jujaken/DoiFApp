@@ -14,7 +14,6 @@ using DoiFApp.ViewModels.Pages;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Forms;
-using System.Windows.Shapes;
 
 namespace DoiFApp.ViewModels
 {
@@ -46,12 +45,12 @@ namespace DoiFApp.ViewModels
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ExtractTempScheduleCommand))]
-        [NotifyCanExecuteChangedFor(nameof(ExctractWorkloadCommand))]
+        [NotifyCanExecuteChangedFor(nameof(ExtractWorkloadCommand))]
         public bool scheduleIsLoad = false;
 
         [ObservableProperty]
         public bool educationIsLoad = false;
-        
+
         #endregion
 
         public MainViewModel()
@@ -197,15 +196,14 @@ namespace DoiFApp.ViewModels
             {
                 Title = "Выдать загруженность",
                 Description = "Формирует таблицу загруженности",
-                Command = ExctractWorkloadCommand
+                Command = ExtractWorkloadCommand
             };
 
             toolsCategories.Add(new ToolCategoryViewModel("Загруженность преподавателей",
                 loadSchedule,
-                checkSchedule,
+                extractWorkload,
                 extractTempSchedule,
-                loadTempSchedule,
-                extractWorkload
+                loadTempSchedule
                 ));
 
             var loadLastSession = new ToolViewModel()
@@ -326,7 +324,17 @@ namespace DoiFApp.ViewModels
         }
 
         [RelayCommand(CanExecute = nameof(ScheduleIsLoad))]
-        public async Task ExctractWorkload()
+        public async Task ExtractWorkload()
+        {
+            var res = MessageBox.Show("Желаете выбрать месяцы?", "Режим вывода", MessageBoxButtons.YesNo);
+
+            if (res == DialogResult.Yes)
+                CurPage = new ExtractWorkloadPageViewModel();
+            else
+                await ExtractWorkload(Enumerable.Range(1, 12).ToArray());
+        }
+
+        public async Task ExtractWorkload(int[] months)
         {
             var path = SaveFile("excel file|*.xlsx", "Загруженность.xlsx");
             if (string.IsNullOrEmpty(path))
@@ -339,8 +347,8 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcessAndLoad(async () =>
             {
-                var data = await Ioc.Default.GetRequiredService<IRepo<LessonModel>>().GetAll();
-                await Ioc.Default.GetRequiredService<IDataWriter<WorkloadData>>().Write(new () { Lessons = data }, path);
+                var data = await Ioc.Default.GetRequiredService<IRepo<LessonModel>>().GetWhere(x => months.Contains(x.Date.Month));
+                await Ioc.Default.GetRequiredService<IDataWriter<WorkloadData>>().Write(new() { Lessons = data }, path);
                 await page.LoadLessonData();
             }, page, "График загруженности готов, файл создан!");
         }
@@ -458,7 +466,7 @@ namespace DoiFApp.ViewModels
 
         #region File Tools
 
-        private static string? GetFile(string filter, string? defaultFileName = null)
+        public static string? GetFile(string filter, string? defaultFileName = null)
         {
             var calculationFilePath = new OpenFileDialog { Filter = filter };
 
@@ -469,7 +477,7 @@ namespace DoiFApp.ViewModels
             return defaultFileName != calculationFilePath.FileName ? calculationFilePath.FileName : null;
         }
 
-        private static string? SaveFile(string filter, string? defaultFileName = null)
+        public static string? SaveFile(string filter, string? defaultFileName = null)
         {
             var calculationFilePath = new SaveFileDialog { Filter = filter };
 
@@ -484,7 +492,7 @@ namespace DoiFApp.ViewModels
 
         #region Command Tools
 
-        private async Task CommandWithProcessAndLoad(Func<Task> action, object? page = null, string msg = "Теперь, вы можете использывать другие команды!")
+        public async Task CommandWithProcessAndLoad(Func<Task> action, object? page = null, string msg = "Теперь, вы можете использывать другие команды!")
         {
             await CommandWithProcessAndError(action, async () =>
             {
@@ -494,7 +502,7 @@ namespace DoiFApp.ViewModels
             });
         }
 
-        private async Task CommandWithProcessAndError(Func<Task> action, Func<Task<object?>>? onSucces = null)
+        public async Task CommandWithProcessAndError(Func<Task> action, Func<Task<object?>>? onSucces = null)
         {
             await CommandWithProcess(action, onSucces, async () =>
             {
@@ -503,7 +511,7 @@ namespace DoiFApp.ViewModels
             });
         }
 
-        private async Task CommandWithProcess(Func<Task> action, Func<Task<object?>>? onSucces = null, Func<Task<object?>>? onProblem = null)
+        public async Task CommandWithProcess(Func<Task> action, Func<Task<object?>>? onSucces = null, Func<Task<object?>>? onProblem = null)
         {
             var oldPage = CurPage;
             CurPage = new LoadingPageViewModel();
@@ -531,13 +539,13 @@ namespace DoiFApp.ViewModels
 
         #region Notify tools
 
-        private async Task NoHasFileMessage()
+        public async Task NoHasFileMessage()
          => await Notify("Неудалось выгрузить!", "Вы не указали путь до файла!", NotifyColorType.Warning);
 
-        private async Task NoHasDirrectoryMessage()
+        public async Task NoHasDirrectoryMessage()
             => await Notify("Неудалось выгрузить!", "Вы не указали путь до файла!", NotifyColorType.Warning);
 
-        private Task Notify(string title, string desc, NotifyColorType colorType = NotifyColorType.Info)
+        public Task Notify(string title, string desc, NotifyColorType colorType = NotifyColorType.Info)
         {
             var notify = Ioc.Default.GetRequiredService<NotifyBuilder>()
                 .WithTitle(title)
