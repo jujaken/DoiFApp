@@ -35,6 +35,10 @@ namespace DoiFApp.ViewModels
         [ObservableProperty]
         private bool canExtract;
 
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(RemoveDbCommand))]
+        public bool canRemoveDb = true;
+
         #endregion
 
         public MainViewModel()
@@ -203,11 +207,19 @@ namespace DoiFApp.ViewModels
                 Command = ExportSessionCommand
             };
 
+            var removeDb = new ToolViewModel()
+            {
+                Title = "Удалить данные",
+                Description = "Удаляет файл с сессей. Команда доступна только как первая сразу после запуска",
+                Command = RemoveDbCommand
+            };
+
             toolsCategories.Add(new ToolCategoryViewModel("DoiF",
                 loadLastSession,
                 clearSession,
                 importSession,
-                exportSession
+                exportSession,
+                removeDb
                 ));
         }
 
@@ -311,6 +323,20 @@ namespace DoiFApp.ViewModels
             });
         }
 
+        [RelayCommand(CanExecute = nameof(CanRemoveDb))]
+        private async Task RemoveDb()
+        {
+            await CommandWithProcessAndError(() =>
+            {
+                File.Delete("doifapp.db");
+                return Task.CompletedTask;
+            }, async () =>
+            {
+                await Notify("Данные удалены", "Данные из сессии успешно удалены");
+                return null;
+            });
+        }
+
         #endregion
 
         #region File Tools
@@ -380,6 +406,8 @@ namespace DoiFApp.ViewModels
 #endif
             CurTask = null;
             NoTask = true;
+
+            CanRemoveDb = false;
         }
 
         #endregion
