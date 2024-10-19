@@ -252,6 +252,12 @@ namespace DoiFApp.ViewModels
         [RelayCommand(CanExecute = nameof(NoTask))]
         private async Task ClearSession()
         {
+            if (!File.Exists(App.DbPath))
+            {
+                await Notify("Сессия не загружена", $"Невозможно загрузить сессию, так как остутствует файл {App.DbPath}", NotifyColorType.Error);
+                return;
+            }
+
             var result = MessageBox.Show("Вы уверены, что хотите очистить сессию?", "Подтверждение", MessageBoxButtons.YesNo);
             if (result != DialogResult.Yes)
             {
@@ -276,6 +282,11 @@ namespace DoiFApp.ViewModels
         private async Task LoadLastSession()
         {
             var page = new DataPageViewModel();
+            if (!File.Exists(App.DbPath))
+            {
+                await Notify("Сессия не загружена", $"Невозможно загрузить сессию, так как остутствует файл {App.DbPath}", NotifyColorType.Error);
+                return;
+            }
             await CommandWithProcessAndLoad(page.LoadLessonData, page);
         }
 
@@ -294,7 +305,7 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcessAndLoad(async () =>
             {
-                await Ioc.Default.GetRequiredService<IDbCopier>().Copy(path, "doifapp.db");
+                await Ioc.Default.GetRequiredService<IDbCopier>().Copy(path, App.DbPath);
                 await page.LoadLessonData();
             }, page);
         }
@@ -313,7 +324,7 @@ namespace DoiFApp.ViewModels
             await CommandWithProcessAndError(() =>
             {
                 File.Delete(path);
-                File.Copy("doifapp.db", path);
+                File.Copy(App.DbPath, path);
 
                 return Task.CompletedTask;
             }, async () =>
@@ -328,7 +339,7 @@ namespace DoiFApp.ViewModels
         {
             await CommandWithProcessAndError(() =>
             {
-                File.Delete("doifapp.db");
+                File.Delete(App.DbPath);
                 return Task.CompletedTask;
             }, async () =>
             {

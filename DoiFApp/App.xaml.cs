@@ -19,6 +19,8 @@ namespace DoiFApp
 {
     public partial class App : Application
     {
+        public const string DbPath = "doifapp.db";
+
         public IServiceProvider Services { get; }
 
         public App()
