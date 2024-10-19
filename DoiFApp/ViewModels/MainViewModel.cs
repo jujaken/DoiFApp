@@ -9,10 +9,12 @@ using DoiFApp.Services.Builders;
 using DoiFApp.Services.Data;
 using DoiFApp.Services.Schedule;
 using DoiFApp.Services.TempSchedule;
+using DoiFApp.Services.Workload;
 using DoiFApp.ViewModels.Pages;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Forms;
+using System.Windows.Shapes;
 
 namespace DoiFApp.ViewModels
 {
@@ -44,6 +46,7 @@ namespace DoiFApp.ViewModels
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ExtractTempScheduleCommand))]
+        [NotifyCanExecuteChangedFor(nameof(ExctractWorkloadCommand))]
         public bool scheduleIsLoad = false;
 
         [ObservableProperty]
@@ -194,7 +197,7 @@ namespace DoiFApp.ViewModels
             {
                 Title = "Выдать загруженность",
                 Description = "Формирует таблицу загруженности",
-                Command = noCommand
+                Command = ExctractWorkloadCommand
             };
 
             toolsCategories.Add(new ToolCategoryViewModel("Загруженность преподавателей",
@@ -320,6 +323,26 @@ namespace DoiFApp.ViewModels
 
             if (page.LessonViewModels.Any())
                 ScheduleIsLoad = true;
+        }
+
+        [RelayCommand(CanExecute = nameof(ScheduleIsLoad))]
+        public async Task ExctractWorkload()
+        {
+            var path = SaveFile("excel file|*.xlsx", "Загруженность.xlsx");
+            if (string.IsNullOrEmpty(path))
+            {
+                await NoHasFileMessage();
+                return;
+            }
+
+            var page = new DataPageViewModel();
+
+            await CommandWithProcessAndLoad(async () =>
+            {
+                var data = await Ioc.Default.GetRequiredService<IRepo<LessonModel>>().GetAll();
+                await Ioc.Default.GetRequiredService<IDataWriter<WorkloadData>>().Write(new () { Lessons = data }, path);
+                await page.LoadLessonData();
+            }, page, "График загруженности готов, файл создан!");
         }
 
         #endregion

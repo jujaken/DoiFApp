@@ -47,10 +47,10 @@ namespace DoiFApp.Services.Workload
                 worksheet.Cells[tableVerticalIndex, 2].Value = curDay;
 
                 if (date.DayOfWeek == DayOfWeek.Saturday)
-                    DrawLine(worksheet, tableVerticalIndex, end, WorkloadHelper.SaturdayColor);
+                    DrawRow(worksheet, tableVerticalIndex, 2, end, WorkloadHelper.SaturdayColor);
 
                 if (date.DayOfWeek == DayOfWeek.Sunday)
-                    DrawLine(worksheet, tableVerticalIndex, end, WorkloadHelper.SundayColor);
+                    DrawRow(worksheet, tableVerticalIndex, 2, end, WorkloadHelper.SundayColor);
 
                 var lessons = data.Lessons!.Where(l => l.Date == date);
 
@@ -152,24 +152,16 @@ namespace DoiFApp.Services.Workload
                 _ => "n"
             };
 
-        private static void DrawLine(ExcelWorksheet worksheet, int vIndex, int hIndex, Color color)
+        private static void DrawRow(ExcelWorksheet worksheet, int y, int x1, int x2, Color color)
         {
-            var rangeString = $"A{vIndex}:{GetEndSymbol(hIndex)}{vIndex}";
-            var range = worksheet.Cells[rangeString];
+            var range = worksheet.Cells[y, x1, y, x2];
 
             range.Style.Fill.PatternType = ExcelFillStyle.Solid;
             range.Style.Fill.BackgroundColor.SetColor(color);
         }
 
-        private static void DoSquare(ExcelWorksheet worksheet, int vIndex1, int hIndex1, int vIndex2, int hIndex2, Action<ExcelRange> action)
-            => action(worksheet.Cells[$"{GetEndSymbol(hIndex1)}{vIndex1}:{GetEndSymbol(hIndex2)}{vIndex2}"]);
-
-        private static string GetEndSymbol(int hIndex)
-        {
-            var startByte = Encoding.ASCII.GetBytes("A");
-            startByte[0] += Convert.ToByte(hIndex - 1);
-            return Encoding.ASCII.GetString(startByte);
-        }
+        private static void DoSquare(ExcelWorksheet worksheet, int y1, int x1, int y2, int x2, Action<ExcelRange> action)
+            => action(worksheet.Cells[y1, x1, y2, x2]);
     }
 }
 
