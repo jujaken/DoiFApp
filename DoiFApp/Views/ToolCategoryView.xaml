@@ -20,16 +20,31 @@
 
             <ToggleButton x:Name="CategoryToggle" Style="{StaticResource CategoryToggleButton}" Content="{Binding Name}"/>
 
-            <ItemsControl ItemsSource="{Binding Tools}"
+            <ItemsControl ItemsSource="{Binding Categories}"
                           Style="{StaticResource dynamiclist}"
-                          Height="{Binding IsChecked, ElementName=CategoryToggle, Converter={StaticResource boolToHeightConverter}}"
-                          Margin="4">
+                          Height="{Binding IsChecked, ElementName=CategoryToggle, Converter={StaticResource boolToHeightConverter}}" >
 
                 <ItemsControl.ItemTemplate>
 
                     <DataTemplate>
 
-                        <local:ToolView DataContext="{Binding}" Margin="1"/>
+                        <local:ToolCategoryView DataContext="{Binding}" Margin="0, 2, 10, 2"/>
+
+                    </DataTemplate>
+
+                </ItemsControl.ItemTemplate>
+
+            </ItemsControl>
+
+            <ItemsControl ItemsSource="{Binding Tools}"
+                          Style="{StaticResource dynamiclist}"
+                          Height="{Binding IsChecked, ElementName=CategoryToggle, Converter={StaticResource boolToHeightConverter}}">
+
+                <ItemsControl.ItemTemplate>
+
+                    <DataTemplate>
+
+                        <local:ToolView DataContext="{Binding}" Margin="5, 4, 5, 0"/>
 
                     </DataTemplate>
 

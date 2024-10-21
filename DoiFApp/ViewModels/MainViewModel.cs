@@ -14,7 +14,6 @@ using DoiFApp.ViewModels.Pages;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Forms;
-using System.Windows.Shapes;
 
 namespace DoiFApp.ViewModels
 {
@@ -116,15 +115,14 @@ namespace DoiFApp.ViewModels
                 Command = noCommand
             };
 
-            toolsCategories.Add(new ToolCategoryViewModel("Индивидуальный план",
+            var plan = new ToolCategoryViewModel("Плановая нагрузка",
                 fillIndividualPlan,
                 loadCalculation,
                 loadMethodicalWork,
                 loadScientificWork,
                 moralMentalWork,
                 foreignersWork,
-                otherWork
-                ));
+                otherWork);
 
             var loadReport = new ToolViewModel()
             {
@@ -154,12 +152,16 @@ namespace DoiFApp.ViewModels
                 Command = noCommand
             };
 
-            toolsCategories.Add(new ToolCategoryViewModel("Фактическая нагрузка",
+            var fact = new ToolCategoryViewModel("Фактическая нагрузка",
                 loadReport,
                 exportReportToIP,
                 loadSchedule,
                 formReportByMW,
-                fillReportMW));
+                fillReportMW);
+
+            toolsCategories.Add(new ToolCategoryViewModel("Индивидуальный план",
+                fact,
+                plan));
 
             var checkSchedule = new ToolViewModel()
             {

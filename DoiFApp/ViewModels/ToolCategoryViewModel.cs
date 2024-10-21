@@ -7,20 +7,30 @@ namespace DoiFApp.ViewModels
     {
         [ObservableProperty]
         private string name = "Название категории";
+
+        [ObservableProperty]
+        private ObservableCollection<ToolCategoryViewModel> categories = [];
+
         [ObservableProperty]
         private ObservableCollection<ToolViewModel> tools = [];
 
+        public ToolCategoryViewModel(string name, IEnumerable<ToolCategoryViewModel>  categories) : this(name)
+        {
+            foreach (var category in categories)
+                Categories.Add(category);
+        }
+
+        public ToolCategoryViewModel(string name, IEnumerable<ToolViewModel> tools) : this(name)
+        {
+            foreach (var tool in tools)
+                Tools.Add(tool);
+        }
         public ToolCategoryViewModel(string name) : this()
         {
             this.name = name;
         }
 
-        public ToolCategoryViewModel(string name, IEnumerable<ToolViewModel> vms) : this(name)
-        {
-            foreach (var vm in vms)
-                tools.Add(vm);
-        }
-
+        public ToolCategoryViewModel(string name, params ToolCategoryViewModel[] vms) : this(name, vms.AsEnumerable()) { }
         public ToolCategoryViewModel(string name, params ToolViewModel[] vms) : this(name, vms.AsEnumerable()) { }
     }
 }
