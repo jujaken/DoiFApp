@@ -266,7 +266,6 @@ namespace DoiFApp.ViewModels
                 Command = ClearNotifiesCommand
             };
 
-
             toolsCategories.Add(new ToolCategoryViewModel("DoiF",
                 loadLastSession,
                 clearSession,
@@ -276,6 +275,8 @@ namespace DoiFApp.ViewModels
                 clearNotifies
                 ));
         }
+
+        #region Common
 
         [RelayCommand(CanExecute = nameof(NoTask))]
         private async Task LoadSchedule()
@@ -303,6 +304,8 @@ namespace DoiFApp.ViewModels
             if (page.LessonViewModels.Any())
                 ScheduleIsLoad = true;
         }
+
+        #endregion
 
         #region Плановая нагрузка
 
