@@ -13,7 +13,7 @@
 
         <StackPanel Margin="20">
 
-            <TextBlock Text="Выберите месяцы:" FontWeight="Bold" Margin="0,0,0,10"/>
+            <Label Content="Выберите месяцы:" Style="{StaticResource l2}" FontWeight="Bold" Margin="0,0,0,10"/>
 
             <ItemsControl ItemsSource="{Binding Months}">
                 <ItemsControl.ItemTemplate>

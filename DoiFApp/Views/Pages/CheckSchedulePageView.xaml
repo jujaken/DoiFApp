@@ -11,38 +11,49 @@
 
     <Grid>
 
-        <StackPanel>
-            
-            <TextBlock Text="Настройка типов:" FontWeight="Bold" Margin="0,0,0,10"/>
+        <StackPanel Margin="10">
+
+            <Label Content="Настройка типов:" Style="{StaticResource l2}" FontWeight="Bold" Margin="0,0,0,10"/>
 
             <ItemsControl ItemsSource="{Binding Path=LessonTypeTranslations}">
-                
+
                 <ItemsControl.ItemTemplate>
-                    
+
                     <DataTemplate>
-                        
+
                         <Grid>
-                            
+
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Text="{Binding CurrentName}"
-                                   VerticalAlignment="Stretch"
-                                   HorizontalAlignment="Stretch"/>
-                            
+                            <Border BorderThickness="1" BorderBrush="#FF622D42">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" >
+                                        <GradientStop Color="RosyBrown"/>
+                                        <GradientStop Color="Snow" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <TextBlock Text="{Binding CurrentName}"
+                                           Foreground="#FF2B072D"
+                                           FontSize="14"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left"
+                                           Margin="4"/>
+                            </Border>
+
                             <TextBox Text="{Binding NewName}"
                                      Grid.Column="1"
                                      VerticalAlignment="Stretch"
                                      HorizontalAlignment="Stretch"/>
-                            
+
                         </Grid>
-                        
+
                     </DataTemplate>
-                    
+
                 </ItemsControl.ItemTemplate>
-                
+
             </ItemsControl>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
