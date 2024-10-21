@@ -4,7 +4,6 @@ using CommunityToolkit.Mvvm.Input;
 using DoiFApp.Data.Models;
 using DoiFApp.Data.Repo;
 using System.Collections.ObjectModel;
-using System.Windows.Media;
 
 namespace DoiFApp.ViewModels.Pages
 {
