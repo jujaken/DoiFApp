@@ -61,56 +61,56 @@ namespace DoiFApp.ViewModels
 
             var loadSchedule = new ToolViewModel()
             {
-                Title = "Загрузить расписание",
+                Title = "📅 Загрузить расписание",
                 Description = "Загружает таблицу excel с расписанием и формирует необходимые данные для работы приложения",
                 Command = LoadScheduleCommand,
             };
 
             var fillIndividualPlan = new ToolViewModel()
             {
-                Title = "Заполнить инд. план",
+                Title = "📝 Заполнить инд. план",
                 Description = "Позволяет выбрать преподавателя и заполняет данный word файл",
                 Command = noCommand
             };
 
             var loadCalculation = new ToolViewModel()
             {
-                Title = "Загрузить расчёт уч. нагрузки",
+                Title = "📊 Загрузить расчёт уч. нагрузки",
                 Description = "Позволяет выбрать преподавателя и заполняет данный word файл",
                 Command = noCommand
             };
 
             var loadMethodicalWork = new ToolViewModel()
             {
-                Title = "Загрузить метод. работу",
+                Title = "📚 Загрузить метод. работу",
                 Description = "Загружает методическую работу из word файла",
                 Command = noCommand
             };
 
             var loadScientificWork = new ToolViewModel()
             {
-                Title = "Загрузить науч. работу",
+                Title = "🔬 Загрузить науч. работу",
                 Description = "Загружает научную работу из word файла",
                 Command = noCommand
             };
 
             var moralMentalWork = new ToolViewModel()
             {
-                Title = "Загрузить мор.-псих. работу",
+                Title = "🧠 Загрузить мор.-псих. работу",
                 Description = "Загружает морально-психологическую работу из word файла",
                 Command = noCommand
             };
 
             var foreignersWork = new ToolViewModel()
             {
-                Title = "Загруз. работу с иностранн. слуш.",
+                Title = "🌍 Загруж. работу с иностранн. слуш.",
                 Description = "Загружает работу с иностранными слушателями из word файла",
                 Command = noCommand
             };
 
             var otherWork = new ToolViewModel()
             {
-                Title = "Загрузить другую работу",
+                Title = "📁 Загрузить другую работу",
                 Description = "Загружает иные виды работ из word файла",
                 Command = noCommand
             };
@@ -126,28 +126,28 @@ namespace DoiFApp.ViewModels
 
             var loadReport = new ToolViewModel()
             {
-                Title = "Загрузить отчёт",
+                Title = "📈 Загрузить отчёт",
                 Description = "Загружает отчёт из excel файла",
                 Command = noCommand
             };
 
             var exportReportToIP = new ToolViewModel()
             {
-                Title = "Выгрузить отчёт в индивидуальный план",
+                Title = "📤 Выгрузить отчёт в индивидуальный план",
                 Description = "Загружает отчёт в word файл",
                 Command = noCommand
             };
 
             var formReportByMW = new ToolViewModel()
             {
-                Title = "Сформировать отчет по месячной нагрузке",
+                Title = "📅 Сформировать отчет по месячной нагрузке",
                 Description = "Загружает отчёт по месяцам в word файл",
                 Command = noCommand
             };
 
             var fillReportMW = new ToolViewModel()
             {
-                Title = "Заполнить ежемес. нагрузку",
+                Title = "✏️ Заполнить ежемес. нагрузку",
                 Description = "Заполняет ежемесячную нагрузку",
                 Command = noCommand
             };
@@ -165,14 +165,14 @@ namespace DoiFApp.ViewModels
 
             var checkSchedule = new ToolViewModel()
             {
-                Title = "Проверить расписание",
+                Title = "🔍 Проверить расписание",
                 Description = "Позволяет просмотреть виды занятия и правильности их обозначения",
                 Command = CheckScheduleCommand
             };
 
             var fromReport = new ToolViewModel()
             {
-                Title = "Сформировать отчёт",
+                Title = "📄 Сформировать отчёт",
                 Description = "Формулирует и выгружает данные для отчёта в excel",
                 Command = FromReportCommand
             };
@@ -181,25 +181,25 @@ namespace DoiFApp.ViewModels
                 loadSchedule,
                 checkSchedule,
                 fromReport
-                ));
+            ));
 
             var extractTempSchedule = new ToolViewModel()
             {
-                Title = "Выдать редакт. расписание",
+                Title = "🖊️ Выдать редакт. расписание",
                 Description = "Выгружает из сессии имеющееся расписание, позволяет отредактировать его вручную в excel",
                 Command = ExtractTempScheduleCommand
             };
 
             var loadTempSchedule = new ToolViewModel()
             {
-                Title = "Загр. редакт. расписание",
+                Title = "📥 Загр. редакт. расписание",
                 Description = "Загружает excel файл с отредактированным расписанием",
                 Command = LoadTempScheduleCommand
             };
 
             var extractWorkload = new ToolViewModel()
             {
-                Title = "Выдать загруженность",
+                Title = "📊 Выдать загруженность",
                 Description = "Формирует таблицу загруженности",
                 Command = ExtractWorkloadCommand
             };
@@ -209,39 +209,39 @@ namespace DoiFApp.ViewModels
                 extractWorkload,
                 extractTempSchedule,
                 loadTempSchedule
-                ));
+            ));
 
             var loadLastSession = new ToolViewModel()
             {
-                Title = "Загрузить предыдущую сессию",
+                Title = "📂 Загрузить предыдущую сессию",
                 Description = "Загружает сессию из файла doifapp.db",
                 Command = LoadLastSessionCommand
             };
 
             var clearSession = new ToolViewModel()
             {
-                Title = "Очистить сессию",
+                Title = "🧹 Очистить сессию",
                 Description = "Очищает все собранные данные из сессии",
                 Command = ClearSessionCommand
             };
 
             var importSession = new ToolViewModel()
             {
-                Title = "Загрузить файл сессии",
+                Title = "📥 Загрузить файл сессии",
                 Description = "Загружает файл сессии",
                 Command = ImportSessionCommand
             };
 
             var exportSession = new ToolViewModel()
             {
-                Title = "Выгрузить файл сессии",
+                Title = "📤 Выгрузить файл сессии",
                 Description = "Выгружает файл сессии",
                 Command = ExportSessionCommand
             };
 
             var removeDb = new ToolViewModel()
             {
-                Title = "Удалить данные",
+                Title = "🗑️ Удалить данные",
                 Description = "Удаляет файл с сессей. Команда доступна только как первая сразу после запуска",
                 Command = RemoveDbCommand
             };
