@@ -258,7 +258,6 @@ namespace DoiFApp.ViewModels
                 Command = RemoveDbCommand
             };
 
-
             var clearNotifies = new ToolViewModel()
             {
                 Title = "🧹 Очистить уведомления",
