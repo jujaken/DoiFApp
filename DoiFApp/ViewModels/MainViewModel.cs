@@ -142,7 +142,7 @@ namespace DoiFApp.ViewModels
 
             var formReportByMW = new ToolViewModel()
             {
-                Title = "Выгрузить отчёт в по месячн. нагрузке",
+                Title = "Сформировать отчет по месячной нагрузке",
                 Description = "Загружает отчёт по месяцам в word файл",
                 Command = noCommand
             };
