@@ -166,8 +166,8 @@ namespace DoiFApp.ViewModels
                 fillReportMW);
 
             toolsCategories.Add(new ToolCategoryViewModel("Индивидуальный план",
-                fact,
-                plan));
+                plan,
+                fact));
 
             // отчетное
 
@@ -307,6 +307,31 @@ namespace DoiFApp.ViewModels
         #endregion
 
         #region Плановая нагрузка
+
+        [RelayCommand(CanExecute = nameof(NoTask))]
+        public async Task LoadTempSchedule()
+        {
+            var path = GetFile("excel file|*.xlsx", "редактируемое расписание.xlsx");
+            if (string.IsNullOrEmpty(path))
+            {
+                await NoHasFileMessage();
+                return;
+            }
+
+            var page = new DataPageViewModel();
+
+            await CommandWithProcessAndLoad(async () =>
+            {
+                var data = await Ioc.Default.GetRequiredService<IDataReader<TempScheduleData>>().Read(path);
+                if (data.Lessons == null || !data.Lessons.Any())
+                    throw new Exception("Data not found");
+
+                await Ioc.Default.GetRequiredService<IDataSaver<TempScheduleData>>().Save(data);
+            }, page, "Данные из редактируемого расписания были загружены");
+
+            if (page.LessonViewModels.Any())
+                ScheduleIsLoad = true;
+        }
 
         #endregion
 
