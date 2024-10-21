@@ -16,16 +16,13 @@ namespace DoiFApp.ViewModels.Pages
         private ObservableCollection<EducationTeacherViewModel> educationTeacherModel = [];
 
         [RelayCommand]
-        public async Task LoadLessonData()
+        public async Task LoadData()
         {
             LessonViewModels = new((await Ioc.Default.GetRequiredService<IRepo<LessonModel>>().GetAll())
                 .Select(l => new LessonViewModel(l)));
 
             EducationTeacherModel = new((await Ioc.Default.GetRequiredService<IRepo<EducationTeacherModel>>()
-                    .Include(at => at.Works1)
-                    .Include(at => at.Works2)
-                    .Include(at => at.ReallyWorks1)
-                    .Include(at => at.ReallyWorks2).GetAll())
+                    .Include(at => at.Works).GetAll())
                 .Select(l => new EducationTeacherViewModel(l)));
         }
     }

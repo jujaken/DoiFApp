@@ -27,13 +27,19 @@ namespace DoiFApp.Services.Education
                     if (work1 != null)
                     {
                         work1.TypesAndHours.ForEach(t => typeAndHours.Add(t));
+                        work1.WorkCategory = WorkCategory.PlanFirstSemester;
                         works.Add(work1);
+                        work1.Teacher = teacher;
+                        teacher.Works.Add(work1);
                     }
                     var work2 = GetWorkTeacher(data, 77, 2, j);
                     if (work2 != null)
                     {
                         work2.TypesAndHours.ForEach(t => typeAndHours.Add(t));
+                        work2.WorkCategory = WorkCategory.PlanSecondSemester;
                         works.Add(work2);
+                        work2.Teacher = teacher;
+                        teacher.Works.Add(work2);
                     }
                     teachers.Add(teacher);
                 });

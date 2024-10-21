@@ -8,7 +8,7 @@ namespace DoiFApp.Services.IndividualPlan
         protected override void UpdateTables(EducationTeacherModel teacher, List<Table> tables)
         {
             // ПЛАНИРУЕМАЯ НА 1 ПОЛУГОДИЕ
-            var w1Dones = InsertData(tables[0], teacher.Works1);
+            var w1Dones = InsertData(tables[0], teacher.PlanWorks1);
         }
     }
 }

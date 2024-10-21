@@ -9,10 +9,10 @@ namespace DoiFApp.ViewModels
 
         public string Id => model is not null ? $"{model.Id}" : "-1";
         public string Name => model is not null ? $"{model.Name}" : "Name";
-        public string Works1 => model?.Works1.Count.ToString() ?? "?";
-        public string Works2 => model?.Works2.Count.ToString() ?? "?";
-        public string ReallyWorks1 => model?.ReallyWorks1.Count.ToString() ?? "?";
-        public string ReallyWorks2 => model?.ReallyWorks2.Count.ToString() ?? "?";
+        public string Works1 => model?.PlanWorks1.Count.ToString() ?? "?";
+        public string Works2 => model?.PlanWorks2.Count.ToString() ?? "?";
+        public string ReallyWorks1 => model?.FactWorks1.Count.ToString() ?? "?";
+        public string ReallyWorks2 => model?.FactWorks2.Count.ToString() ?? "?";
 
         public EducationTeacherViewModel(EducationTeacherModel model) : this()
                 => SetModel(model);

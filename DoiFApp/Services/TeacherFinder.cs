@@ -14,13 +14,7 @@ namespace DoiFApp.Services
             if (teacher == null) return null;
 
             return await teacherRepo.Set
-                    .Include(at => at.Works1)
-                        .ThenInclude(w => w.TypesAndHours)
-                    .Include(at => at.Works2)
-                        .ThenInclude(w => w.TypesAndHours)
-                    .Include(at => at.ReallyWorks1)
-                        .ThenInclude(w => w.TypesAndHours)
-                    .Include(at => at.ReallyWorks2)
+                    .Include(at => at.Works)
                         .ThenInclude(w => w.TypesAndHours)
                 .Where(t => teacher.Id == t.Id).FirstOrDefaultAsync();
         }

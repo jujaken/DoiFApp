@@ -7,6 +7,7 @@ using DoiFApp.Data.Repo;
 using DoiFApp.Services;
 using DoiFApp.Services.Builders;
 using DoiFApp.Services.Data;
+using DoiFApp.Services.Education;
 using DoiFApp.Services.Schedule;
 using DoiFApp.Services.TempSchedule;
 using DoiFApp.Services.Workload;
@@ -81,7 +82,7 @@ namespace DoiFApp.ViewModels
             {
                 Title = "📊 Загрузить расчёт уч. нагрузки",
                 Description = "Позволяет выбрать преподавателя и заполняет данный word файл",
-                Command = noCommand
+                Command = LoadCalculationCommand
             };
 
             var loadMethodicalWork = new ToolViewModel()
@@ -297,7 +298,7 @@ namespace DoiFApp.ViewModels
                     throw new Exception("Data not found");
 
                 await Ioc.Default.GetRequiredService<IDataSaver<ScheduleData>>().Save(data);
-                await page.LoadLessonData();
+                await page.LoadData();
             }, page);
 
             if (page.LessonViewModels.Any())
@@ -309,9 +310,9 @@ namespace DoiFApp.ViewModels
         #region Плановая нагрузка
 
         [RelayCommand(CanExecute = nameof(NoTask))]
-        public async Task LoadTempSchedule()
+        public async Task LoadCalculation()
         {
-            var path = GetFile("excel file|*.xlsx", "редактируемое расписание.xlsx");
+            var path = GetFile("excel file|*.xlsx", "Расчёт.xlsx");
             if (string.IsNullOrEmpty(path))
             {
                 await NoHasFileMessage();
@@ -322,15 +323,16 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcessAndLoad(async () =>
             {
-                var data = await Ioc.Default.GetRequiredService<IDataReader<TempScheduleData>>().Read(path);
-                if (data.Lessons == null || !data.Lessons.Any())
+                var data = await Ioc.Default.GetRequiredService<IDataReader<EducationData>>().Read(path);
+                if (!data.IsHolistic)
                     throw new Exception("Data not found");
 
-                await Ioc.Default.GetRequiredService<IDataSaver<TempScheduleData>>().Save(data);
-            }, page, "Данные из редактируемого расписания были загружены");
+                await Ioc.Default.GetRequiredService<IDataSaver<EducationData>>().Save(data);
+                await page.LoadData();
+            }, page, "Данные из расчёта расписания были загружены");
 
             if (page.LessonViewModels.Any())
-                ScheduleIsLoad = true;
+                EducationIsLoad = true;
         }
 
         #endregion
@@ -357,7 +359,7 @@ namespace DoiFApp.ViewModels
                         l.LessionType = lessonTypeTranslations.FirstOrDefault(t => t.CurrentName == l.LessionType)!.NewName;
                         repo.Update(l);
                     });
-                    await dataPage.LoadLessonData();
+                    await dataPage.LoadData();
                 }, dataPage, "Вы можете редактировать");
             };
             await CommandWithProcessAndLoad(page.Update, page, "Вы можете редактировать");
@@ -379,7 +381,7 @@ namespace DoiFApp.ViewModels
             {
                 var data = await Ioc.Default.GetRequiredService<IRepo<LessonModel>>().GetAll();
                 await Ioc.Default.GetRequiredService<IDataWriter<ScheduleData>>().Write(new() { Lessons = data }, path);
-                await page.LoadLessonData();
+                await page.LoadData();
             }, page, "Отчёт готов, файл создан!");
         }
 
@@ -406,7 +408,30 @@ namespace DoiFApp.ViewModels
             }, page, "Теперь, вы можете обновить файл и загрузить его с помощью команты \"Загр. редакт. расписание\"!");
         }
 
-      
+        [RelayCommand(CanExecute = nameof(NoTask))]
+        public async Task LoadTempSchedule()
+        {
+            var path = GetFile("excel file|*.xlsx", "редактируемое расписание.xlsx");
+            if (string.IsNullOrEmpty(path))
+            {
+                await NoHasFileMessage();
+                return;
+            }
+
+            var page = new DataPageViewModel();
+
+            await CommandWithProcessAndLoad(async () =>
+            {
+                var data = await Ioc.Default.GetRequiredService<IDataReader<TempScheduleData>>().Read(path);
+                if (data.Lessons == null || !data.Lessons.Any())
+                    throw new Exception("Data not found");
+
+                await Ioc.Default.GetRequiredService<IDataSaver<TempScheduleData>>().Save(data);
+            }, page, "Данные из редактируемого расписания были загружены");
+
+            if (page.LessonViewModels.Any())
+                ScheduleIsLoad = true;
+        }
 
         [RelayCommand(CanExecute = nameof(ScheduleIsLoad))]
         public async Task ExtractWorkload()
@@ -440,7 +465,7 @@ namespace DoiFApp.ViewModels
             {
                 var data = await Ioc.Default.GetRequiredService<IRepo<LessonModel>>().GetWhere(x => months.Contains(x.Date.Month));
                 await Ioc.Default.GetRequiredService<IDataWriter<WorkloadData>>().Write(new() { Lessons = data }, path);
-                await page.LoadLessonData();
+                await page.LoadData();
             }, page, "График загруженности готов, файл создан!");
         }
 
@@ -486,7 +511,7 @@ namespace DoiFApp.ViewModels
                 await Notify("Сессия не загружена", $"Невозможно загрузить сессию, так как остутствует файл {App.DbPath}", NotifyColorType.Error);
                 return;
             }
-            await CommandWithProcessAndLoad(page.LoadLessonData, page);
+            await CommandWithProcessAndLoad(page.LoadData, page);
 
             if (page.LessonViewModels.Any())
                 ScheduleIsLoad = true;
@@ -511,7 +536,7 @@ namespace DoiFApp.ViewModels
             await CommandWithProcessAndLoad(async () =>
             {
                 await Ioc.Default.GetRequiredService<IDbCopier>().Copy(path, App.DbPath);
-                await page.LoadLessonData();
+                await page.LoadData();
             }, page);
         }
 

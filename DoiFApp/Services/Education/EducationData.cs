@@ -9,12 +9,12 @@ namespace DoiFApp.Services.Education
         public IEnumerable<EducationTypeAndHourModel>? TypeAndHourModels { get; init; }
         public IEnumerable<EducationWorkModel>? WorkModels { get; init; }
 
-        public bool IsHolistic => TeacherModels != null
-            && TypeAndHourModels != null
-            && WorkModels != null;
+        public bool IsHolistic => TeacherModels != null && TeacherModels.Any()
+            && TypeAndHourModels != null && TypeAndHourModels.Any()
+            && WorkModels != null && WorkModels.Any();
 
         public IEnumerable<object> AllObjects => TeacherModels!.Cast<object>()
-                                                .Union(TypeAndHourModels!.Cast<object>())
-                                                .Union(WorkModels!.Cast<object>());
+                                                 .Union(TypeAndHourModels!.Cast<object>())
+                                                 .Union(WorkModels!.Cast<object>());
     }
 }

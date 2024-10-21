@@ -1,13 +1,26 @@
-﻿namespace DoiFApp.Data.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DoiFApp.Data.Models
 {
     public class EducationTeacherModel(string name) : Model
     {
         public string Name { get; set; } = name;
+        public List<EducationWorkModel> Works { get; set; } = [];
 
-        public List<EducationWorkModel> Works1 { get; set; } = []; // первое 
-        public List<EducationWorkModel> Works2 { get; set; } = []; // второе полугодие
+        [NotMapped]
+        public List<EducationWorkModel> PlanWorks1
+            => Works.Where(w => w.WorkCategory == WorkCategory.PlanFirstSemester).ToList();
+        
+        [NotMapped]
+        public List<EducationWorkModel> PlanWorks2
+            => Works.Where(w => w.WorkCategory == WorkCategory.PlanSecondSemester).ToList();
 
-        public List<EducationWorkModel> ReallyWorks1 { get; set; } = []; // первое 
-        public List<EducationWorkModel> ReallyWorks2 { get; set; } = []; // второе полугодие
+        [NotMapped]
+        public List<EducationWorkModel> FactWorks1
+            => Works.Where(w => w.WorkCategory == WorkCategory.FactFirstSemester).ToList();
+
+        [NotMapped]
+        public List<EducationWorkModel> FactWorks2
+            => Works.Where(w => w.WorkCategory == WorkCategory.FactSecondSemester).ToList();
     }
 }
