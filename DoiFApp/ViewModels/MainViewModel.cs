@@ -59,12 +59,16 @@ namespace DoiFApp.ViewModels
         {
             var noCommand = new RelayCommand(() => { }, () => false);
 
+            // общее
+
             var loadSchedule = new ToolViewModel()
             {
                 Title = "📅 Загрузить расписание",
                 Description = "Загружает таблицу excel с расписанием и формирует необходимые данные для работы приложения",
                 Command = LoadScheduleCommand,
             };
+
+            // плановая
 
             var fillIndividualPlan = new ToolViewModel()
             {
@@ -124,6 +128,8 @@ namespace DoiFApp.ViewModels
                 foreignersWork,
                 otherWork);
 
+            // фактическая
+
             var loadReport = new ToolViewModel()
             {
                 Title = "📈 Загрузить отчёт",
@@ -163,6 +169,8 @@ namespace DoiFApp.ViewModels
                 fact,
                 plan));
 
+            // отчетное
+
             var checkSchedule = new ToolViewModel()
             {
                 Title = "🔍 Проверить расписание",
@@ -182,6 +190,8 @@ namespace DoiFApp.ViewModels
                 checkSchedule,
                 fromReport
             ));
+
+            // загруженность
 
             var extractTempSchedule = new ToolViewModel()
             {
@@ -210,6 +220,8 @@ namespace DoiFApp.ViewModels
                 extractTempSchedule,
                 loadTempSchedule
             ));
+
+            // doif
 
             var loadLastSession = new ToolViewModel()
             {
@@ -246,12 +258,22 @@ namespace DoiFApp.ViewModels
                 Command = RemoveDbCommand
             };
 
+
+            var clearNotifies = new ToolViewModel()
+            {
+                Title = "🧹 Очистить уведомления",
+                Description = "Убирает уведомления справа",
+                Command = ClearNotifiesCommand
+            };
+
+
             toolsCategories.Add(new ToolCategoryViewModel("DoiF",
                 loadLastSession,
                 clearSession,
                 importSession,
                 exportSession,
-                removeDb
+                removeDb,
+                clearNotifies
                 ));
         }
 
@@ -281,6 +303,14 @@ namespace DoiFApp.ViewModels
             if (page.LessonViewModels.Any())
                 ScheduleIsLoad = true;
         }
+
+        #region Плановая нагрузка
+
+        #endregion
+
+        #region Фактическая нагрузка
+
+        #endregion
 
         #region Отчётная документация
 
@@ -518,6 +548,17 @@ namespace DoiFApp.ViewModels
                 return null;
             });
         }
+
+        [RelayCommand]
+        private Task ClearNotifies()
+        {
+            var oldPage = CurPage;
+            CurPage = null;
+            Notifies.Clear();
+            CurPage = oldPage;
+            return Task.CompletedTask;
+        }
+
 
         #endregion
 
