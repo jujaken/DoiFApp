@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using DoiFApp.Data.Models;
 using DoiFApp.Data.Repo;
+using DoiFApp.Services;
 using System.Collections.ObjectModel;
 
 namespace DoiFApp.ViewModels.Pages
@@ -14,29 +16,50 @@ namespace DoiFApp.ViewModels.Pages
         [ObservableProperty]
         private ObservableCollection<string> teachers = [];
 
-        [ObservableProperty]
         private string? selectedTeacher;
+        public string? SelectedTeacher
+        {
+            get => selectedTeacher;
+            set
+            {
+                SetProperty(ref selectedTeacher, value);
+                CanOk = SelectedTeacher != null;
+            }
+        }
+
+        [ObservableProperty]
+        private bool isFirstSemester = true;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(OkCommand))]
+        private bool canOk;
 
         [RelayCommand]
         public async Task Update()
         {
-            var repo = Ioc.Default.GetRequiredService<IRepo<EducationTeacherViewModel>>();
-            var teachers = await (Input == null ? repo.GetAll() : repo.GetWhere(t => t.Name.Contains(Input)));
+            var finder = Ioc.Default.GetRequiredService<ITeacherFinder>();
+            var teachers = await finder.FindByPart(Input);
             Teachers.Clear();
-            foreach(var teacher in teachers)
-                Teachers.Add(teacher.Name);
+            if (teachers != null)
+                foreach (var teacher in teachers)
+                    Teachers.Add(teacher.Name);
         }
 
-        public Action<EducationTeacherViewModel>? OnSelect { get; set; }
+        public event Action? OnCancel;
 
         [RelayCommand]
-        public async Task Select()
+        public void Cancel()
         {
-            var teacher = (await Ioc.Default.GetRequiredService<IRepo<EducationTeacherViewModel>>()
-                .GetWhere(t => t.Name == SelectedTeacher!)).FirstOrDefault()
-                    ?? throw new Exception("teacher not found");
+            OnCancel?.Invoke();
+        }
 
-            OnSelect?.Invoke(teacher);
+        public event Func<(string teacherName, bool isFirstSemester), Task>? OnOk;
+
+        [RelayCommand(CanExecute = nameof(CanOk))]
+        public async Task Ok()
+        {
+            if (OnOk != null)
+                await OnOk.Invoke((selectedTeacher!, IsFirstSemester));
         }
     }
 }

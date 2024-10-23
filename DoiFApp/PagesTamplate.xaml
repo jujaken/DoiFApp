@@ -22,4 +22,9 @@
         <pv:CheckSchedulePageView/>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type pvm:FillIndividualPlanPageViewModel}">
+        <pv:FillIndividualPlanPageView/>
+    </DataTemplate>
+
+
 </ResourceDictionary>

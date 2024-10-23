@@ -8,13 +8,16 @@ using DoiFApp.Services;
 using DoiFApp.Services.Builders;
 using DoiFApp.Services.Data;
 using DoiFApp.Services.Education;
+using DoiFApp.Services.IndividualPlan;
 using DoiFApp.Services.Schedule;
 using DoiFApp.Services.TempSchedule;
 using DoiFApp.Services.Workload;
 using DoiFApp.ViewModels.Pages;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Forms;
+using System.Windows.Shapes;
 
 namespace DoiFApp.ViewModels
 {
@@ -52,6 +55,7 @@ namespace DoiFApp.ViewModels
         public bool scheduleIsLoad = false;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(FillIndividualPlanCommand))]
         public bool educationIsLoad = false;
 
         #endregion
@@ -75,7 +79,7 @@ namespace DoiFApp.ViewModels
             {
                 Title = "📝 Заполнить инд. план",
                 Description = "Позволяет выбрать преподавателя и заполняет данный word файл",
-                Command = noCommand
+                Command = FillIndividualPlanCommand
             };
 
             var loadCalculation = new ToolViewModel()
@@ -309,6 +313,43 @@ namespace DoiFApp.ViewModels
 
         #region Плановая нагрузка
 
+        [RelayCommand(CanExecute = nameof(EducationIsLoad))]
+        public async Task FillIndividualPlan()
+        {
+            var page = new FillIndividualPlanPageViewModel();
+            page.OnCancel += () => CurPage = null;
+            page.OnOk += async (result) =>
+            {
+                var path = GetFile("word file|*.docx", "Индивидуальный план.docx");
+                if (string.IsNullOrEmpty(path))
+                {
+                    await NoHasFileMessage();
+                    return;
+                }
+
+                var dataPage = new DataPageViewModel();
+                await CommandWithProcessAndLoad(async () =>
+                {
+                    var teacher = (await Ioc.Default.GetRequiredService<IRepo<EducationTeacherModel>>()
+                        .Include(at => at.Works)
+                        .GetWhere(t => t.Name == result.teacherName)).FirstOrDefault();
+
+                    if (result.isFirstSemester)
+                    {
+                        var data = new FirstHalfIndividualPlanData() { TeacherModel = teacher };
+                        await Ioc.Default.GetRequiredService<IDataWriter<FirstHalfIndividualPlanData>>().Write(data, path);
+                    }
+                    else
+                    {
+                        var data = new SecondHalfIndividualPlanData() { TeacherModel = teacher };
+                        await Ioc.Default.GetRequiredService<IDataWriter<SecondHalfIndividualPlanData>>().Write(data, path);
+                    }
+                    await dataPage.LoadData();
+                }, dataPage, "Задание выполнено");
+            };
+            await CommandWithProcessAndLoad(page.Update, page, "Меню открыто");
+        }
+
         [RelayCommand(CanExecute = nameof(NoTask))]
         public async Task LoadCalculation()
         {
@@ -360,9 +401,9 @@ namespace DoiFApp.ViewModels
                         repo.Update(l);
                     });
                     await dataPage.LoadData();
-                }, dataPage, "Вы можете редактировать");
+                }, dataPage, "Задание выполнено");
             };
-            await CommandWithProcessAndLoad(page.Update, page, "Вы можете редактировать");
+            await CommandWithProcessAndLoad(page.Update, page, "Меню открыто");
         }
 
         [RelayCommand(CanExecute = nameof(ScheduleIsLoad))]
