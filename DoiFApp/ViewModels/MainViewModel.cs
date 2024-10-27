@@ -14,11 +14,9 @@ using DoiFApp.Services.Schedule;
 using DoiFApp.Services.TempSchedule;
 using DoiFApp.Services.Workload;
 using DoiFApp.ViewModels.Pages;
-using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Forms;
-using System.Windows.Shapes;
 
 namespace DoiFApp.ViewModels
 {
