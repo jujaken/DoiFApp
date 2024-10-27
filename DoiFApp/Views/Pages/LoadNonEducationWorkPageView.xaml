@@ -12,6 +12,9 @@
     <Grid>
 
         <StackPanel Margin="20">
+
+            <Label Content="{Binding Tittle}" Style="{StaticResource l2}" FontWeight="Bold" Margin="0,0,0,10"/>
+
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3*"/>
@@ -37,8 +40,11 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <Grid Background="Snow"
-                                  Margin="2"/>
+                            <Border Background="Snow"
+                                    BorderBrush="#101010"
+                                    CornerRadius="1.1"
+                                    BorderThickness="1"
+                                    Margin="2"/>
 
                             <TextBlock Text="{Binding Text}"
                                        VerticalAlignment="Center"

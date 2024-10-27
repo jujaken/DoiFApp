@@ -391,7 +391,7 @@ namespace DoiFApp.ViewModels
                 return;
             }
 
-            var page = new LoadNonEducationWorkPageViewModel();
+            var page = new LoadNonEducationWorkPageViewModel() { WorkType = workType };
             page.OnCancel += () => CurPage = null;
             page.OnOk += async (result) =>
             {
