@@ -2,8 +2,8 @@
 {
     public enum SemesterType
     {
-        None,
-        First,
-        Second,
+        None = 0b0,
+        First = 0b01,
+        Second = 0b10,
     }
 }

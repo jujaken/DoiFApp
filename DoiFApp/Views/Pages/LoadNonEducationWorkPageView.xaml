@@ -34,6 +34,7 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
                             <Grid Background="Snow"
@@ -45,14 +46,21 @@
                                        TextWrapping="Wrap"/>
 
                             <ToggleButton Grid.Column="1"
-                                          Content="Первый семестр"
+                                          Content="Выбр."
+                                          Height="25"
+                                          VerticalAlignment="Top"
+                                          Margin="2"
+                                          IsChecked="{Binding IsSelected}"/>
+                            
+                            <ToggleButton Grid.Column="2"
+                                          Content="1 сем."
                                           Height="25"
                                           VerticalAlignment="Top"
                                           Margin="2"
                                           IsChecked="{Binding IsFirstSemester}"/>
                             
-                            <ToggleButton Grid.Column="2"
-                                          Content="Второй семестр"
+                            <ToggleButton Grid.Column="3"
+                                          Content="2 сем."
                                           Height="25"
                                           VerticalAlignment="Top"
                                           Margin="2"
