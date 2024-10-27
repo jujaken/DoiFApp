@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Input;
 using DoiFApp.Enums;
 using DoiFApp.Utils.Extensions;
 using System.Collections.ObjectModel;
-using System.Windows.Media;
 
 namespace DoiFApp.ViewModels.Pages
 {
@@ -28,9 +27,12 @@ namespace DoiFApp.ViewModels.Pages
             OnLoad?.Invoke();
         }
 
-        public void Save()
+        public event Action? OnExtract;
+
+        [RelayCommand]
+        public void Extract()
         {
-            OnLoad?.Invoke();
+            OnExtract?.Invoke();
         }
 
         public event Action? OnCancel;
