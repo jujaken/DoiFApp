@@ -56,7 +56,7 @@
                                           Height="25"
                                           VerticalAlignment="Top"
                                           Margin="2"
-                                          IsChecked="{Binding IsFirstSemester}"/>
+                                          IsChecked="{Binding IsSecondSemester}"/>
 
                         </Grid>
 
