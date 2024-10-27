@@ -1,4 +1,5 @@
-﻿using DoiFApp.ViewModels;
+﻿using DoiFApp.Enums;
+using DoiFApp.ViewModels;
 using System.Windows.Media;
 
 namespace DoiFApp.Services.Builders
@@ -57,13 +58,5 @@ namespace DoiFApp.Services.Builders
             (var vm, viewModel) = (viewModel, new NotifyViewModel());
             return vm;
         }
-    }
-
-    public enum NotifyColorType
-    {
-        None,
-        Info,
-        Error,
-        Warning,
     }
 }

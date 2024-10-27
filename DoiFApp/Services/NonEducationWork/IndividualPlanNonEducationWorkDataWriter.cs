@@ -1,4 +1,5 @@
-﻿using DoiFApp.Services.Data;
+﻿using DoiFApp.Enums;
+using DoiFApp.Services.Data;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
 
@@ -15,8 +16,8 @@ namespace DoiFApp.Services.NonEducationWork
 
             var works = data.NonEducationWorks!;
 
-            var firstSemester = works.Where(w => w.Semester == DoiFApp.Data.Models.NonEducationWorkSemesterType.First);
-            var secondSemester = works.Where(w => w.Semester == DoiFApp.Data.Models.NonEducationWorkSemesterType.Second);
+            var firstSemester = works.Where(w => w.Semester == SemesterType.First);
+            var secondSemester = works.Where(w => w.Semester == SemesterType.Second);
 
             // todo UpdateTable...
 

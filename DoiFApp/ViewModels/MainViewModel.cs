@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using DoiFApp.Data;
 using DoiFApp.Data.Models;
 using DoiFApp.Data.Repo;
+using DoiFApp.Enums;
 using DoiFApp.Services;
 using DoiFApp.Services.Builders;
 using DoiFApp.Services.Data;
