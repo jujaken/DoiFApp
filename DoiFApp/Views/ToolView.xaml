@@ -11,7 +11,7 @@
     
     <Grid>
 
-        <Button Content="{Binding Title}" Command="{Binding Command}">
+        <Button Content="{Binding Title}" Command="{Binding Command}" CommandParameter="{Binding Argument}">
 
             <Button.ToolTip>
                 <ToolTip Content="{Binding Description}" Placement="Mouse"/>

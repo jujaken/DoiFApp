@@ -10,8 +10,8 @@ namespace DoiFApp.Enums
         Methodic,
         [Description("Научная работа")]
         Scientic,
-        [Description("Воспитательная работа")]
-        Educational,
+        [Description("Морально-психологическая работа")]
+        Moral,
         [Description("Работа с иностранными слушателями")]
         Foreignic,
         [Description("Иная работа")]

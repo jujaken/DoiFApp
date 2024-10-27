@@ -14,26 +14,15 @@ namespace DoiFApp.ViewModels.Pages
         public string Tittle => WorkType.GetDescription();
 
         [ObservableProperty]
-        private ObservableCollection<NonEducationWorkViewModel> nonEducationWorks = [];
+        private ObservableCollection<NonEducationWorkViewModel> nonEducationWorks =
+        [
+            new (new() { Text = "Работа 1" }) { IsFirstSemester = true, IsSecondSemester = false },
+            new (new() { Text = "Работа 2" }) { IsFirstSemester = false, IsSecondSemester = true },
+            new (new() { Text = "Работа 3" }) { IsFirstSemester = true, IsSecondSemester = true },
+        ];
 
         [ObservableProperty]
         private bool isLoad;
-
-        public event Action? OnLoad;
-
-        [RelayCommand]
-        public void Load()
-        {
-            OnLoad?.Invoke();
-        }
-
-        public event Action? OnExtract;
-
-        [RelayCommand]
-        public void Extract()
-        {
-            OnExtract?.Invoke();
-        }
 
         public event Action? OnCancel;
 
@@ -43,13 +32,13 @@ namespace DoiFApp.ViewModels.Pages
             OnCancel?.Invoke();
         }
 
-        public event Func<NonEducationWorkType, Task>? OnOk;
+        public event Func<NonEducationWorkViewModel[], Task>? OnOk;
 
         [RelayCommand(CanExecute = nameof(IsLoad))]
         public async Task Ok()
         {
             if (OnOk != null)
-                await OnOk.Invoke(WorkType);
+                await OnOk.Invoke([.. NonEducationWorks]);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace DoiFApp.Data
         public DbSet<EducationTeacherModel> EducationTeachers { get; set; }
         public DbSet<EducationWorkModel> EducationWorks{ get; set; }
         public DbSet<EducationTypeAndHourModel> EducationTypesAndHours { get; set; }
-        public DbSet<NonEducationWork> NonEducationWorks {  get; set; }
+        //public DbSet<NonEducationWork> NonEducationWorks {  get; set; }
 
         public AppDbContext()
         {

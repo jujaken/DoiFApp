@@ -10,6 +10,7 @@ using DoiFApp.Services.Builders;
 using DoiFApp.Services.Data;
 using DoiFApp.Services.Education;
 using DoiFApp.Services.IndividualPlan;
+using DoiFApp.Services.NonEducationWork;
 using DoiFApp.Services.Schedule;
 using DoiFApp.Services.TempSchedule;
 using DoiFApp.Services.Workload;
@@ -85,42 +86,47 @@ namespace DoiFApp.ViewModels
             {
                 Title = "📊 Загрузить расчёт уч. нагрузки",
                 Description = "Позволяет выбрать преподавателя и заполняет данный word файл",
-                Command = LoadCalculationCommand
+                Command = LoadCalculationCommand,
             };
 
             var loadMethodicalWork = new ToolViewModel()
             {
-                Title = "📚 Загрузить метод. работу",
+                Title = "📚 Заполнить метод. работу",
                 Description = "Загружает методическую работу из word файла",
-                Command = noCommand
+                Command = LoadNonEducationCommand,
+                Argument = NonEducationWorkType.Methodic,
             };
 
             var loadScientificWork = new ToolViewModel()
             {
-                Title = "🔬 Загрузить науч. работу",
+                Title = "🔬 Заполнить науч. работу",
                 Description = "Загружает научную работу из word файла",
-                Command = noCommand
+                Command = LoadNonEducationCommand,
+                Argument = NonEducationWorkType.Scientic
             };
 
             var moralMentalWork = new ToolViewModel()
             {
-                Title = "🧠 Загрузить мор.-псих. работу",
+                Title = "🧠 Заполнить мор.-псих. работу",
                 Description = "Загружает морально-психологическую работу из word файла",
-                Command = noCommand
+                Command = LoadNonEducationCommand,
+                Argument = NonEducationWorkType.Moral
             };
 
             var foreignersWork = new ToolViewModel()
             {
-                Title = "🌍 Загруж. работу с иностранн. слуш.",
+                Title = "🌍 Заполнить работу с иностранн. слуш.",
                 Description = "Загружает работу с иностранными слушателями из word файла",
-                Command = noCommand
+                Command = LoadNonEducationCommand,
+                Argument = NonEducationWorkType.Foreignic
             };
 
             var otherWork = new ToolViewModel()
             {
-                Title = "📁 Загрузить другую работу",
+                Title = "📁 Заполнить другую работу",
                 Description = "Загружает иные виды работ из word файла",
-                Command = noCommand
+                Command = LoadNonEducationCommand,
+                Argument = NonEducationWorkType.Other
             };
 
             var plan = new ToolCategoryViewModel("Плановая нагрузка",
@@ -373,6 +379,47 @@ namespace DoiFApp.ViewModels
 
             if (page.LessonViewModels.Any())
                 EducationIsLoad = true;
+        }
+
+        [RelayCommand(CanExecute = nameof(NoTask))]
+        public async Task LoadNonEducation(NonEducationWorkType workType)
+        {
+            var path = GetFile("word file|*.docx", "Работа.docx");
+            if (string.IsNullOrEmpty(path))
+            {
+                await NoHasFileMessage();
+                return;
+            }
+
+            var page = new LoadNonEducationWorkPageViewModel();
+            page.OnCancel += () => CurPage = null;
+            page.OnOk += async (result) =>
+            {
+                var path = GetFile("word file|*.docx", "Индивидуальный план.docx");
+                if (string.IsNullOrEmpty(path))
+                {
+                    await NoHasFileMessage();
+                    return;
+                }
+
+                var dataPage = new DataPageViewModel();
+                await CommandWithProcessAndLoad(async () =>
+                {
+                    await dataPage.LoadData();
+                }, dataPage, "Задание выполнено");
+            };
+
+            await CommandWithProcessAndLoad(async () =>
+            {
+                var data = await Ioc.Default.GetRequiredService<IDataReader<NonEducationWorkData>>().Read(path);
+                if (!data.IsHolistic)
+                    throw new Exception("Data not found");
+
+                foreach(var work in data.NonEducationWorks!)
+                    work.Type = workType;
+
+                page.NonEducationWorks =  new(data.NonEducationWorks.Select(w => new NonEducationWorkViewModel(w)));
+            }, page, "Меню открыто");
         }
 
         #endregion

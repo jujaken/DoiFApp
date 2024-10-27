@@ -13,5 +13,14 @@ namespace DoiFApp.ViewModels
         }
 
         public string Text => NonEducationWork?.Text ?? "None";
+
+        [ObservableProperty]
+        private bool isSelected;
+
+        [ObservableProperty]
+        private bool isFirstSemester;
+
+        [ObservableProperty]
+        private bool isSecondSemester;
     }
 }

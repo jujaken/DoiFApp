@@ -12,5 +12,6 @@ namespace DoiFApp.ViewModels
         private string description = "tool desc";
 
         public ICommand? Command { get; set; }
+        public object? Argument { get; set; }
     }
 }
