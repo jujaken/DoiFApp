@@ -401,12 +401,28 @@ namespace DoiFApp.ViewModels
                     await NoHasFileMessage();
                     return;
                 }
-
-                var dataPage = new DataPageViewModel();
-                await CommandWithProcessAndLoad(async () =>
+                
+                await CommandWithProcess(async () =>
                 {
-                    await dataPage.LoadData();
-                }, dataPage, "Задание выполнено");
+                    var data = new NonEducationWorkData()
+                    {
+                        NonEducationWorks = page.NonEducationWorks.Select(w => w.NonEducationWork)!,
+                        IsRewrite = page.IsRewrite,
+                    };
+                    if (!data.IsHolistic)
+                        throw new Exception("data is no holistic");
+
+                    await Ioc.Default.GetRequiredService<IDataWriter<NonEducationWorkData>>().Write(data, path);
+                },
+                async () =>
+                {
+                    await Notify("Успех", "Данные выгружены", NotifyColorType.Info);
+                    return page;
+                }, async () =>
+                {
+                    await Notify("Ошибка", "Данные отсутствуют", NotifyColorType.Error);
+                    return page;
+                });
             };
 
             await CommandWithProcessAndLoad(async () =>

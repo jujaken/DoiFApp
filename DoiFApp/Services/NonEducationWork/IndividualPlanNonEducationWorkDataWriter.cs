@@ -59,7 +59,7 @@ namespace DoiFApp.Services.NonEducationWork
 
                 var id = row.Cells[0].Paragraphs[0];
                 id.RemoveText(0);
-                id.Append(table.Rows.Count().ToString());
+                id.Append(table.Rows.Count.ToString());
 
                 var text = row.Cells[1].Paragraphs[0];
                 text.RemoveText(0);

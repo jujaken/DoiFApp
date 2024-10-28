@@ -96,6 +96,17 @@
                 </ItemsControl.ItemTemplate>
 
             </ItemsControl>
+            <StackPanel Orientation="Horizontal"
+                        Margin="2">
+
+                <Label Content="Перезапись"/>
+
+                <ToggleButton Style="{StaticResource SwitchToggleButtonStyle}"
+                    IsChecked="{Binding IsRewrite}"/>
+
+                <Label Content="Дополнение"/>
+
+            </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
 

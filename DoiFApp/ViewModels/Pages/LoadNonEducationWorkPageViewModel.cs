@@ -21,6 +21,9 @@ namespace DoiFApp.ViewModels.Pages
             new (new() { Text = "Работа 3" }) { IsFirstSemester = true, IsSecondSemester = true },
         ];
 
+        [ObservableProperty]
+        private bool isRewrite = true;
+
         public const string SelectAll = "Выбр.";
         public const string UnselectAll = "Убр.";
 
