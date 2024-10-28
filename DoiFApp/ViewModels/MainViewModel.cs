@@ -256,7 +256,7 @@ namespace DoiFApp.ViewModels
 
             var exportSession = new ToolViewModel()
             {
-                Title = "📤 Выгрузить файл сессии",
+                Title = "🔝 Выгрузить файл сессии",
                 Description = "Выгружает файл сессии",
                 Command = ExportSessionCommand
             };
