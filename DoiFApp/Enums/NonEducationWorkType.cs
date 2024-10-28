@@ -1,20 +1,31 @@
-﻿using System.ComponentModel;
+﻿using DoiFApp.Utils.Attributes;
 
 namespace DoiFApp.Enums
 {
     public enum NonEducationWorkType
     {
-        [Description("Не установлено...")]
+        [ViewName("Не установлено...")]
+        [IPTableId(-1, -1)]
         None,
-        [Description("Методическая работа")]
+
+        [ViewName("Методическая работа")]
+        [IPTableId(5, 6)]
         Methodic,
-        [Description("Научная работа")]
+
+        [ViewName("Научная работа")]
+        [IPTableId(7, 8)]
         Scientic,
-        [Description("Морально-психологическая работа")]
+
+        [ViewName("Морально-психологическая работа")]
+        [IPTableId(9, 10)]
         Moral,
-        [Description("Работа с иностранными слушателями")]
+
+        [ViewName("Работа с иностранными слушателями")]
+        [IPTableId(11, 12)]
         Foreignic,
-        [Description("Иная работа")]
+
+        [ViewName("Иная работа")]
+        [IPTableId(13, 14)]
         Other,
     }
 }

@@ -12,7 +12,7 @@ namespace DoiFApp.ViewModels.Pages
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(Tittle))]
         private NonEducationWorkType workType;
-        public string Tittle => WorkType.GetDescription();
+        public string Tittle => WorkType.GetViewName();
 
         [ObservableProperty]
         private ObservableCollection<NonEducationWorkViewModel> nonEducationWorks =
