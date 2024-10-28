@@ -406,7 +406,16 @@ namespace DoiFApp.ViewModels
                 {
                     var data = new NonEducationWorkData()
                     {
-                        NonEducationWorks = page.NonEducationWorks.Select(w => w.NonEducationWork)!,
+                        NonEducationWorks = page.NonEducationWorks.Where(w => w.IsSelected 
+                            && w.NonEducationWork!.Type != NonEducationWorkType.None).Select(w =>
+                        {
+                            var work = w.NonEducationWork!;
+                            if (w.IsFirstSemester)
+                                work.Semester |= SemesterType.First;
+                            if (w.IsSecondSemester)
+                                work.Semester |= SemesterType.Second;
+                            return work;
+                        }),
                         IsRewrite = page.IsRewrite,
                     };
                     if (!data.IsHolistic)

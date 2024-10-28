@@ -1,6 +1,7 @@
 ﻿using DoiFApp.Enums;
 using DoiFApp.Services.Data;
 using DoiFApp.Utils.Extensions;
+using System.Windows;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
 
@@ -17,33 +18,38 @@ namespace DoiFApp.Services.NonEducationWork
 
             var works = data.NonEducationWorks!;
 
-            var firstSemester = works.Where(w => w.Semester == SemesterType.First);
-            var secondSemester = works.Where(w => w.Semester == SemesterType.Second);
+            var firstSemester = works.Where(w => (w.Semester & SemesterType.First) != 0);
+            var secondSemester = works.Where(w => (w.Semester & SemesterType.Second) != 0);
 
-            await UpdateTableByType(tables, firstSemester, NonEducationWorkType.Methodic, data.IsRewrite);
-            await UpdateTableByType(tables, secondSemester, NonEducationWorkType.Methodic, data.IsRewrite);
+            await UpdateTableByType(tables, firstSemester, NonEducationWorkType.Methodic, true, data.IsRewrite);
+            await UpdateTableByType(tables, secondSemester, NonEducationWorkType.Methodic, false, data.IsRewrite);
 
-            await UpdateTableByType(tables, firstSemester, NonEducationWorkType.Scientic, data.IsRewrite);
-            await UpdateTableByType(tables, secondSemester, NonEducationWorkType.Scientic, data.IsRewrite);
+            await UpdateTableByType(tables, firstSemester, NonEducationWorkType.Scientic, true, data.IsRewrite);
+            await UpdateTableByType(tables, secondSemester, NonEducationWorkType.Scientic, false, data.IsRewrite);
 
-            await UpdateTableByType(tables, firstSemester, NonEducationWorkType.Moral, data.IsRewrite);
-            await UpdateTableByType(tables, secondSemester, NonEducationWorkType.Moral, data.IsRewrite);
+            await UpdateTableByType(tables, firstSemester, NonEducationWorkType.Moral, true, data.IsRewrite);
+            await UpdateTableByType(tables, secondSemester, NonEducationWorkType.Moral, false, data.IsRewrite);
 
-            await UpdateTableByType(tables, firstSemester, NonEducationWorkType.Foreignic, data.IsRewrite);
-            await UpdateTableByType(tables, secondSemester, NonEducationWorkType.Foreignic, data.IsRewrite);
+            await UpdateTableByType(tables, firstSemester, NonEducationWorkType.Foreignic, true, data.IsRewrite);
+            await UpdateTableByType(tables, secondSemester, NonEducationWorkType.Foreignic, false, data.IsRewrite);
 
-            await UpdateTableByType(tables, firstSemester, NonEducationWorkType.Other, data.IsRewrite);
-            await UpdateTableByType(tables, secondSemester, NonEducationWorkType.Other, data.IsRewrite);
+            await UpdateTableByType(tables, firstSemester, NonEducationWorkType.Other, true, data.IsRewrite);
+            await UpdateTableByType(tables, secondSemester, NonEducationWorkType.Other, false, data.IsRewrite);
 
             doc.Save();
             return true;
         }
 
-        private static Task UpdateTableByType(List<Table> tables,
+        private static async Task UpdateTableByType(List<Table> tables,
             IEnumerable<DoiFApp.Data.Models.NonEducationWork> works,
             NonEducationWorkType type,
+            bool isFirst,
             bool isRewrite)
-            => UpdateTable(tables[type.GetFirstId()], works.Where(w => w.Type == type), isRewrite);
+        {
+            var typedWorks = works.Where(w => w.Type == type);
+            if (!typedWorks.Any()) return;
+            await UpdateTable(tables[isFirst ? type.GetFirstId() : type.GetSecondId()], typedWorks, isRewrite);
+        }
 
         private static Task UpdateTable(Table table, IEnumerable<DoiFApp.Data.Models.NonEducationWork> works, bool isRewrite)
         {
@@ -59,7 +65,7 @@ namespace DoiFApp.Services.NonEducationWork
 
                 var id = row.Cells[0].Paragraphs[0];
                 id.RemoveText(0);
-                id.Append(table.Rows.Count.ToString());
+                id.Append((table.Rows.Count - 1).ToString());
 
                 var text = row.Cells[1].Paragraphs[0];
                 text.RemoveText(0);
