@@ -16,13 +16,30 @@
             <Label Content="{Binding Tittle}" Style="{StaticResource l2}" FontWeight="Bold" Margin="0,0,0,10"/>
 
             <Grid>
+
+
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*"/>
                     <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="70"/>
                 </Grid.ColumnDefinitions>
-                
-                
+
+                <Button Grid.Column="1"
+                        HorizontalAlignment="Center"
+                        Command="{Binding ToggleSelectionsCommand}"
+                        Content="{Binding ToggleSelectionsText}"/>
+
+                <Button Grid.Column="2"
+                        HorizontalAlignment="Center"
+                        Command="{Binding ToggleFirstsCommand}"
+                        Content="{Binding ToggleFirstsText}"/>
+
+                <Button Grid.Column="3"
+                        HorizontalAlignment="Center"
+                        Command="{Binding ToggleSecondsCommand}"
+                        Content="{Binding ToggleSecondsText}"/>
+
             </Grid>
 
             <ItemsControl ItemsSource="{Binding NonEducationWorks}">
@@ -35,9 +52,9 @@
                             
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="70"/>
                             </Grid.ColumnDefinitions>
 
                             <Border Background="Snow"
@@ -79,7 +96,19 @@
                 </ItemsControl.ItemTemplate>
 
             </ItemsControl>
-        
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+
+                <Button Content="Отмена"
+                        Command="{Binding CancelCommand}"
+                        Margin="5"/>
+
+                <Button Content="ОК"
+                        Command="{Binding OkCommand}"
+                        Margin="5"/>
+
+            </StackPanel>
+
         </StackPanel>
     
     </Grid>

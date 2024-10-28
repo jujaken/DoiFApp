@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using DoiFApp.Enums;
 using DoiFApp.Utils.Extensions;
 using System.Collections.ObjectModel;
+using System.Linq.Expressions;
 
 namespace DoiFApp.ViewModels.Pages
 {
@@ -21,8 +22,47 @@ namespace DoiFApp.ViewModels.Pages
             new (new() { Text = "Работа 3" }) { IsFirstSemester = true, IsSecondSemester = true },
         ];
 
+        public const string SelectAll = "Выбр.";
+        public const string UnselectAll = "Убр.";
+
         [ObservableProperty]
-        private bool isLoad;
+        private string toggleSelectionsText = SelectAll;
+
+        [RelayCommand]
+        public void ToggleSelections()
+            => ToggleProperty((work, value) => work.IsSelected = value,
+                () => ToggleSelectionsText,
+                (value) => ToggleSelectionsText = value);
+
+        [ObservableProperty]
+        private string toggleFirstsText = SelectAll;
+
+        [RelayCommand]
+        public void ToggleFirsts()
+            => ToggleProperty((work, value) => work.IsFirstSemester = value,
+                () => ToggleFirstsText,
+                (value) => ToggleFirstsText = value);
+
+        [ObservableProperty]
+        private string toggleSecondsText = SelectAll;
+
+        [RelayCommand]
+        public void ToggleSeconds()
+            => ToggleProperty((work, value) => work.IsSecondSemester = value,
+                () => ToggleSecondsText,
+                (value) => ToggleSecondsText = value);
+
+        private void ToggleProperty(Action<NonEducationWorkViewModel, bool> foreachAction, Func<string> getter, Action<string> setter)
+        {
+            if (getter() == SelectAll)
+            {
+                foreach (var work in NonEducationWorks) foreachAction(work, true);
+                setter(UnselectAll);
+                return;
+            }
+            foreach (var work in NonEducationWorks) foreachAction(work, false);
+            setter(SelectAll);
+        }
 
         public event Action? OnCancel;
 
@@ -34,7 +74,7 @@ namespace DoiFApp.ViewModels.Pages
 
         public event Func<NonEducationWorkViewModel[], Task>? OnOk;
 
-        [RelayCommand(CanExecute = nameof(IsLoad))]
+        [RelayCommand]
         public async Task Ok()
         {
             if (OnOk != null)
