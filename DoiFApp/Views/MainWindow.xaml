@@ -40,7 +40,7 @@
 
             <Grid x:Name="ToolsZone" Grid.Column="0" Background="#BE443339">
 
-                <ScrollViewer  HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
 
                     <ItemsControl ItemsSource="{Binding ToolsCategories}"
                           Style="{StaticResource dynamiclist}"

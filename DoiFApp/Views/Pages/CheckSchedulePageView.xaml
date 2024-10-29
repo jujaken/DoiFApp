@@ -15,50 +15,54 @@
 
             <Label Content="Настройка типов:" Style="{StaticResource l2}" FontWeight="Bold" Margin="0,0,0,10"/>
 
-            <ItemsControl ItemsSource="{Binding Path=LessonTypeTranslations}">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
 
-                <ItemsControl.ItemTemplate>
+                <ItemsControl ItemsSource="{Binding Path=LessonTypeTranslations}">
 
-                    <DataTemplate>
+                    <ItemsControl.ItemTemplate>
 
-                        <Grid>
+                        <DataTemplate>
 
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
+                            <Grid>
 
-                            <Border BorderThickness="1" BorderBrush="#FF622D42">
-                                
-                                <Border.Background>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" >
-                                        <GradientStop Color="RosyBrown"/>
-                                        <GradientStop Color="Snow" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Border.Background>
-                                
-                                <TextBlock Text="{Binding CurrentName}"
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border BorderThickness="1" BorderBrush="#FF622D42">
+
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" >
+                                            <GradientStop Color="RosyBrown"/>
+                                            <GradientStop Color="Snow" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+
+                                    <TextBlock Text="{Binding CurrentName}"
                                            Foreground="#FF2B072D"
                                            FontSize="14"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Left"
                                            Margin="4"/>
-                                
-                            </Border>
 
-                            <TextBox Text="{Binding NewName}"
+                                </Border>
+
+                                <TextBox Text="{Binding NewName}"
                                      Grid.Column="1"
                                      VerticalAlignment="Stretch"
                                      HorizontalAlignment="Stretch"/>
 
-                        </Grid>
+                            </Grid>
 
-                    </DataTemplate>
+                        </DataTemplate>
 
-                </ItemsControl.ItemTemplate>
+                    </ItemsControl.ItemTemplate>
 
-            </ItemsControl>
+                </ItemsControl>
 
+            </ScrollViewer>
+            
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
 
                 <Button Content="Вернуть"
