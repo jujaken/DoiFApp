@@ -34,48 +34,41 @@ namespace DoiFApp.Services.Workload
                 tcell.Style.TextRotation = 180;
             }
 
-            var index = 2;
-            var lastDate = data.Lessons.First().Date;
-            
-            // возможно, пропускются отпуски
+            var index = 1;
 
-            foreach (var lesson in data.Lessons)
+            var startDate = data.Lessons.First().Date;
+            var endDate = data.Lessons.Last().Date;
+
+            for (var date = startDate; date <= endDate; date = date.AddDays(1))
             {
-                if (lastDate != lesson.Date)
+                index++;
+
+                worksheet.Cells[index, 1].Value = date;
+                worksheet.Cells[index, 2].Value = DateUtil.SwitchDayOfWeek(date.DayOfWeek); ;
+
+                if (date.DayOfWeek == DayOfWeek.Saturday)
+                    DrawRow(worksheet, index, 2, end, WorkloadHelper.SaturdayColor);
+                else if (date.DayOfWeek == DayOfWeek.Sunday)
+                    DrawRow(worksheet, index, 2, end, WorkloadHelper.SundayColor);
+
+                foreach(var lesson in data.Lessons.Where(l => l.Date == date))
                 {
-                    lastDate = lesson.Date;
-                    index++;
-                }
-
-                var tableVerticalIndex = index;
-                worksheet.Cells[tableVerticalIndex, 1].Value = lesson.Date;
-
-                var curDay = DateUtil.SwitchDayOfWeek(lesson.Date.DayOfWeek);
-                worksheet.Cells[tableVerticalIndex, 2].Value = curDay;
-
-                if (lesson.Date.DayOfWeek == DayOfWeek.Saturday)
-                    DrawRow(worksheet, tableVerticalIndex, 2, end, WorkloadHelper.SaturdayColor);
-
-                if (lesson.Date.DayOfWeek == DayOfWeek.Sunday)
-                    DrawRow(worksheet, tableVerticalIndex, 2, end, WorkloadHelper.SundayColor);
-
-                for (var j = 0; j < teachersUnique.Count; j++)
-                {
-                    var teacher = teachersUnique[j];
-                    if (lesson.Teachers.Contains(teacher))
+                    for (var j = 0; j < teachersUnique.Count; j++)
                     {
-                        var lessionsCell = worksheet.Cells[tableVerticalIndex, start + j];
-                        lessionsCell.Value += SwitchClassId(lesson.Time) + " ";
+                        var teacher = teachersUnique[j];
+                        if (lesson.Teachers.Contains(teacher))
+                        {
+                            var lessionsCell = worksheet.Cells[index, start + j];
+                            lessionsCell.Value += SwitchClassId(lesson.Time) + " ";
 
-                        lessionsCell.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                        lessionsCell.Style.Fill.BackgroundColor.SetColor(WorkloadHelper.SelectCellColor(lesson.Auditoriums));
+                            lessionsCell.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            lessionsCell.Style.Fill.BackgroundColor.SetColor(WorkloadHelper.SelectCellColor(lesson.Auditoriums));
+                        }
                     }
                 }
             }
 
             AddNotes(end + 1, worksheet);
-
-            // view
             DoSquare(worksheet, 1, 1, index, end, (range) =>
             {
                 range.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
@@ -93,7 +86,6 @@ namespace DoiFApp.Services.Workload
 
                 range.AutoFitColumns(worksheet.DefaultColWidth / 2);
             });
-
             package.Save();
 
             return Task.FromResult(true);
