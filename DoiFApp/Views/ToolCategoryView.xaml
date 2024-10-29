@@ -28,7 +28,7 @@
 
                     <DataTemplate>
 
-                        <local:ToolCategoryView DataContext="{Binding}" Margin="0, 2, 10, 2"/>
+                        <local:ToolCategoryView DataContext="{Binding}" Margin="20, 2, 0, 2"/>
 
                     </DataTemplate>
 

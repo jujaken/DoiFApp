@@ -16,7 +16,7 @@
     </Window.DataContext>
 
     <Grid>
-        
+
         <Rectangle>
 
             <Rectangle.Fill>
@@ -65,10 +65,8 @@
             <Grid x:Name="PageZone" Grid.Column="1">
 
                 <Border Background="#11111111"/>
-                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
-                    <ContentControl Content="{Binding CurPage}"/>
-                </ScrollViewer>
-                
+                <ContentControl Content="{Binding CurPage}"/>
+
             </Grid>
 
             <Grid x:Name="NotifiesZone"
@@ -94,7 +92,7 @@
             </Grid>
 
         </Grid>
-        
+
     </Grid>
 
 </Window>

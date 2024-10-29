@@ -66,6 +66,71 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="ToolButton" TargetType="Button">
+        <Setter Property="FontFamily" Value="Cascadia Code"/>
+        <Setter Property="Foreground" Value="#101010"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding Foreground}"
+                            CornerRadius="1.1" BorderThickness="1" >
+                        <Grid>
+                            <ContentPresenter Margin="14,1" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="border" Property="Background" Value="#FF7E7E7E"/>
+                            <Setter TargetName="border" Property="BorderBrush" Value="#101010"/>
+                            <Setter Property="Foreground" Value="#101010"/>
+                            <Setter Property="Opacity" Value="0.7"/>
+                            <Setter Property="Cursor" Value="No"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="RoyalBlue" Duration="0:0:0.3">
+                                <ColorAnimation.EasingFunction>
+                                    <SineEase/>
+                                </ColorAnimation.EasingFunction>
+                            </ColorAnimation>
+                            <ColorAnimation Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)" To="White" Duration="0:0:0.3">
+                                <ColorAnimation.EasingFunction>
+                                    <SineEase/>
+                                </ColorAnimation.EasingFunction>
+                            </ColorAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="White" Duration="0:0:0.21">
+                                <ColorAnimation.EasingFunction>
+                                    <SineEase/>
+                                </ColorAnimation.EasingFunction>
+                            </ColorAnimation>
+                            <ColorAnimation Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)" To="#101010" Duration="0:0:0.21">
+                                <ColorAnimation.EasingFunction>
+                                    <SineEase/>
+                                </ColorAnimation.EasingFunction>
+                            </ColorAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.ExitActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <Style x:Key="HeaderButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Margin" Value="1"/>
