@@ -51,7 +51,7 @@ namespace DoiFApp.ViewModels
         [NotifyCanExecuteChangedFor(nameof(ExtractTempScheduleCommand))]
         [NotifyCanExecuteChangedFor(nameof(ExtractWorkloadCommand))]
         [NotifyCanExecuteChangedFor(nameof(CheckScheduleCommand))]
-        [NotifyCanExecuteChangedFor(nameof(FromReportCommand))]
+        [NotifyCanExecuteChangedFor(nameof(FromReportByMWCommand))]
         public bool scheduleIsLoad = false;
 
         [ObservableProperty]
@@ -154,20 +154,6 @@ namespace DoiFApp.ViewModels
                 Command = noCommand
             };
 
-            var formReportByMW = new ToolViewModel()
-            {
-                Title = "📅 Сформировать отчет по месячной нагрузке",
-                Description = "Загружает отчёт по месяцам в word файл",
-                Command = noCommand
-            };
-
-            var fillReportMW = new ToolViewModel()
-            {
-                Title = "✏️ Заполнить ежемес. нагрузку",
-                Description = "Заполняет ежемесячную нагрузку",
-                Command = noCommand
-            };
-
             var checkSchedule = new ToolViewModel()
             {
                 Title = "🔍 Проверить расписание",
@@ -175,11 +161,18 @@ namespace DoiFApp.ViewModels
                 Command = CheckScheduleCommand
             };
 
-            var fromReport = new ToolViewModel()
+            var formReportByMW = new ToolViewModel()
             {
-                Title = "📄 Сформировать отчёт",
-                Description = "Формулирует и выгружает данные для отчёта в excel",
-                Command = FromReportCommand
+                Title = "📅 Сформировать отчет по месячной нагрузке",
+                Description = "Загружает отчёт по месяцам и дисциплинам в excel файл",
+                Command = FromReportByMWCommand
+            };
+
+            var fillReportMW = new ToolViewModel()
+            {
+                Title = "✏️ Заполнить ежемес. нагрузку",
+                Description = "Заполняет ежемесячную нагрузку в индивидуальный план",
+                Command = noCommand
             };
 
             var fact = new ToolCategoryViewModel("Фактическая нагрузка",
@@ -187,7 +180,6 @@ namespace DoiFApp.ViewModels
                 exportReportToIP,
                 loadSchedule,
                 checkSchedule,
-                fromReport,
                 formReportByMW,
                 fillReportMW);
 
@@ -196,6 +188,13 @@ namespace DoiFApp.ViewModels
                 fact));
 
             // отчетное
+
+            var fromReport = new ToolViewModel()
+            {
+                Title = "📄 Сформировать отчёт",
+                Description = "Формулирует и выгружает данные для отчёта в excel",
+                Command = noCommand
+            };
 
             toolsCategories.Add(new ToolCategoryViewModel("Отчётная документация",
                 loadSchedule,
@@ -480,7 +479,7 @@ namespace DoiFApp.ViewModels
         }
 
         [RelayCommand(CanExecute = nameof(ScheduleIsLoad))]
-        private async Task FromReport()
+        private async Task FromReportByMW()
         {
             var path = SaveFile("excel file|*.xlsx", "Отчёт по месяцам и дисциплинам.xlsx");
             if (string.IsNullOrEmpty(path))
