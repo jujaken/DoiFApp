@@ -3,7 +3,6 @@ using System.IO;
 using OfficeOpenXml.Style;
 using System.Drawing;
 using DoiFApp.Utils;
-using System.Text;
 using DoiFApp.Services.Data;
 
 namespace DoiFApp.Services.Workload
