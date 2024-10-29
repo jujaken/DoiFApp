@@ -6,6 +6,7 @@ using Xceed.Words.NET;
 
 namespace DoiFApp.Services.IndividualPlan
 {
+    // todo: fix service
     public abstract class AbstractIndividualPlanWriter<T> : IDataWriter<T> where T : AbstractIndividualPlanData
     {
         public async Task<bool> Write(T data, string path)
