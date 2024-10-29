@@ -168,19 +168,6 @@ namespace DoiFApp.ViewModels
                 Command = noCommand
             };
 
-            var fact = new ToolCategoryViewModel("Фактическая нагрузка",
-                loadReport,
-                exportReportToIP,
-                loadSchedule,
-                formReportByMW,
-                fillReportMW);
-
-            toolsCategories.Add(new ToolCategoryViewModel("Индивидуальный план",
-                plan,
-                fact));
-
-            // отчетное
-
             var checkSchedule = new ToolViewModel()
             {
                 Title = "🔍 Проверить расписание",
@@ -195,6 +182,21 @@ namespace DoiFApp.ViewModels
                 Command = FromReportCommand
             };
 
+            var fact = new ToolCategoryViewModel("Фактическая нагрузка",
+                loadReport,
+                exportReportToIP,
+                loadSchedule,
+                checkSchedule,
+                fromReport,
+                formReportByMW,
+                fillReportMW);
+
+            toolsCategories.Add(new ToolCategoryViewModel("Индивидуальный план",
+                plan,
+                fact));
+
+            // отчетное
+
             toolsCategories.Add(new ToolCategoryViewModel("Отчётная документация",
                 loadSchedule,
                 checkSchedule,
@@ -205,7 +207,7 @@ namespace DoiFApp.ViewModels
 
             var extractTempSchedule = new ToolViewModel()
             {
-                Title = "🖊️ Выдать редакт. расписание",
+                Title = "🖊️ Сохр. редакт. расписание",
                 Description = "Выгружает из сессии имеющееся расписание, позволяет отредактировать его вручную в excel",
                 Command = ExtractTempScheduleCommand
             };
@@ -219,7 +221,7 @@ namespace DoiFApp.ViewModels
 
             var extractWorkload = new ToolViewModel()
             {
-                Title = "📊 Выдать загруженность",
+                Title = "📊 Сохранить загруженность",
                 Description = "Формирует таблицу загруженности",
                 Command = ExtractWorkloadCommand
             };
