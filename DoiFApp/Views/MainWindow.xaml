@@ -65,8 +65,10 @@
             <Grid x:Name="PageZone" Grid.Column="1">
 
                 <Border Background="#11111111"/>
-                <ContentControl Content="{Binding CurPage}"/>
-
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
+                    <ContentControl Content="{Binding CurPage}"/>
+                </ScrollViewer>
+                
             </Grid>
 
             <Grid x:Name="NotifiesZone"

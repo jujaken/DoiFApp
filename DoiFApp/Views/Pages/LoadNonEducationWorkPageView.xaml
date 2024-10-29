@@ -17,7 +17,6 @@
 
             <Grid>
 
-
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="70"/>
@@ -42,8 +41,6 @@
 
             </Grid>
 
-            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
-                
                 <ItemsControl ItemsSource="{Binding NonEducationWorks}">
 
                     <ItemsControl.ItemTemplate>
@@ -99,8 +96,6 @@
 
                 </ItemsControl>
 
-            </ScrollViewer>
-            
             <StackPanel Orientation="Horizontal"
                         Margin="2">
 
