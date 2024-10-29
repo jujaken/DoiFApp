@@ -45,9 +45,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Resources\individualplansimple.docx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="Resources\reportsimple.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
