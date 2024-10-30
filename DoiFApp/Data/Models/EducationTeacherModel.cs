@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using DoiFApp.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DoiFApp.Data.Models
 {
