@@ -1,7 +1,6 @@
 ﻿using DoiFApp.Data.Models;
 using DoiFApp.Services.Data;
 using DoiFApp.Utils;
-using System.Windows;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
 
@@ -53,7 +52,7 @@ namespace DoiFApp.Services.IndividualPlan
                 var workSum = work.TypesAndHours
                     .Sum(x => x.Value);
 
-                dones[row.Cells.Count - 3] = workSum;
+                dones[row.Cells.Count - 3] += workSum;
                 row.Cells[^2].Paragraphs[0].RemoveText(0);
                 row.Cells[^2].Paragraphs[0].Append(workSum.ToString("0.0", System.Globalization.CultureInfo.GetCultureInfo("en-US")));
 
@@ -61,9 +60,7 @@ namespace DoiFApp.Services.IndividualPlan
                     .Where(x => TableDataUtil.GetEquivalent(x.Key) != null)
                     .Sum(x => x.Value);
 
-                MessageBox.Show(audiWorkSum.ToString());
-
-                dones[row.Cells.Count - 2] = workSum;
+                dones[row.Cells.Count - 2] += workSum;
                 row.Cells[^1].Paragraphs[0].RemoveText(0);
                 row.Cells[^1].Paragraphs[0].Append(audiWorkSum.ToString("0.0", System.Globalization.CultureInfo.GetCultureInfo("en-US")));
             }
