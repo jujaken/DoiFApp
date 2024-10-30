@@ -3,7 +3,7 @@ using DoiFApp.Services.Data;
 
 namespace DoiFApp.Services.Education
 {
-    public class EducationData : IData
+    public class AbstractEducationData : IData
     {
         public IEnumerable<EducationTeacherModel>? TeacherModels { get; init; }
         public IEnumerable<EducationTypeAndHourModel>? TypeAndHourModels { get; init; }

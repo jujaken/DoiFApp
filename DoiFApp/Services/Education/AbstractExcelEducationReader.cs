@@ -6,15 +6,17 @@ using OfficeOpenXml;
 
 namespace DoiFApp.Services.Education
 {
-    public class ExcelEducationReader : IDataReader<EducationData>
+    public abstract class AbstractExcelEducationReader<T> : IDataReader<T> where T : AbstractEducationData
     {
         private const int TittleRow = 8;
         private static readonly IEnumerable<string> headers = TableDataUtil.GetHeaders(TableDataUtil.InputCommonTableHeaders);
 
-        public Task<EducationData> Read(string path)
+        public abstract Task<T> Read(string path);
+
+        public Task<AbstractEducationData> Read(string path, string name, WorkCategory first, WorkCategory second)
         {
             using var package = new ExcelPackage(path);
-            var worksheet = package.Workbook.Worksheets.Where(w => w.Name.Contains("расч", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault()
+            var worksheet = package.Workbook.Worksheets.Where(w => w.Name.Contains(name, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault()
                 ?? throw new Exception("worksheet not found");
 
             var teachers = new List<EducationTeacherModel>();
@@ -28,7 +30,7 @@ namespace DoiFApp.Services.Education
                     if (work1 != null)
                     {
                         work1.TypesAndHours.ForEach(t => typeAndHours.Add(t));
-                        work1.WorkCategory = WorkCategory.PlanFirstSemester;
+                        work1.WorkCategory = first;
                         works.Add(work1);
                         work1.Teacher = teacher;
                         teacher.Works.Add(work1);
@@ -37,7 +39,7 @@ namespace DoiFApp.Services.Education
                     if (work2 != null)
                     {
                         work2.TypesAndHours.ForEach(t => typeAndHours.Add(t));
-                        work2.WorkCategory = WorkCategory.PlanSecondSemester;
+                        work2.WorkCategory = second;
                         works.Add(work2);
                         work2.Teacher = teacher;
                         teacher.Works.Add(work2);
@@ -45,7 +47,7 @@ namespace DoiFApp.Services.Education
                     teachers.Add(teacher);
                 });
 
-            return Task.FromResult(new EducationData()
+            return Task.FromResult(new AbstractEducationData()
             {
                 TeacherModels = teachers,
                 TypeAndHourModels = typeAndHours,
@@ -122,25 +124,5 @@ namespace DoiFApp.Services.Education
             }
             return workData;
         }
-
-        //private static void AddIfNeed(List<EducationWorkModel> works, EducationWorkModel? work)
-        //{
-        //    if (work == null) return;
-        //    works.Add(work);
-        //}
-
-        //private static void AddIfNeedLatest(List<EducationWorkModel> works, EducationWorkModel? work)
-        //{
-        //    if (work == null) return;
-        //    var currentModel = works.Where(w => w.Name == work.Name).FirstOrDefault();
-        //    if (currentModel == null)
-        //    {
-        //        works.Add(work);
-        //        return;
-        //    }
-
-        //    foreach (var data in work.TypesAndHours)
-        //        currentModel.TypesAndHours.Where(t => t.Key == data.Key).First().Value += data.Value;
-        //}
     }
 }

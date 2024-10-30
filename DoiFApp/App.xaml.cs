@@ -47,8 +47,10 @@ namespace DoiFApp
                 // builders
                 .AddTransient<NotifyBuilder>()
                 // education
-                .AddTransient<IDataReader<EducationData>, ExcelEducationReader>()
-                .AddTransient<IDataSaver<EducationData>, SessionEducationSaver>()
+                .AddTransient<IDataReader<PlanEducationData>, ExcelPlanEducationReader>()
+                .AddTransient<IDataSaver<PlanEducationData>, SessionPlanEducationSaver>()
+                .AddTransient<IDataReader<FactEducationData>, ExcelFactEducationReader>()
+                .AddTransient<IDataSaver<FactEducationData>, SessionFactEducationSaver>()
                 // indivilual plan
                 .AddTransient<IDataWriter<FirstHalfIndividualPlanData>, FirstHalfIndividualPlanDataWriter>()
                 .AddTransient<IDataWriter<SecondHalfIndividualPlanData>, SecondHalfIndividualPlanDataWriter>()

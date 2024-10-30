@@ -370,11 +370,11 @@ namespace DoiFApp.ViewModels
 
             await CommandWithProcessAndLoad(async () =>
             {
-                var data = await Ioc.Default.GetRequiredService<IDataReader<EducationData>>().Read(path);
+                var data = await Ioc.Default.GetRequiredService<IDataReader<PlanEducationData>>().Read(path);
                 if (!data.IsHolistic)
                     throw new Exception("Data not found");
 
-                await Ioc.Default.GetRequiredService<IDataSaver<EducationData>>().Save(data);
+                await Ioc.Default.GetRequiredService<IDataSaver<PlanEducationData>>().Save(data);
                 await page.LoadData();
             }, page, "Данные из расчёта расписания были загружены");
 
