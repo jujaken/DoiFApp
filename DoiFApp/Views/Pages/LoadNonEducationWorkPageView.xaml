@@ -41,61 +41,70 @@
 
             </Grid>
 
-                <ItemsControl ItemsSource="{Binding NonEducationWorks}">
+            <Grid Height="{Binding ActualHeight, 
+                  RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}">
 
-                    <ItemsControl.ItemTemplate>
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
 
-                        <DataTemplate>
+                    <ItemsControl ItemsSource="{Binding NonEducationWorks}">
 
-                            <Grid>
+                        <ItemsControl.ItemTemplate>
 
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="70"/>
-                                    <ColumnDefinition Width="70"/>
-                                    <ColumnDefinition Width="70"/>
-                                </Grid.ColumnDefinitions>
+                            <DataTemplate>
 
-                                <Border Background="Snow"
-                                    BorderBrush="#101010"
-                                    CornerRadius="1.1"
-                                    BorderThickness="1"
-                                    Margin="2"/>
+                                <Grid>
 
-                                <TextBlock Text="{Binding Text}"
-                                       VerticalAlignment="Center"
-                                       Margin="4"
-                                       TextWrapping="Wrap"/>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="70"/>
+                                        <ColumnDefinition Width="70"/>
+                                        <ColumnDefinition Width="70"/>
+                                    </Grid.ColumnDefinitions>
 
-                                <ToggleButton Grid.Column="1"
-                                          Content="Выбр."
-                                          Height="25"
-                                          VerticalAlignment="Top"
-                                          Margin="2"
-                                          IsChecked="{Binding IsSelected}"/>
+                                    <Border Background="Snow"
+                                            BorderBrush="#101010"
+                                            CornerRadius="1.1"
+                                            BorderThickness="1"
+                                            Margin="2"/>
 
-                                <ToggleButton Grid.Column="2"
-                                          Content="1 сем."
-                                          Height="25"
-                                          VerticalAlignment="Top"
-                                          Margin="2"
-                                          IsChecked="{Binding IsFirstSemester}"/>
+                                    <TextBlock Text="{Binding Text}"
+                                               VerticalAlignment="Center"
+                                               Margin="4"
+                                               TextWrapping="Wrap"/>
 
-                                <ToggleButton Grid.Column="3"
-                                          Content="2 сем."
-                                          Height="25"
-                                          VerticalAlignment="Top"
-                                          Margin="2"
-                                          IsChecked="{Binding IsSecondSemester}"/>
+                                    <ToggleButton Grid.Column="1"
+                              Content="Выбр."
+                              Height="25"
+                              VerticalAlignment="Top"
+                              Margin="2"
+                              IsChecked="{Binding IsSelected}"/>
 
-                            </Grid>
+                                    <ToggleButton Grid.Column="2"
+                              Content="1 сем."
+                              Height="25"
+                              VerticalAlignment="Top"
+                              Margin="2"
+                              IsChecked="{Binding IsFirstSemester}"/>
 
-                        </DataTemplate>
+                                    <ToggleButton Grid.Column="3"
+                              Content="2 сем."
+                              Height="25"
+                              VerticalAlignment="Top"
+                              Margin="2"
+                              IsChecked="{Binding IsSecondSemester}"/>
 
-                    </ItemsControl.ItemTemplate>
+                                </Grid>
 
-                </ItemsControl>
+                            </DataTemplate>
 
+                        </ItemsControl.ItemTemplate>
+
+                    </ItemsControl>
+
+                </ScrollViewer>
+
+            </Grid>
+            
             <StackPanel Orientation="Horizontal"
                         Margin="2">
 

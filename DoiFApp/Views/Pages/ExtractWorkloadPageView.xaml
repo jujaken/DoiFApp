@@ -15,15 +15,21 @@
 
             <Label Content="Выберите месяцы:" Style="{StaticResource l2}" FontWeight="Bold" Margin="0,0,0,10"/>
 
-            <ItemsControl ItemsSource="{Binding Months}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <ToggleButton Content="{Binding Name}"
-                                      IsChecked="{Binding IsSelected}"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <Grid Height="{Binding ActualHeight,
+                  RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}">
 
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
+
+                    <ItemsControl ItemsSource="{Binding Months}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <ToggleButton Content="{Binding Name}"
+                                      IsChecked="{Binding IsSelected}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
 
                 <Button Content="Очистить выбор"
