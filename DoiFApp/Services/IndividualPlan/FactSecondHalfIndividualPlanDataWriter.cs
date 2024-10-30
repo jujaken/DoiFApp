@@ -3,13 +3,13 @@ using Xceed.Document.NET;
 
 namespace DoiFApp.Services.IndividualPlan
 {
-    public class SecondHalfIndividualPlanDataWriter : AbstractIndividualPlanWriter<SecondHalfIndividualPlanData>
+    public class FactSecondHalfIndividualPlanDataWriter : AbstractIndividualPlanWriter<FactSecondHalfIndividualPlanData>
     {
         protected override async Task UpdateTables(EducationTeacherModel teacher, List<Table> tables)
         {
-            var table = tables[1];
+            var table = tables[3];
             await InsertData(table, teacher.PlanWorks2);
-            await InsertDones(table, tables[0]);
+            await InsertDones(table, tables[2]);
         }
     }
 }

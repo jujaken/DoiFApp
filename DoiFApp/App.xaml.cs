@@ -47,13 +47,15 @@ namespace DoiFApp
                 // builders
                 .AddTransient<NotifyBuilder>()
                 // education
-                .AddTransient<IDataReader<PlanEducationData>, ExcelPlanEducationReader>()
-                .AddTransient<IDataSaver<PlanEducationData>, SessionPlanEducationSaver>()
-                .AddTransient<IDataReader<FactEducationData>, ExcelFactEducationReader>()
-                .AddTransient<IDataSaver<FactEducationData>, SessionFactEducationSaver>()
+                .AddTransient<IDataReader<PlanEducationData>, ExcelPlanEducationDataReader>()
+                .AddTransient<IDataSaver<PlanEducationData>, SessionPlanEducationDataSaver>()
+                .AddTransient<IDataReader<FactEducationData>, ExcelFactEducationDataReader>()
+                .AddTransient<IDataSaver<FactEducationData>, SessionFactEducationDataSaver>()
                 // indivilual plan
-                .AddTransient<IDataWriter<FirstHalfIndividualPlanData>, FirstHalfIndividualPlanDataWriter>()
-                .AddTransient<IDataWriter<SecondHalfIndividualPlanData>, SecondHalfIndividualPlanDataWriter>()
+                .AddTransient<IDataWriter<PlanFirstHalfIndividualPlanData>, PlanFirstHalfIndividualPlanDataWriter>()
+                .AddTransient<IDataWriter<PlanSecondHalfIndividualPlanData>, PlanSecondHalfIndividualPlanDataWriter>()
+                .AddTransient<IDataWriter<FactFirstHalfIndividualPlanData>, FactFirstHalfIndividualPlanDataWriter>()
+                .AddTransient<IDataWriter<FactSecondHalfIndividualPlanData>, FactSecondHalfIndividualPlanDataWriter>()
                 // non education
                 .AddTransient<IDataReader<NonEducationWorkData>, WordNonEducationWorkDataReader>()
                 .AddTransient<IDataWriter<NonEducationWorkData>, IndividualPlanNonEducationWorkDataWriter>()

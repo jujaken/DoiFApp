@@ -15,7 +15,6 @@ using DoiFApp.Services.Schedule;
 using DoiFApp.Services.TempSchedule;
 using DoiFApp.Services.Workload;
 using DoiFApp.ViewModels.Pages;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Forms;
@@ -80,7 +79,8 @@ namespace DoiFApp.ViewModels
             {
                 Title = "📝 Заполнить инд. план",
                 Description = "Позволяет выбрать преподавателя и заполняет данный word файл",
-                Command = FillIndividualPlanCommand
+                Command = FillIndividualPlanCommand,
+                Argument = true
             };
 
             var loadCalculation = new ToolViewModel()
@@ -145,14 +145,15 @@ namespace DoiFApp.ViewModels
             {
                 Title = "📈 Загрузить отчёт",
                 Description = "Загружает отчёт из excel файла",
-                Command = noCommand
+                Command = LoadReportCommand
             };
 
             var exportReportToIP = new ToolViewModel()
             {
                 Title = "📤 Выгрузить отчёт в индивидуальный план",
                 Description = "Загружает отчёт в word файл",
-                Command = noCommand
+                Command = FillIndividualPlanCommand,
+                Argument = false
             };
 
             var checkSchedule = new ToolViewModel()
@@ -316,12 +317,8 @@ namespace DoiFApp.ViewModels
                 ScheduleIsLoad = true;
         }
 
-        #endregion
-
-        #region Плановая нагрузка
-
         [RelayCommand(CanExecute = nameof(EducationIsLoad))]
-        public async Task FillIndividualPlan()
+        public async Task FillIndividualPlan(bool isPlan)
         {
             var page = new FillIndividualPlanPageViewModel();
             page.OnCancel += () => CurPage = null;
@@ -340,21 +337,30 @@ namespace DoiFApp.ViewModels
                     var teacher = (await Ioc.Default.GetRequiredService<ITeacherFinder>()
                         .FindByPart(result.teacherName, true))!.FirstOrDefault();
 
-                    if (result.isFirstSemester)
-                    {
-                        var data = new FirstHalfIndividualPlanData() { TeacherModel = teacher };
-                        await Ioc.Default.GetRequiredService<IDataWriter<FirstHalfIndividualPlanData>>().Write(data, path);
-                    }
+                    if (isPlan)
+                        if (result.isFirstSemester)
+                            await Ioc.Default.GetRequiredService<IDataWriter<PlanFirstHalfIndividualPlanData>>()
+                                .Write(new PlanFirstHalfIndividualPlanData() { TeacherModel = teacher }, path);
+                        else
+                            await Ioc.Default.GetRequiredService<IDataWriter<PlanSecondHalfIndividualPlanData>>()
+                                .Write(new PlanSecondHalfIndividualPlanData() { TeacherModel = teacher }, path);
                     else
-                    {
-                        var data = new SecondHalfIndividualPlanData() { TeacherModel = teacher };
-                        await Ioc.Default.GetRequiredService<IDataWriter<SecondHalfIndividualPlanData>>().Write(data, path);
-                    }
+                        if (result.isFirstSemester)
+                            await Ioc.Default.GetRequiredService<IDataWriter<FactFirstHalfIndividualPlanData>>()
+                                .Write(new FactFirstHalfIndividualPlanData() { TeacherModel = teacher }, path);
+                        else
+                            await Ioc.Default.GetRequiredService<IDataWriter<FactSecondHalfIndividualPlanData>>()
+                                .Write(new FactSecondHalfIndividualPlanData() { TeacherModel = teacher }, path);
+
                     await dataPage.LoadData();
                 }, dataPage, "Задание выполнено");
             };
             await CommandWithProcessAndLoad(page.Update, page, "Меню открыто");
         }
+
+        #endregion
+
+        #region Плановая нагрузка
 
         [RelayCommand(CanExecute = nameof(NoTask))]
         public async Task LoadCalculation()
@@ -451,6 +457,32 @@ namespace DoiFApp.ViewModels
         #endregion
 
         #region Фактическая нагрузка
+
+        [RelayCommand]
+        public async Task LoadReport()
+        {
+            var path = GetFile("excel file|*.xlsx", "Отчёт.xlsx");
+            if (string.IsNullOrEmpty(path))
+            {
+                await NoHasFileMessage();
+                return;
+            }
+
+            var page = new DataPageViewModel();
+
+            await CommandWithProcessAndLoad(async () =>
+            {
+                var data = await Ioc.Default.GetRequiredService<IDataReader<FactEducationData>>().Read(path);
+                if (!data.IsHolistic)
+                    throw new Exception("Data not found");
+
+                await Ioc.Default.GetRequiredService<IDataSaver<FactEducationData>>().Save(data);
+                await page.LoadData();
+            }, page, "Данные из отчёта расписания были загружены");
+
+            if (page.LessonViewModels.Any())
+                EducationIsLoad = true;
+        }
 
         #endregion
 

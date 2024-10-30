@@ -2,7 +2,7 @@
 
 namespace DoiFApp.Services.Education
 {
-    public class ExcelFactEducationReader : AbstractExcelEducationReader<FactEducationData>
+    public class ExcelFactEducationDataReader : AbstractExcelEducationReader<FactEducationData>
     {
         public override async Task<FactEducationData> Read(string path)
         {
