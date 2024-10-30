@@ -5,10 +5,9 @@ namespace DoiFApp.Services.IndividualPlan
 {
     public class FirstHalfIndividualPlanDataWriter : AbstractIndividualPlanWriter<FirstHalfIndividualPlanData>
     {
-        protected override void UpdateTables(EducationTeacherModel teacher, List<Table> tables)
+        protected override async Task UpdateTables(EducationTeacherModel teacher, List<Table> tables)
         {
-            // ПЛАНИРУЕМАЯ НА 1 ПОЛУГОДИЕ
-            var w1Dones = InsertData(tables[0], teacher.PlanWorks1);
+            await InsertData(tables[0], teacher.PlanWorks1);
         }
     }
 }

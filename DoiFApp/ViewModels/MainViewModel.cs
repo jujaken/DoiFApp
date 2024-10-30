@@ -15,6 +15,7 @@ using DoiFApp.Services.Schedule;
 using DoiFApp.Services.TempSchedule;
 using DoiFApp.Services.Workload;
 using DoiFApp.ViewModels.Pages;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Forms;
@@ -336,9 +337,8 @@ namespace DoiFApp.ViewModels
                 var dataPage = new DataPageViewModel();
                 await CommandWithProcessAndLoad(async () =>
                 {
-                    var teacher = (await Ioc.Default.GetRequiredService<IRepo<EducationTeacherModel>>()
-                        .Include(at => at.Works)
-                        .GetWhere(t => t.Name == result.teacherName)).FirstOrDefault();
+                    var teacher = (await Ioc.Default.GetRequiredService<ITeacherFinder>()
+                        .FindByPart(result.teacherName, true))!.FirstOrDefault();
 
                     if (result.isFirstSemester)
                     {
@@ -402,12 +402,12 @@ namespace DoiFApp.ViewModels
                     await NoHasFileMessage();
                     return;
                 }
-                
+
                 await CommandWithProcess(async () =>
                 {
                     var data = new NonEducationWorkData()
                     {
-                        NonEducationWorks = page.NonEducationWorks.Where(w => w.IsSelected 
+                        NonEducationWorks = page.NonEducationWorks.Where(w => w.IsSelected
                             && w.NonEducationWork!.Type != NonEducationWorkType.None).Select(w =>
                         {
                             var work = w.NonEducationWork!;
@@ -441,10 +441,10 @@ namespace DoiFApp.ViewModels
                 if (!data.IsHolistic)
                     throw new Exception("Data not found");
 
-                foreach(var work in data.NonEducationWorks!)
+                foreach (var work in data.NonEducationWorks!)
                     work.Type = workType;
 
-                page.NonEducationWorks =  new(data.NonEducationWorks.Select(w => new NonEducationWorkViewModel(w)));
+                page.NonEducationWorks = new(data.NonEducationWorks.Select(w => new NonEducationWorkViewModel(w)));
             }, page, "Меню открыто");
         }
 

@@ -4,6 +4,6 @@ namespace DoiFApp.Services
 {
     public interface ITeacherFinder
     {
-        Task<List<EducationTeacherModel>?> FindByPart(string? part);
+        Task<List<EducationTeacherModel>?> FindByPart(string? part, bool needInclude = false);
     }
 }
