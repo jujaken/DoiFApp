@@ -44,7 +44,7 @@
 
                     <DataTemplate>
 
-                        <local:ToolView DataContext="{Binding}" Margin="5, 4, 5, 0"/>
+                        <local:ToolView DataContext="{Binding}" Margin="20, 2, 2, 2"/>
 
                     </DataTemplate>
 
