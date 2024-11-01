@@ -346,11 +346,11 @@ namespace DoiFApp.ViewModels
                                 .Write(new PlanSecondHalfIndividualPlanData() { TeacherModel = teacher }, path);
                     else
                         if (result.isFirstSemester)
-                            await Ioc.Default.GetRequiredService<IDataWriter<FactFirstHalfIndividualPlanData>>()
-                                .Write(new FactFirstHalfIndividualPlanData() { TeacherModel = teacher }, path);
-                        else
-                            await Ioc.Default.GetRequiredService<IDataWriter<FactSecondHalfIndividualPlanData>>()
-                                .Write(new FactSecondHalfIndividualPlanData() { TeacherModel = teacher }, path);
+                        await Ioc.Default.GetRequiredService<IDataWriter<FactFirstHalfIndividualPlanData>>()
+                            .Write(new FactFirstHalfIndividualPlanData() { TeacherModel = teacher }, path);
+                    else
+                        await Ioc.Default.GetRequiredService<IDataWriter<FactSecondHalfIndividualPlanData>>()
+                            .Write(new FactSecondHalfIndividualPlanData() { TeacherModel = teacher }, path);
 
                     await dataPage.LoadData();
                 }, dataPage, "Задание выполнено");
@@ -411,18 +411,25 @@ namespace DoiFApp.ViewModels
 
                 await CommandWithProcess(async () =>
                 {
+                    var works = new List<NonEducationWork>();
+                    foreach (var vm in page.NonEducationWorks)
+                        if (vm.Count > 0 && vm.NonEducationWork!.Type != NonEducationWorkType.None)
+                        {
+                            var work = vm.NonEducationWork!;
+
+                            if (vm.IsFirstSemester)
+                                work.Semester |= SemesterType.First;
+
+                            if (vm.IsSecondSemester)
+                                work.Semester |= SemesterType.Second;
+
+                            for (int i = 0; i < vm.Count; i++)
+                                works.Add(work);
+                        }
+
                     var data = new NonEducationWorkData()
                     {
-                        NonEducationWorks = page.NonEducationWorks.Where(w => w.IsSelected
-                            && w.NonEducationWork!.Type != NonEducationWorkType.None).Select(w =>
-                        {
-                            var work = w.NonEducationWork!;
-                            if (w.IsFirstSemester)
-                                work.Semester |= SemesterType.First;
-                            if (w.IsSecondSemester)
-                                work.Semester |= SemesterType.Second;
-                            return work;
-                        }),
+                        NonEducationWorks = works,
                         IsRewrite = page.IsRewrite,
                     };
                     if (!data.IsHolistic)

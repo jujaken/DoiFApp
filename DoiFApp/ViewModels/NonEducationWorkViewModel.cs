@@ -15,7 +15,7 @@ namespace DoiFApp.ViewModels
         public string Text => NonEducationWork?.Text ?? "None";
 
         [ObservableProperty]
-        private bool isSelected = true;
+        private int count = 1;
 
         [ObservableProperty]
         private bool isFirstSemester;
