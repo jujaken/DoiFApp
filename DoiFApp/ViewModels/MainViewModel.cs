@@ -297,9 +297,9 @@ namespace DoiFApp.ViewModels
 
         private void OnPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(ScheduleAndEducationIsLoad) || e.PropertyName == nameof(EducationIsLoad))
+            if (e.PropertyName == nameof(ScheduleIsLoad) || e.PropertyName == nameof(EducationIsLoad))
             {
-                ScheduleAndEducationIsLoad = ScheduleAndEducationIsLoad && EducationIsLoad;
+                ScheduleAndEducationIsLoad = ScheduleIsLoad && EducationIsLoad;
             }
         }
 
