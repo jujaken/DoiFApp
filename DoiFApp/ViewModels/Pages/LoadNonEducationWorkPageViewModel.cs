@@ -30,11 +30,11 @@ namespace DoiFApp.ViewModels.Pages
         [ObservableProperty]
         private string toggleSelectionsText = SelectAll;
 
-        [RelayCommand]
-        public void ToggleSelections()
-            => ToggleProperty((work, value) => work.IsSelected = value,
-                () => ToggleSelectionsText,
-                (value) => ToggleSelectionsText = value);
+        //[RelayCommand]
+        //public void ToggleSelections()
+        //    => ToggleProperty((work, value) => work.IsSelected = value,
+        //        () => ToggleSelectionsText,
+        //        (value) => ToggleSelectionsText = value);
 
         [ObservableProperty]
         private string toggleFirstsText = SelectAll;

@@ -8,8 +8,8 @@
         mc:Ignorable="d"
         Title="DoiFApp"
         Icon="pack://application:,,,/Resources/doif.ico"
-        Height="450" Width="800"
-        MinHeight="300" MinWidth="700">
+        Height="450" Width="900"
+        MinHeight="300" MinWidth="900">
 
     <Window.DataContext>
         <vm:MainViewModel/>
