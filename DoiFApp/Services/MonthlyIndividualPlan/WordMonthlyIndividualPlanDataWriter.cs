@@ -1,6 +1,5 @@
 ﻿using DoiFApp.Data.Models;
 using DoiFApp.Services.Data;
-using System.Collections.Generic;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
 
