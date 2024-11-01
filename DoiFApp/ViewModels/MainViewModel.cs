@@ -10,6 +10,7 @@ using DoiFApp.Services.Builders;
 using DoiFApp.Services.Data;
 using DoiFApp.Services.Education;
 using DoiFApp.Services.IndividualPlan;
+using DoiFApp.Services.MonthlyIndividualPlan;
 using DoiFApp.Services.NonEducationWork;
 using DoiFApp.Services.Schedule;
 using DoiFApp.Services.TempSchedule;
@@ -51,17 +52,23 @@ namespace DoiFApp.ViewModels
         [NotifyCanExecuteChangedFor(nameof(ExtractTempScheduleCommand))]
         [NotifyCanExecuteChangedFor(nameof(ExtractWorkloadCommand))]
         [NotifyCanExecuteChangedFor(nameof(CheckScheduleCommand))]
-        [NotifyCanExecuteChangedFor(nameof(FromReportByMWCommand))]
+        [NotifyCanExecuteChangedFor(nameof(FormReportByMWCommand))]
         public bool scheduleIsLoad = false;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(FillIndividualPlanCommand))]
         public bool educationIsLoad = false;
 
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(FillReportMWCommand))]
+        public bool scheduleAndEducationIsLoad = false;
+
         #endregion
 
         public MainViewModel()
         {
+            PropertyChanged += OnPropertyChanged;
+
             var noCommand = new RelayCommand(() => { }, () => false);
 
             // общее
@@ -167,14 +174,14 @@ namespace DoiFApp.ViewModels
             {
                 Title = "📅 Сформировать отчет по месячной нагрузке",
                 Description = "Загружает отчёт по месяцам и дисциплинам в excel файл",
-                Command = FromReportByMWCommand
+                Command = FormReportByMWCommand
             };
 
             var fillReportMW = new ToolViewModel()
             {
                 Title = "✏️ Заполнить ежемес. нагрузку",
                 Description = "Заполняет ежемесячную нагрузку в индивидуальный план",
-                Command = noCommand
+                Command = FillReportMWCommand
             };
 
             var fact = new ToolCategoryViewModel("Фактическая нагрузка",
@@ -191,7 +198,7 @@ namespace DoiFApp.ViewModels
 
             // отчетное
 
-            var fromReport = new ToolViewModel()
+            var formReport = new ToolViewModel()
             {
                 Title = "📄 Сформировать отчёт",
                 Description = "Формулирует и выгружает данные для отчёта в excel",
@@ -201,7 +208,7 @@ namespace DoiFApp.ViewModels
             toolsCategories.Add(new ToolCategoryViewModel("Отчётная документация",
                 loadSchedule,
                 checkSchedule,
-                fromReport
+                formReport
             ));
 
             // загруженность
@@ -286,6 +293,14 @@ namespace DoiFApp.ViewModels
                 removeDb,
                 clearNotifies
                 ));
+        }
+
+        private void OnPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ScheduleAndEducationIsLoad) || e.PropertyName == nameof(EducationIsLoad))
+            {
+                ScheduleAndEducationIsLoad = ScheduleAndEducationIsLoad && EducationIsLoad;
+            }
         }
 
         #region Common
@@ -518,7 +533,7 @@ namespace DoiFApp.ViewModels
         }
 
         [RelayCommand(CanExecute = nameof(ScheduleIsLoad))]
-        private async Task FromReportByMW()
+        private async Task FormReportByMW()
         {
             var path = SaveFile("excel file|*.xlsx", "Отчёт по месяцам и дисциплинам.xlsx");
             if (string.IsNullOrEmpty(path))
@@ -535,6 +550,37 @@ namespace DoiFApp.ViewModels
                 await Ioc.Default.GetRequiredService<IDataWriter<ScheduleData>>().Write(new() { Lessons = data }, path);
                 await page.LoadData();
             }, page, "Отчёт готов, файл создан!");
+        }
+
+        [RelayCommand(CanExecute = nameof(ScheduleAndEducationIsLoad))]
+        private async Task FillReportMW()
+        {
+            var page = new FillIndividualPlanPageViewModel();
+            page.OnCancel += () => CurPage = null;
+            page.OnOk += async (result) =>
+            {
+                var path = GetFile("word file|*.docx", "Индивидуальный план.docx");
+                if (string.IsNullOrEmpty(path))
+                {
+                    await NoHasFileMessage();
+                    return;
+                }
+
+                var dataPage = new DataPageViewModel();
+                await CommandWithProcessAndLoad(async () =>
+                {
+                    var teacher = (await Ioc.Default.GetRequiredService<ITeacherFinder>()
+                        .FindByPart(result.teacherName, true))!.FirstOrDefault()!;
+
+                    var lessons = await Ioc.Default.GetRequiredService<IRepo<LessonModel>>().GetWhere(l => l.TeachersText.Contains(teacher.Name));
+
+                    await Ioc.Default.GetRequiredService<IDataWriter<MonthlyIndividualPlanData>>()
+                        .Write(new MonthlyIndividualPlanData() { TeacherModel = teacher, Lessons = lessons }, path);
+
+                    await dataPage.LoadData();
+                }, dataPage, "Задание выполнено");
+            };
+            await CommandWithProcessAndLoad(page.Update, page, "Меню открыто");
         }
 
         #endregion
@@ -799,8 +845,8 @@ namespace DoiFApp.ViewModels
             try
             {
 #endif
-            await Task.Run(action.Invoke);
-            CurPage = onSucces == null ? null : await onSucces.Invoke() ?? oldPage;
+                await Task.Run(action.Invoke);
+                CurPage = onSucces == null ? null : await onSucces.Invoke() ?? oldPage;
 #if RELEASE
             }
             catch

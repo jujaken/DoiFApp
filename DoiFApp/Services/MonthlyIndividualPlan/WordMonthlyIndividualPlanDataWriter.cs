@@ -19,7 +19,7 @@ namespace DoiFApp.Services.MonthlyIndividualPlan
         {
             using var doc = DocX.Load(path);
             var tables = doc.Tables;
-            await InsertData(tables[4], data.Lessons!.Where(l => l.Teachers.Contains(data.TeacherModel!.Name)));
+            await InsertData(tables[4], data.Lessons!);
             doc.Save();
         }
 
@@ -36,6 +36,7 @@ namespace DoiFApp.Services.MonthlyIndividualPlan
         protected Task FillRow(Row row, int month, IEnumerable<LessonModel> lessons)
         {
             lessons = lessons.Where(l => l.Date.Month == month);
+            // todo
             return Task.CompletedTask;
         }
     }
