@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="DoiFApp.Views.Pages.FillMonthlyIndividualPlanPageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DoiFApp.Views.Pages"
+             xmlns:vm="clr-namespace:DoiFApp.ViewModels.Pages"
+             xmlns:controlls="clr-namespace:DoiFApp.Views.Controlls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance vm:FillIndividualPlanPageViewModel, IsDesignTimeCreatable=True}">
+
+    <Grid>
+
+        <StackPanel Margin="20">
+
+            <Label Content="Выберите преподавателя:" Style="{StaticResource l2}" FontWeight="Bold" Margin="0,0,0,10"/>
+
+            <AdornerDecorator>
+                
+                <TextBox Text="{Binding Input}"
+                         HorizontalAlignment="Stretch"
+                         Height="25"
+                         Margin="2">
+
+                    <TextBox.InputBindings>
+                        <KeyBinding Command="{Binding Path=UpdateCommand}" Key="Enter"/>
+                    </TextBox.InputBindings>
+
+                    <controlls:WatermarkService.Watermark>
+                        <Label Content="Введите фамилию преподавателя..."/>
+                    </controlls:WatermarkService.Watermark>
+
+                </TextBox>
+
+            </AdornerDecorator>
+
+            <ComboBox ItemsSource="{Binding Teachers}"
+                      SelectedItem="{Binding SelectedTeacher}"
+                      Margin="2"
+                      IsEditable="True"
+                      StaysOpenOnEdit="True"/>
+
+            <StackPanel Orientation="Horizontal"
+                        Margin="2">
+                
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+
+                <Button Content="Отмена"
+                        Command="{Binding CancelCommand}"
+                        Margin="5"/>
+
+                <Button Content="ОК"
+                        Command="{Binding OkCommand}"
+                        Margin="5"/>
+
+            </StackPanel>
+            
+        </StackPanel>
+
+    </Grid>
+
+</UserControl>

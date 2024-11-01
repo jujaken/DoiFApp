@@ -29,5 +29,10 @@
     <DataTemplate DataType="{x:Type pvm:LoadNonEducationWorkPageViewModel}">
         <pv:LoadNonEducationWorkPageView/>
     </DataTemplate>
+
+
+    <DataTemplate DataType="{x:Type pvm:LoadNonEducationWorkPageViewModel}">
+        <pv:LoadNonEducationWorkPageView/>
+    </DataTemplate>
     
 </ResourceDictionary>

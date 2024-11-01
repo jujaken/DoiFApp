@@ -555,9 +555,9 @@ namespace DoiFApp.ViewModels
         [RelayCommand(CanExecute = nameof(ScheduleAndEducationIsLoad))]
         private async Task FillReportMW()
         {
-            var page = new FillIndividualPlanPageViewModel();
+            var page = new FillMonthlyIndividualPlanPageViewModel();
             page.OnCancel += () => CurPage = null;
-            page.OnOk += async (result) =>
+            page.OnOk += async (teacherName) =>
             {
                 var path = GetFile("word file|*.docx", "Индивидуальный план.docx");
                 if (string.IsNullOrEmpty(path))
@@ -570,7 +570,7 @@ namespace DoiFApp.ViewModels
                 await CommandWithProcessAndLoad(async () =>
                 {
                     var teacher = (await Ioc.Default.GetRequiredService<ITeacherFinder>()
-                        .FindByPart(result.teacherName, true))!.FirstOrDefault()!;
+                        .FindByPart(teacherName, true))!.FirstOrDefault()!;
 
                     var lessons = await Ioc.Default.GetRequiredService<IRepo<LessonModel>>().GetWhere(l => l.TeachersText.Contains(teacher.Name));
 
