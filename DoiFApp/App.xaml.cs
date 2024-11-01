@@ -7,6 +7,7 @@ using DoiFApp.Services.Builders;
 using DoiFApp.Services.Data;
 using DoiFApp.Services.Education;
 using DoiFApp.Services.IndividualPlan;
+using DoiFApp.Services.MonthlyIndividualPlan;
 using DoiFApp.Services.NonEducationWork;
 using DoiFApp.Services.Schedule;
 using DoiFApp.Services.TempSchedule;
@@ -56,6 +57,7 @@ namespace DoiFApp
                 .AddTransient<IDataWriter<PlanSecondHalfIndividualPlanData>, WordPlanSecondHalfIndividualPlanDataWriter>()
                 .AddTransient<IDataWriter<FactFirstHalfIndividualPlanData>, WordFactFirstHalfIndividualPlanDataWriter>()
                 .AddTransient<IDataWriter<FactSecondHalfIndividualPlanData>, WordFactSecondHalfIndividualPlanDataWriter>()
+                .AddTransient<IDataWriter<MonthlyIndividualPlanData>, WordMonthlyIndividualPlanDataWriter>()
                 // non education
                 .AddTransient<IDataReader<NonEducationWorkData>, WordNonEducationWorkDataReader>()
                 .AddTransient<IDataWriter<NonEducationWorkData>, IndividualPlanNonEducationWorkDataWriter>()
