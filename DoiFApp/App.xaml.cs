@@ -52,10 +52,10 @@ namespace DoiFApp
                 .AddTransient<IDataReader<FactEducationData>, ExcelFactEducationDataReader>()
                 .AddTransient<IDataSaver<FactEducationData>, SessionFactEducationDataSaver>()
                 // indivilual plan
-                .AddTransient<IDataWriter<PlanFirstHalfIndividualPlanData>, PlanFirstHalfIndividualPlanDataWriter>()
-                .AddTransient<IDataWriter<PlanSecondHalfIndividualPlanData>, PlanSecondHalfIndividualPlanDataWriter>()
-                .AddTransient<IDataWriter<FactFirstHalfIndividualPlanData>, FactFirstHalfIndividualPlanDataWriter>()
-                .AddTransient<IDataWriter<FactSecondHalfIndividualPlanData>, FactSecondHalfIndividualPlanDataWriter>()
+                .AddTransient<IDataWriter<PlanFirstHalfIndividualPlanData>, WordPlanFirstHalfIndividualPlanDataWriter>()
+                .AddTransient<IDataWriter<PlanSecondHalfIndividualPlanData>, WordPlanSecondHalfIndividualPlanDataWriter>()
+                .AddTransient<IDataWriter<FactFirstHalfIndividualPlanData>, WordFactFirstHalfIndividualPlanDataWriter>()
+                .AddTransient<IDataWriter<FactSecondHalfIndividualPlanData>, WordFactSecondHalfIndividualPlanDataWriter>()
                 // non education
                 .AddTransient<IDataReader<NonEducationWorkData>, WordNonEducationWorkDataReader>()
                 .AddTransient<IDataWriter<NonEducationWorkData>, IndividualPlanNonEducationWorkDataWriter>()

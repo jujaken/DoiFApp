@@ -3,7 +3,7 @@ using Xceed.Document.NET;
 
 namespace DoiFApp.Services.IndividualPlan
 {
-    public class FactSecondHalfIndividualPlanDataWriter : AbstractIndividualPlanWriter<FactSecondHalfIndividualPlanData>
+    public class WordFactSecondHalfIndividualPlanDataWriter : WordAbstractIndividualPlanWriter<FactSecondHalfIndividualPlanData>
     {
         protected override async Task UpdateTables(EducationTeacherModel teacher, List<Table> tables)
         {
