@@ -346,7 +346,6 @@ namespace DoiFApp.ViewModels
                     return;
                 }
 
-                var dataPage = new DataPageViewModel();
                 await CommandWithProcessAndLoad(async () =>
                 {
                     var teacher = (await Ioc.Default.GetRequiredService<ITeacherFinder>()
@@ -366,9 +365,7 @@ namespace DoiFApp.ViewModels
                     else
                         await Ioc.Default.GetRequiredService<IDataWriter<FactSecondHalfIndividualPlanData>>()
                             .Write(new FactSecondHalfIndividualPlanData() { TeacherModel = teacher }, path);
-
-                    await dataPage.LoadData();
-                }, dataPage, "Задание выполнено");
+                }, page, "Задание выполнено");
             };
             await CommandWithProcessAndLoad(page.Update, page, "Меню открыто");
         }
@@ -578,7 +575,6 @@ namespace DoiFApp.ViewModels
                     return;
                 }
 
-                var dataPage = new DataPageViewModel();
                 await CommandWithProcessAndLoad(async () =>
                 {
                     var teacher = (await Ioc.Default.GetRequiredService<ITeacherFinder>()
@@ -597,8 +593,7 @@ namespace DoiFApp.ViewModels
                             Converters = converters,
                         }, path);
 
-                    await dataPage.LoadData();
-                }, dataPage, "Задание выполнено");
+                }, page, "Задание выполнено");
             };
             await CommandWithProcessAndLoad(page.Update, page, "Меню открыто");
         }
