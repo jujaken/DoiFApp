@@ -30,6 +30,7 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
+                                    <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
 
                                 <Border BorderThickness="1" BorderBrush="#FF622D42">
@@ -54,6 +55,12 @@
                                      Grid.Column="1"
                                      VerticalAlignment="Stretch"
                                      HorizontalAlignment="Stretch"/>
+
+                                <ComboBox Grid.Column="2"
+                                          ItemsSource="{Binding Convertions}"
+                                          SelectedItem="{Binding SelectedConvertion}"
+                                          IsEditable="True"
+                                          StaysOpenOnEdit="True"/>
 
                             </Grid>
 

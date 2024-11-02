@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using DoiFApp.Utils;
 
 namespace DoiFApp.ViewModels
 {
@@ -9,5 +10,10 @@ namespace DoiFApp.ViewModels
 
         [ObservableProperty]
         private string newName = "СуперЛекция";
+
+        [ObservableProperty]
+        private string? selectedConvertion;
+
+        public static string[] Convertions => TableDataUtil.GetHeaders(TableDataUtil.InputCommonTableHeaders).ToArray();
     }
 }

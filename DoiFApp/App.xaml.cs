@@ -45,6 +45,7 @@ namespace DoiFApp
                 .AddTransient<IRepo<EducationTeacherModel>, Repo<EducationTeacherModel>>()
                 .AddTransient<IRepo<EducationWorkModel>, Repo<EducationWorkModel>>()
                 .AddTransient<IRepo<EducationTypeAndHourModel>, Repo<EducationTypeAndHourModel>>()
+                .AddTransient<IRepo<LessonTypeConverter>, Repo<LessonTypeConverter>>()
                 // builders
                 .AddTransient<NotifyBuilder>()
                 // education

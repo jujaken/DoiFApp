@@ -520,11 +520,23 @@ namespace DoiFApp.ViewModels
                 var dataPage = new DataPageViewModel();
                 await CommandWithProcessAndLoad(async () =>
                 {
-                    var repo = Ioc.Default.GetRequiredService<IRepo<LessonModel>>();
-                    (await repo.GetAll()).ForEach(l =>
+                    var converterRepo = Ioc.Default.GetRequiredService<IRepo<LessonTypeConverter>>();
+                    converterRepo.Db.RecreateLessonTypeConverters();
+                    foreach(var translation in lessonTypeTranslations)
+                        if (translation.SelectedConvertion != null
+                            && (await converterRepo.GetWhere(c => c.TypeName == translation.NewName
+                                && c.Convertion == translation.SelectedConvertion)).Count == 0)
+                            await converterRepo.Create(new()
+                            {
+                                TypeName = translation.NewName,
+                                Convertion = translation.SelectedConvertion
+                            });
+
+                    var lessonRepo = Ioc.Default.GetRequiredService<IRepo<LessonModel>>();
+                    (await lessonRepo.GetAll()).ForEach(l =>
                     {
                         l.LessionType = lessonTypeTranslations.FirstOrDefault(t => t.CurrentName == l.LessionType)!.NewName;
-                        repo.Update(l);
+                        lessonRepo.Update(l);
                     });
                     await dataPage.LoadData();
                 }, dataPage, "Задание выполнено");

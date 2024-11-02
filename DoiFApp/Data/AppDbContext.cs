@@ -10,10 +10,26 @@ namespace DoiFApp.Data
         public DbSet<EducationWorkModel> EducationWorks{ get; set; }
         public DbSet<EducationTypeAndHourModel> EducationTypesAndHours { get; set; }
         //public DbSet<NonEducationWork> NonEducationWorks {  get; set; }
-
+        public DbSet<LessonTypeConverter> LessonTypeConverters { get; set; }
+        
         public AppDbContext()
         {
             Database.EnsureCreated();
+        }
+
+        public void RecreateLessonTypeConverters()
+        {
+            foreach (var entity in ChangeTracker.Entries())
+                entity.State = EntityState.Detached;
+
+            try
+            {
+                LessonTypeConverters.RemoveRange(LessonTypeConverters);
+            }
+            catch
+            {
+            }
+            SaveChanges();
         }
 
         public void RecreateLessons()

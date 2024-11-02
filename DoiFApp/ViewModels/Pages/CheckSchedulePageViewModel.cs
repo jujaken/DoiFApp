@@ -24,7 +24,16 @@ namespace DoiFApp.ViewModels.Pages
                     uniqueTypes.Add(l.LessionType);
             });
 
-            LessonTypeTranslations = [.. uniqueTypes.Select(t => new LessonTypeTranslateViewModel() { CurrentName = t, NewName = t })];
+            LessonTypeTranslations.Clear();
+
+            foreach (var type in uniqueTypes)
+                LessonTypeTranslations.Add(new LessonTypeTranslateViewModel()
+                {
+                    CurrentName = type,
+                    NewName = type,
+                    SelectedConvertion = (await Ioc.Default.GetRequiredService<IRepo<LessonTypeConverter>>()
+                        .GetWhere(c => c.TypeName == type)).FirstOrDefault()?.Convertion,
+                });
         }
 
         [RelayCommand]
