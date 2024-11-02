@@ -522,7 +522,7 @@ namespace DoiFApp.ViewModels
                 {
                     var converterRepo = Ioc.Default.GetRequiredService<IRepo<LessonTypeConverter>>();
                     converterRepo.Db.RecreateLessonTypeConverters();
-                    foreach(var translation in lessonTypeTranslations)
+                    foreach (var translation in lessonTypeTranslations)
                         if (translation.SelectedConvertion != null
                             && (await converterRepo.GetWhere(c => c.TypeName == translation.NewName
                                 && c.Convertion == translation.SelectedConvertion)).Count == 0)
@@ -584,10 +584,18 @@ namespace DoiFApp.ViewModels
                     var teacher = (await Ioc.Default.GetRequiredService<ITeacherFinder>()
                         .FindByPart(teacherName, true))!.FirstOrDefault()!;
 
-                    var lessons = await Ioc.Default.GetRequiredService<IRepo<LessonModel>>().GetWhere(l => l.TeachersText.Contains(teacher.Name));
+                    var lessons = await Ioc.Default.GetRequiredService<IRepo<LessonModel>>()
+                        .GetWhere(l => l.TeachersText.Contains(teacher.Name));
+
+                    var converters = await Ioc.Default.GetRequiredService<IRepo<LessonTypeConverter>>().GetAll();
 
                     await Ioc.Default.GetRequiredService<IDataWriter<MonthlyIndividualPlanData>>()
-                        .Write(new MonthlyIndividualPlanData() { TeacherModel = teacher, Lessons = lessons }, path);
+                        .Write(new MonthlyIndividualPlanData()
+                        {
+                            TeacherModel = teacher,
+                            Lessons = lessons,
+                            Converters = converters,
+                        }, path);
 
                     await dataPage.LoadData();
                 }, dataPage, "Задание выполнено");
@@ -857,8 +865,8 @@ namespace DoiFApp.ViewModels
             try
             {
 #endif
-                await Task.Run(action.Invoke);
-                CurPage = onSucces == null ? null : await onSucces.Invoke() ?? oldPage;
+            await Task.Run(action.Invoke);
+            CurPage = onSucces == null ? null : await onSucces.Invoke() ?? oldPage;
 #if RELEASE
             }
             catch
