@@ -16,25 +16,6 @@
 
             <Label Content="Выберите преподавателя:" Style="{StaticResource l2}" FontWeight="Bold" Margin="0,0,0,10"/>
 
-            <AdornerDecorator>
-                
-                <TextBox Text="{Binding Input}"
-                         HorizontalAlignment="Stretch"
-                         Height="25"
-                         Margin="2">
-
-                    <TextBox.InputBindings>
-                        <KeyBinding Command="{Binding Path=UpdateCommand}" Key="Enter"/>
-                    </TextBox.InputBindings>
-
-                    <controlls:WatermarkService.Watermark>
-                        <Label Content="Введите фамилию преподавателя..."/>
-                    </controlls:WatermarkService.Watermark>
-
-                </TextBox>
-
-            </AdornerDecorator>
-
             <ComboBox ItemsSource="{Binding Teachers}"
                       SelectedItem="{Binding SelectedTeacher}"
                       Margin="2"

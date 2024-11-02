@@ -8,8 +8,8 @@ namespace DoiFApp.ViewModels.Pages
 {
     public partial class FillMonthlyIndividualPlanPageViewModel : ObservableObject
     {
-        [ObservableProperty]
-        private string? input;
+        //[ObservableProperty]
+        //private string? input;
 
         [ObservableProperty]
         private ObservableCollection<string> teachers = [];
@@ -33,7 +33,7 @@ namespace DoiFApp.ViewModels.Pages
         public async Task Update()
         {
             var finder = Ioc.Default.GetRequiredService<ITeacherFinder>();
-            var teachers = await finder.FindByPart(Input);
+            var teachers = await finder.FindByPart(null);
             Teachers.Clear();
             if (teachers != null)
                 foreach (var teacher in teachers)
