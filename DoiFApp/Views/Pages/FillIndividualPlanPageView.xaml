@@ -24,13 +24,10 @@
 
             <StackPanel Orientation="Horizontal"
                         Margin="2">
-                
-                <Label Content="Первый семестр"/>
-                
-                <ToggleButton Style="{StaticResource SwitchToggleButtonStyle}"
-                              IsChecked="{Binding IsFirstSemester}"/>
-                
-                <Label Content="Второй семестр"/>
+
+                <ToggleButton Content="Первый семестр" IsChecked="{Binding IsFirstSemester}"/>
+                <Grid Margin="2"/>
+                <ToggleButton Content="Второй семестр" IsChecked="{Binding IsSecondSemester}"/>
                 
             </StackPanel>
             

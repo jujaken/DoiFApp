@@ -358,8 +358,7 @@ namespace DoiFApp.ViewModels
                         else
                             await Ioc.Default.GetRequiredService<IDataWriter<PlanSecondHalfIndividualPlanData>>()
                                 .Write(new PlanSecondHalfIndividualPlanData() { TeacherModel = teacher }, path);
-                    else
-                        if (result.isFirstSemester)
+                    else if (result.isSecondSemester)
                         await Ioc.Default.GetRequiredService<IDataWriter<FactFirstHalfIndividualPlanData>>()
                             .Write(new FactFirstHalfIndividualPlanData() { TeacherModel = teacher }, path);
                     else

@@ -26,7 +26,10 @@ namespace DoiFApp.ViewModels.Pages
         }
 
         [ObservableProperty]
-        private bool isFirstSemester = true;
+        private bool isFirstSemester = false;
+
+        [ObservableProperty]
+        private bool isSecondSemester = false;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(OkCommand))]
@@ -51,13 +54,13 @@ namespace DoiFApp.ViewModels.Pages
             OnCancel?.Invoke();
         }
 
-        public event Func<(string teacherName, bool isFirstSemester), Task>? OnOk;
+        public event Func<(string teacherName, bool isFirstSemester, bool isSecondSemester), Task>? OnOk;
 
         [RelayCommand(CanExecute = nameof(CanOk))]
         public async Task Ok()
         {
             if (OnOk != null)
-                await OnOk.Invoke((selectedTeacher!, IsFirstSemester));
+                await OnOk.Invoke((selectedTeacher!, IsFirstSemester, IsSecondSemester));
         }
     }
 }
