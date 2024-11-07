@@ -12,7 +12,7 @@
     <Grid Height="{Binding ActualHeight,
           RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}">
 
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
+        <ScrollViewer>
 
             <StackPanel Margin="20">
 

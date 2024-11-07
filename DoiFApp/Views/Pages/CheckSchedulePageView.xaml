@@ -17,7 +17,7 @@
 
             <Label Content="Настройка типов:" Style="{StaticResource l2}" FontWeight="Bold" Margin="0,0,0,10"/>
 
-            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
+            <ScrollViewer>
                 
                 <ItemsControl ItemsSource="{Binding Path=LessonTypeTranslations}">
 
