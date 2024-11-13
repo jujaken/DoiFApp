@@ -57,6 +57,7 @@ namespace DoiFApp.Services.IndividualPlan
                 row.Cells[^2].Paragraphs[0].Append(workSum.ToString("0.0", System.Globalization.CultureInfo.GetCultureInfo("en-US")));
 
                 var audiWorkSum = work.TypesAndHours
+                    // проверить логику проверки аудиторной нагрузки
                     .Where(x => TableDataUtil.GetEquivalent(x.Key) != null)
                     .Sum(x => x.Value);
 
