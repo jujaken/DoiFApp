@@ -60,7 +60,7 @@ namespace DoiFApp.Services.IndividualPlan
                     .Where(x => TableDataUtil.GetEquivalent(x.Key) != null)
                     .Sum(x => x.Value);
 
-                dones[row.Cells.Count - 2] += workSum;
+                dones[row.Cells.Count - 2] += audiWorkSum;
                 row.Cells[^1].Paragraphs[0].RemoveText(0);
                 row.Cells[^1].Paragraphs[0].Append(audiWorkSum.ToString("0.0", System.Globalization.CultureInfo.GetCultureInfo("en-US")));
             }

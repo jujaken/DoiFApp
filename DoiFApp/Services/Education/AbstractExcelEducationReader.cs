@@ -6,6 +6,10 @@ using OfficeOpenXml;
 
 namespace DoiFApp.Services.Education
 {
+    /// <summary>
+    /// todo: проверить правильность загрузки (нет части дисциплин)
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class AbstractExcelEducationReader<T> : IDataReader<T> where T : AbstractEducationData
     {
         private const int TittleRow = 8;
