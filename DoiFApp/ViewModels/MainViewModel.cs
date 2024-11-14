@@ -205,13 +205,6 @@ namespace DoiFApp.ViewModels
                 Command = noCommand
             };
 
-            toolsCategories.Add(new ToolCategoryViewModel("Отчётная документация",
-                loadSchedule,
-                checkSchedule,
-                formReport
-            ));
-
-            // загруженность
 
             var extractTempSchedule = new ToolViewModel()
             {
@@ -219,6 +212,15 @@ namespace DoiFApp.ViewModels
                 Description = "Выгружает из сессии имеющееся расписание, позволяет отредактировать его вручную в excel",
                 Command = ExtractTempScheduleCommand
             };
+
+            toolsCategories.Add(new ToolCategoryViewModel("Отчётная документация",
+                loadSchedule,
+                checkSchedule,
+                extractTempSchedule,
+                formReport
+            ));
+
+            // загруженность
 
             var loadTempSchedule = new ToolViewModel()
             {
@@ -237,7 +239,6 @@ namespace DoiFApp.ViewModels
             toolsCategories.Add(new ToolCategoryViewModel("Загруженность преподавателей",
                 loadSchedule,
                 extractWorkload,
-                extractTempSchedule,
                 loadTempSchedule
             ));
 

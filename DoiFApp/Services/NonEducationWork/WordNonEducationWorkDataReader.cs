@@ -5,6 +5,8 @@ namespace DoiFApp.Services.NonEducationWork
 {
     public class WordNonEducationWorkDataReader : IDataReader<NonEducationWorkData>
     {
+        // разработка или переработка в зависимости от выбора пользователя
+        // методическая
         public Task<NonEducationWorkData> Read(string path)
         {
             using var doc = DocX.Load(path);

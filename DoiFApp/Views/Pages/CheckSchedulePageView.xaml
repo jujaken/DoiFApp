@@ -17,8 +17,24 @@
 
             <Label Content="Настройка типов:" Style="{StaticResource l2}" FontWeight="Bold" Margin="0,0,0,10"/>
 
+            <Grid Margin="3"/>
+            <Label Style="{StaticResource l4}" Content="Переименнование названия типа занятий в расписании и обозначение типа занятий в индивидуальном плане и отчете" Background="Snow"/>
+            <Grid Margin="3"/>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Label Style="{StaticResource l3}" HorizontalAlignment="Center" Content="Тип занятия в расписании" Grid.Column="0"/>
+                <Label Style="{StaticResource l3}" HorizontalAlignment="Center" Content="Стандартные виды занятий" Grid.Column="1"/>
+                <Label Style="{StaticResource l3}" HorizontalAlignment="Center" Content="Обозначние занятий в отчёте" Grid.Column="2"/>
+            </Grid>
+
             <ScrollViewer>
-                
+
+
                 <ItemsControl ItemsSource="{Binding Path=LessonTypeTranslations}">
 
                     <ItemsControl.ItemTemplate>
