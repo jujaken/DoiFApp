@@ -402,6 +402,8 @@ namespace DoiFApp.ViewModels
 
                 await Ioc.Default.GetRequiredService<IDataSaver<PlanEducationData>>().Save(data);
                 await page.LoadData();
+
+                ScheduleIsLoad = true;
             }, page, "Данные из расчёта расписания были загружены");
 
             if (page.LessonViewModels.Any())
