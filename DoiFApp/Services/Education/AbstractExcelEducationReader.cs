@@ -23,11 +23,10 @@ namespace DoiFApp.Services.Education
             var worksheet = package.Workbook.Worksheets.Where(w => w.Name.Contains(name, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault()
                 ?? throw new Exception("worksheet not found");
 
-            var teachers = new List<EducationTeacherModel>();
             var typeAndHours = new List<EducationTypeAndHourModel>();
             var works = new List<EducationWorkModel>();
 
-            ParseData(worksheet,
+            var teachers = ParseData(worksheet,
                 (data, teacher, j) =>
                 {
                     var work1 = GetWorkTeacher(data, 15, 2, j);
@@ -39,7 +38,7 @@ namespace DoiFApp.Services.Education
                         work1.Teacher = teacher;
                         teacher.Works.Add(work1);
                     }
-                    var work2 = GetWorkTeacher(data, 77, 2, j);
+                    var work2 = GetWorkTeacher(data, 77, 64, j);
                     if (work2 != null)
                     {
                         work2.TypesAndHours.ForEach(t => typeAndHours.Add(t));
@@ -48,7 +47,6 @@ namespace DoiFApp.Services.Education
                         work2.Teacher = teacher;
                         teacher.Works.Add(work2);
                     }
-                    teachers.Add(teacher);
                 });
 
             return Task.FromResult(new AbstractEducationData()
@@ -59,9 +57,11 @@ namespace DoiFApp.Services.Education
             });
         }
 
-        private static void ParseData(ExcelWorksheet data,
+        private static List<EducationTeacherModel> ParseData(ExcelWorksheet data,
             Action<ExcelWorksheet, EducationTeacherModel, int> jFunc)
         {
+            var teachers = new List<EducationTeacherModel>();
+   
             var (teacherRows, endId) = GetTeacherRows(data);
             teacherRows.Add(endId);
 
@@ -74,7 +74,11 @@ namespace DoiFApp.Services.Education
 
                 for (int j = teacherId + 1; j < teacherRows[i + 1]; j++) // row
                     jFunc(data, teacher, j);
+
+                teachers.Add(teacher);
             }
+
+            return teachers;
         }
 
         private static (List<int>, int) GetTeacherRows(ExcelWorksheet data)
@@ -97,13 +101,21 @@ namespace DoiFApp.Services.Education
             return (teacherRows, endId);
         }
 
+        /// <summary>
+        /// смотрит ячейки рабочей колонки (под преподавателем) и загружает работу с типами (лекции и тп) и значениями (часы)
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="startColumn"></param>
+        /// <param name="workColumn"></param>
+        /// <param name="valueRow"></param>
+        /// <returns></returns>
         private static EducationWorkModel? GetWorkTeacher(ExcelWorksheet data, int startColumn, int workColumn, int valueRow)
         {
             var workCell = data.Cells[valueRow, workColumn];
             if (workCell == null) return null;
 
             var workName = data.Cells[valueRow, workColumn].Value?.ToString();
-            if (workName == null) return null;
+            if (workName == null || workName.Length < 3) return null;
 
             return new EducationWorkModel(workName)
             {
@@ -111,6 +123,13 @@ namespace DoiFApp.Services.Education
             };
         }
 
+        /// <summary>
+        /// берёт колонки с названиями вида работы (лекции там и тп) и смотрит сколько часов по данной работе занимает
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="startColumn"></param>
+        /// <param name="valueRow"></param>
+        /// <returns></returns>
         private static List<EducationTypeAndHourModel> GetWorkData(ExcelWorksheet data, int startColumn, int valueRow)
         {
             var workData = new List<EducationTypeAndHourModel>();
