@@ -25,7 +25,11 @@ namespace DoiFApp.Services.Education
                 // PlanWorks1
 
                 if (newTeacher.PlanWorks1.Count != 0)
-                    repoTeacher.PlanWorks1.ForEach(w => repoTeacher.Works.Remove(w));
+                    repoTeacher.PlanWorks1.ForEach(w =>
+                    {
+                        repoTeacher.Works.Remove(w);
+                        repo.Db.Remove(w);
+                    });
 
                 if (repoTeacher.PlanWorks1.Count == 0)
                     repoTeacher.Works.AddRange(newTeacher.PlanWorks1);
@@ -33,7 +37,11 @@ namespace DoiFApp.Services.Education
                 // PlanWorks2
 
                 if (newTeacher.PlanWorks2.Count != 0)
-                    repoTeacher.PlanWorks2.ForEach(w => repoTeacher.Works.Remove(w));
+                    repoTeacher.PlanWorks2.ForEach(w =>
+                    {
+                        repoTeacher.Works.Remove(w);
+                        repo.Db.Remove(w);
+                    });
 
                 if (repoTeacher.PlanWorks2.Count == 0)
                     repoTeacher.Works.AddRange(newTeacher.PlanWorks2);
@@ -41,7 +49,11 @@ namespace DoiFApp.Services.Education
                 // FactWorks1
 
                 if (newTeacher.FactWorks1.Count != 0)
-                    repoTeacher.FactWorks1.ForEach(w => repoTeacher.Works.Remove(w));
+                    repoTeacher.FactWorks1.ForEach(w =>
+                    {
+                        repoTeacher.Works.Remove(w);
+                        repo.Db.Remove(w);
+                    });
 
                 if (repoTeacher.FactWorks1.Count == 0)
                     repoTeacher.Works.AddRange(newTeacher.FactWorks1);
@@ -49,7 +61,11 @@ namespace DoiFApp.Services.Education
                 // FactWorks2
 
                 if (newTeacher.FactWorks2.Count != 0)
-                    repoTeacher.FactWorks2.ForEach(w => repoTeacher.Works.Remove(w));
+                    repoTeacher.FactWorks2.ForEach(w =>
+                    {
+                        repoTeacher.Works.Remove(w);
+                        repo.Db.Remove(w);
+                    });
 
                 if (repoTeacher.FactWorks2.Count == 0)
                     repoTeacher.Works.AddRange(newTeacher.FactWorks2);
