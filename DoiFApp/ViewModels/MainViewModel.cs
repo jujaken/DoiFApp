@@ -353,18 +353,25 @@ namespace DoiFApp.ViewModels
                         .FindByPart(result.teacherName, true))!.FirstOrDefault();
 
                     if (isPlan)
+                    {
                         if (result.isFirstSemester)
                             await Ioc.Default.GetRequiredService<IDataWriter<PlanFirstHalfIndividualPlanData>>()
                                 .Write(new PlanFirstHalfIndividualPlanData() { TeacherModel = teacher }, path);
-                        else
+                        if (result.isSecondSemester)
                             await Ioc.Default.GetRequiredService<IDataWriter<PlanSecondHalfIndividualPlanData>>()
                                 .Write(new PlanSecondHalfIndividualPlanData() { TeacherModel = teacher }, path);
-                    else if (result.isSecondSemester)
-                        await Ioc.Default.GetRequiredService<IDataWriter<FactFirstHalfIndividualPlanData>>()
-                            .Write(new FactFirstHalfIndividualPlanData() { TeacherModel = teacher }, path);
+                    }
                     else
-                        await Ioc.Default.GetRequiredService<IDataWriter<FactSecondHalfIndividualPlanData>>()
-                            .Write(new FactSecondHalfIndividualPlanData() { TeacherModel = teacher }, path);
+                    {
+                        if (result.isFirstSemester)
+                            await Ioc.Default.GetRequiredService<IDataWriter<FactFirstHalfIndividualPlanData>>()
+                                .Write(new FactFirstHalfIndividualPlanData() { TeacherModel = teacher }, path);
+
+                        if (result.isSecondSemester)
+                            await Ioc.Default.GetRequiredService<IDataWriter<FactSecondHalfIndividualPlanData>>()
+                                .Write(new FactSecondHalfIndividualPlanData() { TeacherModel = teacher }, path);
+                    }
+
                 }, page, "Задание выполнено");
             };
             await CommandWithProcessAndLoad(page.Update, page, "Меню открыто");
