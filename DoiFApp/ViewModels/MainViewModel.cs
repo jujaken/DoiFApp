@@ -403,8 +403,10 @@ namespace DoiFApp.ViewModels
                 await Ioc.Default.GetRequiredService<IDataSaver<PlanEducationData>>().Save(data);
                 await page.LoadData();
 
-                EducationIsLoad = true;
             }, page, "Данные из расчёта расписания были загружены");
+
+            if (page.EducationTeacherModel.Any())
+                EducationIsLoad = true;
         }
 
         [RelayCommand(CanExecute = nameof(NoTask))]
