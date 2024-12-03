@@ -1,7 +1,6 @@
 ﻿using DoiFApp.Data.Models;
 using DoiFApp.Enums;
 using DoiFApp.Services.Data;
-using DoiFApp.Utils;
 using OfficeOpenXml;
 
 namespace DoiFApp.Services.Education
@@ -9,7 +8,8 @@ namespace DoiFApp.Services.Education
     public abstract class AbstractExcelEducationReader<T> : IDataReader<T> where T : AbstractEducationData
     {
         private const int TittleRow = 8;
-        private static readonly IEnumerable<string> headers = TableDataUtil.GetHeaders(TableDataUtil.InputCommonTableHeaders);
+        private const int HeadersCount = 22;
+        //private static readonly IEnumerable<string> headers = TableDataUtil.GetHeaders(TableDataUtil.InputCommonTableHeaders);
 
         public abstract Task<T> Read(string path);
 
@@ -30,8 +30,8 @@ namespace DoiFApp.Services.Education
                     {
                         work1.TypesAndHours.ForEach(t => typeAndHours.Add(t));
                         work1.WorkCategory = first;
-                        works.Add(work1);
                         work1.Teacher = teacher;
+                        works.Add(work1);
                         teacher.Works.Add(work1);
                     }
                     var work2 = GetWorkTeacher(data, 77, 64, j);
@@ -39,8 +39,8 @@ namespace DoiFApp.Services.Education
                     {
                         work2.TypesAndHours.ForEach(t => typeAndHours.Add(t));
                         work2.WorkCategory = second;
-                        works.Add(work2);
                         work2.Teacher = teacher;
+                        works.Add(work2);
                         teacher.Works.Add(work2);
                     }
                 });
@@ -57,7 +57,7 @@ namespace DoiFApp.Services.Education
             Action<ExcelWorksheet, EducationTeacherModel, int> jFunc)
         {
             var teachers = new List<EducationTeacherModel>();
-   
+
             var (teacherRows, endId) = GetTeacherRows(data);
             teacherRows.Add(endId);
 
@@ -129,17 +129,21 @@ namespace DoiFApp.Services.Education
         private static List<EducationTypeAndHourModel> GetWorkData(ExcelWorksheet data, int startColumn, int valueRow)
         {
             var workData = new List<EducationTypeAndHourModel>();
-            for (int i = startColumn; workData.Count != headers.Count(); i++)
+            // код старый и не очень
+            // в идеале привязать к хэдорам, а также не добавлять пустые данные
+            // но тогда нужно переделывать ещё и вывод в ИП, а мне пока лень
+            for (int i = startColumn; workData.Count != HeadersCount; i++)
             {
                 var tittleCell = data.Cells[TittleRow, i];
                 if (tittleCell == null || tittleCell.Value == null) continue;
 
                 var tittle = tittleCell.Value.ToString();
-                if (tittle == null || !headers.Contains(tittle)) continue;
+                // возможно, требуется использование хэдоров для обеспечения надёжного ввода
+                if (string.IsNullOrEmpty(tittle) /* || !headers.Contains(tittle) */) continue;
 
                 var valueCell = data.Cells[valueRow, i];
                 var value = valueCell == null || valueCell.Value == null ? 0 : (double)valueCell.Value;
-                workData.Add(new EducationTypeAndHourModel() { Key = tittle!, Value = value });
+                workData.Add(new EducationTypeAndHourModel() { Key = tittle, Value = value });
             }
             return workData;
         }
