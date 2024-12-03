@@ -8,7 +8,7 @@ namespace DoiFApp.Services.IndividualPlan
         protected override async Task UpdateTables(EducationTeacherModel teacher, List<Table> tables)
         {
             var table = tables[3];
-            await InsertData(table, teacher.PlanWorks2, true);
+            await InsertData(table, teacher.FactWorks2, true);
             await InsertDones(table, tables[2]);
         }
     }
