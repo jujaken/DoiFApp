@@ -13,6 +13,13 @@
     <Grid Height="{Binding ActualHeight,
                   RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}">
 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="64"/>
+        </Grid.RowDefinitions>
+
         <StackPanel Margin="10">
 
             <Label Content="Настройка типов:" Style="{StaticResource l2}" FontWeight="Bold" Margin="0,0,0,10"/>
@@ -32,79 +39,83 @@
                 <Label Style="{StaticResource l3}" HorizontalAlignment="Center" Content="Обозначние занятий в отчёте" Grid.Column="2"/>
             </Grid>
 
-            <ScrollViewer>
+        </StackPanel>
 
+        <ScrollViewer Grid.Row="1">
 
-                <ItemsControl ItemsSource="{Binding Path=LessonTypeTranslations}">
+            <ItemsControl ItemsSource="{Binding Path=LessonTypeTranslations}">
 
-                    <ItemsControl.ItemTemplate>
+                <ItemsControl.ItemTemplate>
 
-                        <DataTemplate>
+                    <DataTemplate>
 
-                            <Grid>
+                        <Grid>
 
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
 
-                                <Border BorderThickness="1" BorderBrush="#FF622D42">
+                            <Border BorderThickness="1" BorderBrush="#FF622D42">
 
-                                    <Border.Background>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" >
-                                            <GradientStop Color="RosyBrown"/>
-                                            <GradientStop Color="Snow" Offset="1"/>
-                                        </LinearGradientBrush>
-                                    </Border.Background>
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" >
+                                        <GradientStop Color="RosyBrown"/>
+                                        <GradientStop Color="Snow" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
 
-                                    <TextBlock Text="{Binding CurrentName}"
+                                <TextBlock Text="{Binding CurrentName}"
                                            Foreground="#FF2B072D"
                                            FontSize="14"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Left"
                                            Margin="4"/>
 
-                                </Border>
+                            </Border>
 
-                                <TextBox Text="{Binding NewName}"
-                                     Grid.Column="1"
-                                     VerticalAlignment="Stretch"
-                                     HorizontalAlignment="Stretch"/>
+                            <TextBox Text="{Binding NewName}"
+                                         Grid.Column="1"
+                                         VerticalAlignment="Stretch"
+                                         HorizontalAlignment="Stretch"/>
 
-                                <ComboBox Grid.Column="2"
+                            <ComboBox Grid.Column="2"
                                           ItemsSource="{Binding Convertions}"
                                           SelectedItem="{Binding SelectedConvertion}"
                                           IsEditable="True"
                                           StaysOpenOnEdit="True"/>
 
-                            </Grid>
+                        </Grid>
 
-                        </DataTemplate>
+                    </DataTemplate>
 
-                    </ItemsControl.ItemTemplate>
+                </ItemsControl.ItemTemplate>
 
-                </ItemsControl>
+            </ItemsControl>
 
-            </ScrollViewer>
+        </ScrollViewer>
+
+        <Grid Grid.Row="2">
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
 
                 <Button Content="Вернуть"
-                        Command="{Binding ReturnCommand}"
-                        Margin="5"/>
+                         Command="{Binding ReturnCommand}"
+                         Margin="5"/>
 
                 <Button Content="Отмена"
-                        Command="{Binding CancelCommand}"
-                        Margin="5"/>
+                         Command="{Binding CancelCommand}"
+                         Margin="5"/>
 
                 <Button Content="ОК"
-                        Command="{Binding OkCommand}"
-                        Margin="5"/>
+                         Command="{Binding OkCommand}"
+                         Margin="5"/>
 
             </StackPanel>
 
-        </StackPanel>
+        </Grid>
 
     </Grid>
+    
 </UserControl>
