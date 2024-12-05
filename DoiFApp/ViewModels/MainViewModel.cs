@@ -330,7 +330,10 @@ namespace DoiFApp.ViewModels
             }, page);
 
             if (page.LessonViewModels.Any())
+            {
                 ScheduleIsLoad = true;
+                await Notify("Предупреждение", "Не забудьте проверить расписание!", NotifyColorType.Warning);
+            }
         }
 
         [RelayCommand(CanExecute = nameof(EducationIsLoad))]
@@ -546,6 +549,10 @@ namespace DoiFApp.ViewModels
                     });
                     await dataPage.LoadData();
                 }, dataPage, "Задание выполнено");
+            };
+            page.OnError += async () =>
+            {
+                await Notify("Невозможно продолжить", "Вы не указали все обозначения занятий в отчёте!", NotifyColorType.Error);
             };
             await CommandWithProcessAndLoad(page.Update, page, "Меню открыто");
         }

@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using DoiFApp.Data.Models;
 using DoiFApp.Data.Repo;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace DoiFApp.ViewModels.Pages
 {
@@ -52,12 +53,19 @@ namespace DoiFApp.ViewModels.Pages
         }
 
         public event Func<IEnumerable<LessonTypeTranslateViewModel>, Task>? OnOk;
+        public event Func<Task>? OnError;
 
         [RelayCommand]
         public async Task Ok()
         {
-            if (OnOk != null)
-                await OnOk.Invoke(LessonTypeTranslations.AsEnumerable());
+            if (LessonTypeTranslations.All(t => t.SelectedConvertion != null))
+            {
+                if (OnOk != null)
+                    await OnOk.Invoke(LessonTypeTranslations.AsEnumerable());
+                return;
+            }
+            if (OnError != null)
+                await OnError.Invoke();
         }
     }
 }
