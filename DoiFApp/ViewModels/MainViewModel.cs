@@ -19,6 +19,8 @@ using DoiFApp.ViewModels.Pages;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Forms;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace DoiFApp.ViewModels
 {
@@ -286,13 +288,21 @@ namespace DoiFApp.ViewModels
                 Command = ClearNotifiesCommand
             };
 
+            var setupColorSettings = new ToolViewModel()
+            {
+                Title = "🎨 Настройки",
+                Description = "Выбрать свои цвета в приложении",
+                Command = SetupColorSettingsCommand
+            };
+
             toolsCategories.Add(new ToolCategoryViewModel("DoiF",
                 loadLastSession,
                 clearSession,
                 importSession,
                 exportSession,
                 removeDb,
-                clearNotifies
+                clearNotifies,
+                setupColorSettings
                 ));
         }
 
@@ -707,7 +717,7 @@ namespace DoiFApp.ViewModels
         {
             if (!File.Exists(App.DbPath))
             {
-                await Notify("Сессия не загружена", $"Невозможно загрузить сессию, так как остутствует файл {App.DbPath}", NotifyColorType.Error);
+                await Notify("Сессия не загружена", $"Невозможно загрузить сессию, так как отсутствует файл {App.DbPath}", NotifyColorType.Error);
                 return;
             }
 
@@ -817,6 +827,13 @@ namespace DoiFApp.ViewModels
             return Task.CompletedTask;
         }
 
+        [RelayCommand]
+        private async Task SetupColorSettings()
+        {
+            var page = new AppSettingsPageViewModel();
+            await page.Load();
+            CurPage = page;
+        }
 
         #endregion
 

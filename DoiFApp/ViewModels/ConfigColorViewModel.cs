@@ -1,0 +1,53 @@
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using DoiFApp.Config;
+using DoiFApp.Utils;
+using System.Windows.Media;
+
+namespace DoiFApp.ViewModels
+{
+    public class ConfigColorViewModel : ObservableObject
+    {
+        public ConfigColorViewModel(ConfigColor configColor)
+        {
+            ConfigColor = configColor;
+            value = new() { A = 255, R = ConfigColor.Value[0], G = ConfigColor.Value[1], B = ConfigColor.Value[2] };
+            hex = ColorUtils.ColorToHex(value);
+        }
+
+        public ConfigColor ConfigColor { get; private set; }
+
+        public string Key
+        {
+            get => ConfigColor.Key;
+            set => SetProperty(ConfigColor.Key, value, ConfigColor, (m, v) => m.Key = v);
+        }
+
+        private Color value;
+        public Color Value
+        {
+            get => value;
+            set
+            {
+                if (this.value ==  value) return;
+
+                this.value = value;
+                SetProperty(ConfigColor.Value, [value.R, value.G, value.B], ConfigColor, (m, v) => m.Value = v);
+                Hex = ColorUtils.ColorToHex(value);
+            }
+        }
+
+        private string hex;
+        public string Hex
+        {
+            get => hex;
+            set
+            {
+                if (hex == value) return;
+                if (hex.Length == 7) return;
+
+                SetProperty(ref hex, value);
+                Value = ColorUtils.HexToColor(value);
+            }
+        }
+    }
+}

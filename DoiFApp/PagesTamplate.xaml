@@ -30,9 +30,12 @@
         <pv:LoadNonEducationWorkPageView/>
     </DataTemplate>
 
-
     <DataTemplate DataType="{x:Type pvm:FillMonthlyIndividualPlanPageViewModel}">
         <pv:FillMonthlyIndividualPlanPageView/>
     </DataTemplate>
-    
+
+    <DataTemplate DataType="{x:Type pvm:AppSettingsPageViewModel}">
+        <pv:AppSettingsPageView/>
+    </DataTemplate>
+
 </ResourceDictionary>

@@ -53,7 +53,7 @@ namespace DoiFApp
                 .AddTransient<IDataSaver<PlanEducationData>, SessionPlanEducationDataSaver>()
                 .AddTransient<IDataReader<FactEducationData>, ExcelFactEducationDataReader>()
                 .AddTransient<IDataSaver<FactEducationData>, SessionFactEducationDataSaver>()
-                // indivilual plan
+                // individual plan
                 .AddTransient<IDataWriter<PlanFirstHalfIndividualPlanData>, WordPlanFirstHalfIndividualPlanDataWriter>()
                 .AddTransient<IDataWriter<PlanSecondHalfIndividualPlanData>, WordPlanSecondHalfIndividualPlanDataWriter>()
                 .AddTransient<IDataWriter<FactFirstHalfIndividualPlanData>, WordFactFirstHalfIndividualPlanDataWriter>()
@@ -75,6 +75,7 @@ namespace DoiFApp
                 // other services
                 .AddTransient<ITeacherFinder, TeacherFinder>()
                 .AddTransient<IDbCopier, SqliteDbCopy>()
+                .AddTransient<IAppConfigService, JsonAppConfigService>()
                 .BuildServiceProvider();
     }
 }
