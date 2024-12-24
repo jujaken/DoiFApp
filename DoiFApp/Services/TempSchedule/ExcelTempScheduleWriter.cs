@@ -29,19 +29,19 @@ namespace DoiFApp.Services.TempSchedule
             data.Cells[1, 9].Value = "Часы";
 
             int i = 2;
-            foreach (var lession in scheduleData.Lessons!)
+            foreach (var lesson in scheduleData.Lessons!)
             {
-                lession.Teachers.ForEach(teacher =>
+                lesson.Teachers.ForEach(teacher =>
                 {
-                    data.Cells[i, 1].Value = lession.Date;
-                    data.Cells[i, 2].Value = lession.Time;
-                    data.Cells[i, 3].Value = lession.Discipline;
-                    data.Cells[i, 4].Value = lession.LessionType;
-                    data.Cells[i, 5].Value = lession.Topic;
-                    data.Cells[i, 6].Value = GetListStr(lession.Groups, ',');
-                    data.Cells[i, 8].Value = GetListStr(lession.Auditoriums, ',');
+                    data.Cells[i, 1].Value = lesson.Date.ToString();
+                    data.Cells[i, 2].Value = lesson.Time;
+                    data.Cells[i, 3].Value = lesson.Discipline;
+                    data.Cells[i, 4].Value = lesson.LessionType;
+                    data.Cells[i, 5].Value = lesson.Topic;
+                    data.Cells[i, 6].Value = GetListStr(lesson.Groups, ',');
+                    data.Cells[i, 8].Value = GetListStr(lesson.Auditoriums, ',');
                     data.Cells[i, 7].Value = teacher;
-                    data.Cells[i, 9].Value = lession.Wight;
+                    data.Cells[i, 9].Value = lesson.Wight;
                     i++;
                 });
             };

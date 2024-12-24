@@ -19,8 +19,6 @@ using DoiFApp.ViewModels.Pages;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Forms;
-using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace DoiFApp.ViewModels
 {
@@ -179,6 +177,13 @@ namespace DoiFApp.ViewModels
                 Command = FormReportByMWCommand
             };
 
+            var loadReportByMW = new ToolViewModel()
+            {
+                Title = "🈷️ Загрузить отчет по месячной нагрузке",
+                Description = "Загружает отчёт по месяцам и дисциплинам в excel файл",
+                Command = LoadReportByMWCommand
+            };
+
             var fillReportMW = new ToolViewModel()
             {
                 Title = "✏️ Заполнить ежемес. нагрузку",
@@ -192,6 +197,7 @@ namespace DoiFApp.ViewModels
                 loadSchedule,
                 checkSchedule,
                 formReportByMW,
+                loadReportByMW,
                 fillReportMW);
 
             toolsCategories.Add(new ToolCategoryViewModel("Индивидуальный план",
@@ -206,7 +212,6 @@ namespace DoiFApp.ViewModels
                 Description = "Формулирует и выгружает данные для отчёта в excel",
                 Command = noCommand
             };
-
 
             var extractTempSchedule = new ToolViewModel()
             {
@@ -585,6 +590,32 @@ namespace DoiFApp.ViewModels
                 await Ioc.Default.GetRequiredService<IDataWriter<ScheduleData>>().Write(new() { Lessons = data }, path);
                 await page.LoadData();
             }, page, "Отчёт готов, файл создан!");
+        }
+
+        [RelayCommand(CanExecute = nameof(NoTask))]
+        private async Task LoadReportByMW()
+        {
+            var path = GetFile("excel file|*.xlsx", "Отчёт по месяцам и дисциплинам.xlsx");
+            if (string.IsNullOrEmpty(path))
+            {
+                await NoHasFileMessage();
+                return;
+            }
+            var page = new DataPageViewModel();
+
+            await CommandWithProcessAndLoad(async () =>
+            {
+                var data = await Ioc.Default.GetRequiredService<IDataReader<TempScheduleData>>().Read(path);
+                if (data.Lessons == null || !data.Lessons.Any())
+                    throw new Exception("Data not found");
+
+                await Ioc.Default.GetRequiredService<IDataSaver<TempScheduleData>>().Save(data);
+            }, page, "Данные из редактируемого расписания были загружены");
+
+            await page.LoadData();
+
+            if (page.LessonViewModels.Any())
+                ScheduleIsLoad = true;
         }
 
         [RelayCommand(CanExecute = nameof(ScheduleAndEducationIsLoad))]
