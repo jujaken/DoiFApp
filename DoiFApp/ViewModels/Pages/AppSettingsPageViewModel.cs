@@ -10,7 +10,8 @@ namespace DoiFApp.ViewModels.Pages
     public partial class AppSettingsPageViewModel : ObservableObject
     {
         [ObservableProperty]
-        private ObservableCollection<ConfigColorCategoryViewModel> configColorCategories = [];
+        private ObservableCollection<ConfigColorCategoryViewModel> configColorCategories =
+            [.. AppConfig.DefaultConfig.ConfigColorCategories.Select(c => new ConfigColorCategoryViewModel(c))];
 
         private const string filePath = "doif-colors.json";
 
@@ -20,6 +21,8 @@ namespace DoiFApp.ViewModels.Pages
             var appConfigService = Ioc.Default.GetRequiredService<IAppConfigService>();
             var config = await appConfigService.Get(filePath)
                 ?? await appConfigService.SetDefault(filePath);
+            
+            ConfigColorCategories.Clear();
 
             foreach (var category in config.ConfigColorCategories)
                 ConfigColorCategories.Add(new(category));
