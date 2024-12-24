@@ -196,8 +196,8 @@ namespace DoiFApp.ViewModels
                 exportReportToIP,
                 loadSchedule,
                 checkSchedule,
-                formReportByMW,
                 loadReportByMW,
+                formReportByMW,
                 fillReportMW);
 
             toolsCategories.Add(new ToolCategoryViewModel("Индивидуальный план",
