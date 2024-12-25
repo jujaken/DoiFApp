@@ -7,6 +7,11 @@ namespace DoiFApp.ViewModels
 {
     public class ConfigColorViewModel : ObservableObject
     {
+        public ConfigColorViewModel() : this(new ConfigColor() { Key = "Пример", Value = [255, 0, 0] })
+        {
+        }
+
+
         public ConfigColorViewModel(ConfigColor configColor)
         {
             ConfigColor = configColor;
