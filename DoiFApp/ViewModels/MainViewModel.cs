@@ -545,23 +545,30 @@ namespace DoiFApp.ViewModels
                 await CommandWithProcessAndLoad(async () =>
                 {
                     var converterRepo = Ioc.Default.GetRequiredService<IRepo<LessonTypeConverter>>();
+                    var lessonRepo = Ioc.Default.GetRequiredService<IRepo<LessonModel>>();
+                    var lessons = await lessonRepo.GetAll();
+                    
                     converterRepo.Db.RecreateLessonTypeConverters();
+
                     foreach (var translation in lessonTypeTranslations)
                         if (translation.SelectedConvertion != null
-                            && (await converterRepo.GetWhere(c => c.TypeName == translation.NewName
-                                && c.Convertion == translation.SelectedConvertion)).Count == 0)
+                          && (await converterRepo.GetWhere(c => c.TypeName == translation.NewName
+                              && c.Convertion == translation.SelectedConvertion)).Count == 0)
+                        {
                             await converterRepo.Create(new()
                             {
                                 TypeName = translation.NewName,
                                 Convertion = translation.SelectedConvertion
                             });
 
-                    var lessonRepo = Ioc.Default.GetRequiredService<IRepo<LessonModel>>();
-                    (await lessonRepo.GetAll()).ForEach(l =>
-                    {
-                        l.LessionType = lessonTypeTranslations.FirstOrDefault(t => t.CurrentName == l.LessionType)!.NewName;
-                        lessonRepo.Update(l);
-                    });
+                            if (translation.NewName != translation.CurrentName)
+                                foreach (var lesson in lessons.Where(l => l.LessionType == translation.CurrentName))
+                                {
+                                    lesson.LessionType = translation.NewName;
+                                    await lessonRepo.Update(lesson);
+                                }
+                        }
+
                     await dataPage.LoadData();
                 }, dataPage, "Задание выполнено");
             };
