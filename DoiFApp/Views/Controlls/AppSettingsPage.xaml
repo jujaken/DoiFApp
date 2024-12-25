@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:DoiFApp.Views.Controlls"
              xmlns:vm="clr-namespace:DoiFApp.ViewModels"
              xmlns:con="clr-namespace:DoiFApp.Views.Converters"
-             mc:Ignorable="d" 
+             xmlns:picker="clr-namespace:ag.WPF.ColorPicker;assembly=ag.WPF.ColorPicker"
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance vm:ConfigColorViewModel, IsDesignTimeCreatable=True}">
 
@@ -14,7 +15,7 @@
         <con:ColorToBrushConverter x:Key="colorToBrushConverter"/>
     </UserControl.Resources>
     
-    <Grid Height="20" Width="Auto">
+    <Grid Height="25" Width="Auto">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
@@ -23,15 +24,13 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Text="{Binding Key}"/>
-
-        <Button Grid.Column="1" Background="{Binding Value, Converter={StaticResource colorToBrushConverter}}"
-              Margin="2"
-              BorderBrush="Black"
-              BorderThickness="1"/>
-
+        
+        <picker:ColorPicker Grid.Column="1" SelectedColor="{Binding Value}"/>
+       
         <TextBox Grid.Column="2" Text="{Binding Hex}"
-               HorizontalAlignment="Stretch"
-               HorizontalContentAlignment="Right"/>
-
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Stretch"
+                 HorizontalContentAlignment="Right"/>
+        
     </Grid>
 </UserControl>

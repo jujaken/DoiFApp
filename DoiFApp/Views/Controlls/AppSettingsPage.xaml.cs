@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ag.WPF.ColorPicker;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,11 @@ namespace DoiFApp.Views.Controlls
         public AppSettingsPage()
         {
             InitializeComponent();
+        }
+
+        private void OpenColorPicker(object sender, RoutedEventArgs e)
+        {
+            var colorPanel = new ColorPanel();
         }
     }
 }

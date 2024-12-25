@@ -33,11 +33,13 @@ namespace DoiFApp.ViewModels
             get => value;
             set
             {
-                if (this.value ==  value) return;
+                System.Windows.MessageBox.Show(value.ToString());
 
-                this.value = value;
-                SetProperty(ConfigColor.Value, [value.R, value.G, value.B], ConfigColor, (m, v) => m.Value = v);
+                if (this.value == value) return;
+
+                SetProperty(ref this.value, value);
                 Hex = ColorUtils.ColorToHex(value);
+                SetProperty(ConfigColor.Value, [value.R, value.G, value.B], ConfigColor, (m, v) => m.Value = v);
             }
         }
 
@@ -48,10 +50,18 @@ namespace DoiFApp.ViewModels
             set
             {
                 if (hex == value) return;
-                if (hex.Length == 7) return;
+                if (hex.Length != 7) return;
 
-                SetProperty(ref hex, value);
-                Value = ColorUtils.HexToColor(value);
+                try
+                {
+                    var color = ColorUtils.HexToColor(value);
+                    Value = color;
+                    SetProperty(ref hex, value);
+                }
+                catch
+                {
+
+                }
             }
         }
     }

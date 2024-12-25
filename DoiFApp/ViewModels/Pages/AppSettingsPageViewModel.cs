@@ -15,17 +15,45 @@ namespace DoiFApp.ViewModels.Pages
 
         private const string filePath = "doif-colors.json";
 
+
+
         [RelayCommand]
         public async Task Load()
         {
             var appConfigService = Ioc.Default.GetRequiredService<IAppConfigService>();
+
             var config = await appConfigService.Get(filePath)
                 ?? await appConfigService.SetDefault(filePath);
-            
+
             ConfigColorCategories.Clear();
 
             foreach (var category in config.ConfigColorCategories)
                 ConfigColorCategories.Add(new(category));
+        }
+
+        public Action? OnSave;
+
+        [RelayCommand]
+        public async Task Save()
+        {
+            var appConfigService = Ioc.Default.GetRequiredService<IAppConfigService>();
+
+            await appConfigService.Save(new AppConfig()
+            {
+                ConfigColorCategories = [.. ConfigColorCategories.Select(category => {
+                    return new ConfigColorCategory(){
+                        Tittle = category.Tittle,
+                        Colors = category.Colors.Select(color => {
+                            System.Windows.MessageBox.Show(color.Value.ToString());
+                            return new ConfigColor() {
+                                Key = color.Key,
+                                Value = [color.Value.R, color.Value.G, color.Value.B]
+                            };
+                        }).ToList()
+                    };
+                })]
+            }, filePath);
+            OnSave?.Invoke();
         }
     }
 }

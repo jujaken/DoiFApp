@@ -10,11 +10,16 @@
              
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance vm:AppSettingsPageViewModel, IsDesignTimeCreatable=True}">
-
     
     <Grid Height="{Binding ActualHeight,
                   RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}">
 
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="64"/>
+        </Grid.RowDefinitions>
+        
         <ScrollViewer>
 
             <ItemsControl ItemsSource="{Binding ConfigColorCategories}">
@@ -55,6 +60,11 @@
             </ItemsControl>
 
         </ScrollViewer>
+
+        <Button Style="{StaticResource MainButton}" Content="Сохранить"
+                Grid.Row="1"
+                Command="{Binding SaveCommand}"
+                HorizontalAlignment="Right" Margin="5"/>
 
     </Grid>
 </UserControl>
