@@ -29,7 +29,7 @@ namespace DoiFApp.Services.TempSchedule
 
                     Auditoriums = data.Cells[i, 8].GetCellValue<string>().Split(',').Select(s => s.Trim()).ToList(),
 
-                    Wight = data.Cells[i, 9].GetCellValue<int>(),
+                    Wight = data.Cells[i, 9].GetCellValue<double>(),
                 };
 
                 var existingLessons = lessons.Where(l => l.Date == inputData.Date
