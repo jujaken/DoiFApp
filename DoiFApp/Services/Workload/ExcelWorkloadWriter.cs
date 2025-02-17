@@ -120,7 +120,7 @@ namespace DoiFApp.Services.Workload
             int startNoteY = 2, i = 0;
 
             AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.KoptevoColor, "Коптево");
-            AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.VolginoColor, "Волгино");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.VolginoColor, "Волгина");
             AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.OtherColor, "Др. площадки");
             AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.WithoutColor, "Без аудитории");
             AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.TransitionColor, "Переезд");
