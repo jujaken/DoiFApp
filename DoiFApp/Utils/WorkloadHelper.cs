@@ -13,9 +13,10 @@ namespace DoiFApp.Utils
         public static Color TransitionColor => Color.FromArgb(255, 100, 245, 100); // green
         public static Color WithoutColor => Color.FromArgb(255, 0, 200, 200); // blue
 
-        public static Color SwitchColorByAuditorium(string id)
-            => id switch
+        public static Color SwitchColorByBuilding(string building)
+            => building switch
             {
+                "Без корпуса" => WithoutColor,
                 "1" => VolginoColor,
                 "2" => VolginoColor,
                 "3" => VolginoColor,
@@ -23,18 +24,17 @@ namespace DoiFApp.Utils
                 _ => OtherColor,
             };
 
-        public static Color SelectCellColor(List<string> auditoriums)
+        public static List<string> GetBuildings(List<string> auditoriums)
         {
-            var auds = auditoriums.Where(a => a.Contains("к/"));
+            return auditoriums.Select(GetBuilding).ToList();
+        }
 
-            if (!auds.Any())
-                return WithoutColor;
+        public static string GetBuilding(string auditory)
+        {
+            if (!auditory.Contains("к/"))
+                return "Без корпуса";
 
-            var suites = auds.Select(a => a.Split("к/")[0]).Distinct();
-            if (suites.Count() > 1)
-                return TransitionColor;
-
-            return SwitchColorByAuditorium(suites.First());
+            return auditory.Split("к/")[0];
         }
     }
 }

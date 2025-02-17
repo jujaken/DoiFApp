@@ -50,41 +50,66 @@ namespace DoiFApp.Services.Workload
                 else if (date.DayOfWeek == DayOfWeek.Sunday)
                     DrawRow(worksheet, index, 2, end, WorkloadHelper.SundayColor);
 
-                foreach(var lesson in data.Lessons.Where(l => l.Date == date))
-                {
-                    for (var j = 0; j < teachersUnique.Count; j++)
-                    {
-                        var teacher = teachersUnique[j];
-                        if (lesson.Teachers.Contains(teacher))
-                        {
-                            var lessionsCell = worksheet.Cells[index, start + j];
-                            lessionsCell.Value += SwitchClassId(lesson.Time) + " ";
+                var curDayLessons = data.Lessons.Where(l => l.Date == date);
 
-                            lessionsCell.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                            lessionsCell.Style.Fill.BackgroundColor.SetColor(WorkloadHelper.SelectCellColor(lesson.Auditoriums));
-                        }
+                for (var j = 0; j < teachersUnique.Count; j++)
+                {
+                    var teacher = teachersUnique[j];
+                    var lessonsCell = worksheet.Cells[index, start + j];
+                    var curTeacherCurDayLessons = curDayLessons.Where(l => l.Teachers.Contains(teacher));
+                    if (!curTeacherCurDayLessons.Any()) continue;
+
+                    foreach (var lesson in curTeacherCurDayLessons)
+                        lessonsCell.Value += SwitchClassId(lesson.Time) + " ";
+
+                    lessonsCell.Style.Fill.PatternType = ExcelFillStyle.Solid;
+
+                    var buildings = curTeacherCurDayLessons
+                        .Select(l => l.Auditoriums)
+                        .Select(WorkloadHelper.GetBuildings)
+                        .SelectMany(list => list)
+                        .Distinct()
+                        .ToList();
+
+                    buildings.Remove("Без корпуса");
+
+                    if (buildings.Count == 0)
+                    {
+                        lessonsCell.Style.Fill.BackgroundColor
+                            .SetColor(WorkloadHelper.WithoutColor);
+                        continue;
                     }
+
+                    if (buildings.Count == 1)
+                    {
+                        lessonsCell.Style.Fill.BackgroundColor
+                             .SetColor(WorkloadHelper.SwitchColorByBuilding(buildings[0]));
+                        continue;
+                    }
+
+                    lessonsCell.Style.Fill.BackgroundColor
+                        .SetColor(WorkloadHelper.TransitionColor);
                 }
             }
 
             AddNotes(end + 1, worksheet);
             DoSquare(worksheet, 1, 1, index, end, (range) =>
-            {
-                range.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                {
+                    range.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-                range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                range.Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                range.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    range.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    range.Style.Border.Right.Style = ExcelBorderStyle.Thin;
 
-                range.Style.Border.Top.Color.SetColor(Color.Black);
-                range.Style.Border.Bottom.Color.SetColor(Color.Black);
-                range.Style.Border.Left.Color.SetColor(Color.Black);
-                range.Style.Border.Right.Color.SetColor(Color.Black);
+                    range.Style.Border.Top.Color.SetColor(Color.Black);
+                    range.Style.Border.Bottom.Color.SetColor(Color.Black);
+                    range.Style.Border.Left.Color.SetColor(Color.Black);
+                    range.Style.Border.Right.Color.SetColor(Color.Black);
 
-                range.AutoFitColumns(worksheet.DefaultColWidth / 2);
-            });
+                    range.AutoFitColumns(worksheet.DefaultColWidth / 2);
+                });
             package.Save();
 
             return Task.FromResult(true);
