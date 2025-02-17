@@ -677,12 +677,14 @@ namespace DoiFApp.ViewModels
             }
 
             var page = new DataPageViewModel();
-
+            
             await CommandWithProcessAndLoad(async () =>
             {
                 var scheduleData = await Ioc.Default.GetRequiredService<IRepo<LessonModel>>().GetAll();
                 await Ioc.Default.GetRequiredService<IDataWriter<TempScheduleData>>().Write(new() { Lessons = scheduleData }, path);
             }, page, "Теперь, вы можете обновить файл и загрузить его с помощью команты \"Загр. редакт. расписание\"!");
+            
+            await page.LoadData();
         }
 
         [RelayCommand(CanExecute = nameof(NoTask))]
@@ -705,6 +707,8 @@ namespace DoiFApp.ViewModels
 
                 await Ioc.Default.GetRequiredService<IDataSaver<TempScheduleData>>().Save(data);
             }, page, "Данные из редактируемого расписания были загружены");
+
+            await page.LoadData();
 
             if (page.LessonViewModels.Any())
                 ScheduleIsLoad = true;
@@ -744,6 +748,8 @@ namespace DoiFApp.ViewModels
                 await Ioc.Default.GetRequiredService<IDataWriter<WorkloadData>>().Write(new() { Lessons = data }, path);
                 await page.LoadData();
             }, page, "График загруженности готов, файл создан!");
+
+            await page.LoadData();
         }
 
         #endregion
