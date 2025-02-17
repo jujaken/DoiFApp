@@ -34,7 +34,12 @@ namespace DoiFApp.Utils
             if (!auditory.Contains("к/"))
                 return "Без корпуса";
 
-            return auditory.Split("к/")[0];
+            var id = auditory.Split("к/")[0];
+
+            if (id == "2" || id == "3")
+                return "1";
+
+            return id;
         }
     }
 }
