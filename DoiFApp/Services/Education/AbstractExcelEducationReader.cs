@@ -22,10 +22,18 @@ namespace DoiFApp.Services.Education
             var typeAndHours = new List<EducationTypeAndHourModel>();
             var works = new List<EducationWorkModel>();
 
+            var workCells = worksheet.Dimension
+                .Where(c => c.Value != null && c.Value.ToString() == "Ф.И.О. преподавателя")
+                .ToArray();
+
+            var startCells = worksheet.Dimension
+                .Where(c => c.Value != null && c.Value.ToString() == "лекции")
+                .ToArray();
+
             var teachers = ParseData(worksheet,
                 (data, teacher, j) =>
                 {
-                    var work1 = GetWorkTeacher(data, 15, 2, j);
+                    var work1 = GetWorkTeacher(data, startCells[0].Start.Column, workCells[0].Start.Column, j);
                     if (work1 != null)
                     {
                         work1.TypesAndHours.ForEach(t => typeAndHours.Add(t));
@@ -34,7 +42,7 @@ namespace DoiFApp.Services.Education
                         works.Add(work1);
                         teacher.Works.Add(work1);
                     }
-                    var work2 = GetWorkTeacher(data, 77, 64, j);
+                    var work2 = GetWorkTeacher(data, startCells[1].Start.Column, workCells[1].Start.Column, j);
                     if (work2 != null)
                     {
                         work2.TypesAndHours.ForEach(t => typeAndHours.Add(t));
