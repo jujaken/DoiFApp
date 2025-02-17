@@ -42,7 +42,7 @@ namespace DoiFApp.Services.Workload
             {
                 index++;
 
-                worksheet.Cells[index, 1].Value = date;
+                worksheet.Cells[index, 1].Value = $"{date:dd.MM.yy}";
                 worksheet.Cells[index, 2].Value = DateUtil.SwitchDayOfWeek(date.DayOfWeek); ;
 
                 if (date.DayOfWeek == DayOfWeek.Saturday)
