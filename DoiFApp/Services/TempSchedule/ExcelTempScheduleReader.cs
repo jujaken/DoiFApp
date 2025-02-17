@@ -1,6 +1,7 @@
 ﻿using DoiFApp.Data.Models;
 using DoiFApp.Services.Data;
 using OfficeOpenXml;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DoiFApp.Services.TempSchedule
 {
@@ -17,7 +18,6 @@ namespace DoiFApp.Services.TempSchedule
             {
                 var inputData = new LessonModel
                 {
-                    Date = LessonModel.GetDateOnly(data.Cells[i, 1].GetCellValue<string>()),
                     Time = data.Cells[i, 2].GetCellValue<string>(),
 
                     Discipline = data.Cells[i, 3].GetCellValue<string>(),
@@ -31,6 +31,11 @@ namespace DoiFApp.Services.TempSchedule
 
                     Wight = data.Cells[i, 9].GetCellValue<double>(),
                 };
+
+                if (data.Cells[i, 1].Value is DateTime value)
+                    inputData.Date = DateOnly.FromDateTime(value);
+                else
+                    inputData.Date = LessonModel.GetDateOnly(data.Cells[i, 1].GetCellValue<string>());
 
                 var existingLessons = lessons.Where(l => l.Date == inputData.Date
                       && l.Time == inputData.Time
