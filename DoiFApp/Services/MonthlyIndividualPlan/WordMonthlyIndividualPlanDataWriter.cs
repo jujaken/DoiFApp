@@ -3,12 +3,15 @@ using DoiFApp.Services.Data;
 using DoiFApp.Utils;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
+using static OfficeOpenXml.ExcelErrorValue;
 
 namespace DoiFApp.Services.MonthlyIndividualPlan
 {
     public class WordMonthlyIndividualPlanDataWriter : IDataWriter<MonthlyIndividualPlanData>
     {
         public static string[] Convertions => TableDataUtil.GetHeaders(TableDataUtil.InputCommonTableHeaders).ToArray();
+        public static string[] InputReportTableHeaders => TableDataUtil.GetHeaders(TableDataUtil.InputReportTableHeaders).ToArray();
+        public static string[] Auditorium => TableDataUtil.GetHeaders(TableDataUtil.Auditorium).ToArray();
 
         public async Task<bool> Write(MonthlyIndividualPlanData data, string path)
         {
@@ -46,17 +49,27 @@ namespace DoiFApp.Services.MonthlyIndividualPlan
             IEnumerable<LessonModel> lessons,
             IEnumerable<LessonTypeConverter> converters)
         {
+            var sum = 0d;
             for (int i = 0; i < Convertions.Length; i++)
             {
                 var converter = converters.Where(c => c.Convertion == Convertions[i]).FirstOrDefault();
                 if (converter == null) continue;
 
-                var sum = lessons.Where(l => l.LessionType == converter.TypeName).Sum(l => l.Wight);
-                var value = sum.ToString("0.0", System.Globalization.CultureInfo.GetCultureInfo("en-US")) ?? "0.0";
+                var typeSum = lessons.Where(l => l.LessionType == converter.TypeName).Sum(l => l.Wight);
+ 
+                var value = typeSum.ToString("0.0", System.Globalization.CultureInfo.GetCultureInfo("en-US")) ?? "0.0";
                 var cell = row.Cells[i + 1];
                 cell.Paragraphs[0].RemoveText(0);
                 cell.Paragraphs[0].Append(value);
+
+                if (Auditorium.Contains(converter.Convertion))
+                    sum += typeSum;
             }
+
+            var resultCell = row.Cells[InputReportTableHeaders.Length + Convertions.Length];
+            resultCell.Paragraphs[0].RemoveText(0);
+            resultCell.Paragraphs[0].Append(sum.ToString("0.0", System.Globalization.CultureInfo.GetCultureInfo("en-US")) ?? "0.0");
+            
             return Task.CompletedTask;
         }
     }
