@@ -22,6 +22,7 @@ namespace DoiFApp
     public partial class App : Application
     {
         public const string DbPath = "doifapp.db";
+        public const string SettingsPath = "doif-colors.json";
 
         public IServiceProvider Services { get; }
 

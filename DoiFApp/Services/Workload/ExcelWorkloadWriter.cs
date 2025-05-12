@@ -4,14 +4,18 @@ using OfficeOpenXml.Style;
 using System.Drawing;
 using DoiFApp.Utils;
 using DoiFApp.Services.Data;
+using DoiFApp.Config;
 
 namespace DoiFApp.Services.Workload
 {
-    public class ExcelWorkloadWriter : IDataWriter<WorkloadData>
+    public class ExcelWorkloadWriter(IAppConfigService cfgService) : IDataWriter<WorkloadData>
     {
-        public Task<bool> Write(WorkloadData data, string path)
+        public async Task<bool> Write(WorkloadData data, string path)
         {
-            if (!data.IsHolistic || data.Lessons == null) return Task.FromResult(false);
+            var settings = await cfgService.Get(App.SettingsPath) ?? throw new ArgumentNullException(nameof(cfgService));
+            var settingsCategory = settings.ConfigColorCategories.Where(c => c.Tittle == WorkloadHelper.CategoryName).FirstOrDefault() ?? throw new ArgumentNullException(nameof(settings));
+
+            if (!data.IsHolistic || data.Lessons == null) return false;
 
             if (File.Exists(path))
                 File.Delete(path);
@@ -43,12 +47,12 @@ namespace DoiFApp.Services.Workload
                 index++;
 
                 worksheet.Cells[index, 1].Value = $"{date:dd.MM.yy}";
-                worksheet.Cells[index, 2].Value = DateUtil.SwitchDayOfWeek(date.DayOfWeek); ;
+                worksheet.Cells[index, 2].Value = DateUtil.SwitchDayOfWeek(date.DayOfWeek);
 
                 if (date.DayOfWeek == DayOfWeek.Saturday)
-                    DrawRow(worksheet, index, 2, end, WorkloadHelper.SaturdayColor);
+                    DrawRow(worksheet, index, 2, end, WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.SaturdayColorName));
                 else if (date.DayOfWeek == DayOfWeek.Sunday)
-                    DrawRow(worksheet, index, 2, end, WorkloadHelper.SundayColor);
+                    DrawRow(worksheet, index, 2, end, WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.SundayColorName));
 
                 var curDayLessons = data.Lessons.Where(l => l.Date == date);
 
@@ -76,23 +80,23 @@ namespace DoiFApp.Services.Workload
                     if (buildings.Count == 0)
                     {
                         lessonsCell.Style.Fill.BackgroundColor
-                            .SetColor(WorkloadHelper.WithoutColor);
+                            .SetColor(WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.WithoutColorName));
                         continue;
                     }
 
                     if (buildings.Count == 1)
                     {
                         lessonsCell.Style.Fill.BackgroundColor
-                             .SetColor(WorkloadHelper.SwitchColorByBuilding(buildings[0]));
+                             .SetColor(WorkloadHelper.SwitchColorByBuilding(settingsCategory, buildings[0]));
                         continue;
                     }
 
                     lessonsCell.Style.Fill.BackgroundColor
-                        .SetColor(WorkloadHelper.TransitionColor);
+                        .SetColor(WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.TransitionColorName));
                 }
             }
 
-            AddNotes(end + 1, worksheet);
+            AddNotes(end + 1, worksheet, settingsCategory);
             DoSquare(worksheet, 1, 1, index, end, (range) =>
                 {
                     range.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
@@ -112,18 +116,18 @@ namespace DoiFApp.Services.Workload
                 });
             package.Save();
 
-            return Task.FromResult(true);
+            return true;
         }
 
-        private static void AddNotes(int startNoteX, ExcelWorksheet worksheet)
+        private static void AddNotes(int startNoteX, ExcelWorksheet worksheet, ConfigColorCategory settingsCategory)
         {
             int startNoteY = 2, i = 0;
 
-            AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.KoptevoColor, "Коптево");
-            AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.VolginoColor, "Волгина");
-            AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.OtherColor, "Др. площадки");
-            AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.WithoutColor, "Без аудитории");
-            AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.TransitionColor, "Переезд");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.KoptevoColorName), "Коптево");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.VolginoColorName), "Волгина");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.OtherColorName), "Др. площадки");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.WithoutColorName), "Без аудитории");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.TransitionColorName), "Переезд");
 
             i++;
 

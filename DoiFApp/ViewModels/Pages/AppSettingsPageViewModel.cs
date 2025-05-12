@@ -13,16 +13,13 @@ namespace DoiFApp.ViewModels.Pages
         private ObservableCollection<ConfigColorCategoryViewModel> configColorCategories =
             [.. AppConfig.DefaultConfig.ConfigColorCategories.Select(c => new ConfigColorCategoryViewModel(c))];
 
-        private const string filePath = "doif-colors.json";
-
-
         [RelayCommand]
         public async Task Load()
         {
             var appConfigService = Ioc.Default.GetRequiredService<IAppConfigService>();
 
-            var config = await appConfigService.Get(filePath)
-                ?? await appConfigService.SetDefault(filePath);
+            var config = await appConfigService.Get(App.SettingsPath)
+                ?? await appConfigService.SetDefault(App.SettingsPath);
 
             ConfigColorCategories.Clear();
 
@@ -50,8 +47,16 @@ namespace DoiFApp.ViewModels.Pages
                         }).ToList()
                     };
                 })]
-            }, filePath);
+            }, App.SettingsPath);
             OnSave?.Invoke();
+        }
+
+        [RelayCommand]
+        public async Task SetDefault()
+        {
+            var appConfigService = Ioc.Default.GetRequiredService<IAppConfigService>();
+            await appConfigService.SetDefault(App.SettingsPath);
+            await Load();
         }
     }
 }

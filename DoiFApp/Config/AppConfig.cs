@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿using DoiFApp.Utils;
 
 namespace DoiFApp.Config
 {
@@ -11,14 +11,18 @@ namespace DoiFApp.Config
             ConfigColorCategories =
             [
                 new ConfigColorCategory() {
-                    Tittle = "Цвета в отчёте по преподавателям",
+                    Tittle = WorkloadHelper.CategoryName,
                     Colors =
                     [
-                        new ConfigColor() { Key = "Цвет такой-то", Value = [255, 0, 0] },
-                        new ConfigColor() { Key = "Цвет такой-то 2", Value = [255, 0, 0] },
-                        new ConfigColor() { Key = "Цвет такой-то 3", Value = [255, 0, 0] },
+                        new ConfigColor() { Key = WorkloadHelper.SaturdayColorName, Value = WorkloadHelper.SaturdayColorDefault },
+                        new ConfigColor() { Key = WorkloadHelper.SundayColorName, Value = WorkloadHelper.SundayColorDefault },
+                        new ConfigColor() { Key = WorkloadHelper.KoptevoColorName, Value = WorkloadHelper.KoptevoColorDefault },
+                        new ConfigColor() { Key = WorkloadHelper.VolginoColorName, Value = WorkloadHelper.VolginoColorDefault },
+                        new ConfigColor() { Key = WorkloadHelper.OtherColorName, Value = WorkloadHelper.OtherColorDefault },
+                        new ConfigColor() { Key = WorkloadHelper.TransitionColorName, Value = WorkloadHelper.TransitionColorDefault },
+                        new ConfigColor() { Key = WorkloadHelper.WithoutColorName, Value = WorkloadHelper.WithoutColorDefault },
                     ]
-                },
+                 },
             ],
         };
     }

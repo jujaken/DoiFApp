@@ -1,27 +1,45 @@
-﻿using System.Drawing;
+﻿using DoiFApp.Config;
+using System.Drawing;
 
 namespace DoiFApp.Utils
 {
     public static class WorkloadHelper
     {
-        public static Color SaturdayColor => Color.FromArgb(255, 255, 192, 203); // low red
-        public static Color SundayColor => Color.FromArgb(255, 255, 0, 0); // red
+        public const string CategoryName = "Цвета для загруженности";
 
-        public static Color KoptevoColor => Color.FromArgb(255, 199, 199, 199); // grey
-        public static Color VolginoColor => Color.FromArgb(255, 255, 255, 230); // yellow
-        public static Color OtherColor => Color.FromArgb(255, 255, 230, 200); // orange
-        public static Color TransitionColor => Color.FromArgb(255, 100, 245, 100); // green
-        public static Color WithoutColor => Color.FromArgb(255, 0, 200, 200); // blue
+        public const string SaturdayColorName = "Цвет субботы";
+        public const string SundayColorName = "Цвет воскресенья";
 
-        public static Color SwitchColorByBuilding(string building)
+        public const string KoptevoColorName = "Цвет Коптево";
+        public const string VolginoColorName = "Цвет Волгина";
+        public const string OtherColorName = "Цвет для других площадок";
+        public const string TransitionColorName = "Цвет перехода";
+        public const string WithoutColorName = "Цвет без аудитории";
+
+        public static List<byte> SaturdayColorDefault => [255, 192, 203]; // low red
+        public static List<byte> SundayColorDefault => [255, 0, 0]; // red
+
+        public static List<byte> KoptevoColorDefault => [199, 199, 199]; // grey
+        public static List<byte> VolginoColorDefault => [255, 255, 230]; // yellow
+        public static List<byte> OtherColorDefault => [255, 230, 200]; // orange
+        public static List<byte> TransitionColorDefault => [100, 245, 100]; // green
+        public static List<byte> WithoutColorDefault => [0, 200, 200]; // blue
+
+        public static Color GetColorByName(ConfigColorCategory configColor, string name)
+        {
+            var value = (configColor.Colors.Where(c => c.Key == name).FirstOrDefault() ?? throw new ArgumentException("Bad config or name!")).Value;
+            return Color.FromArgb(value[0], value[1], value[2]);
+        }
+
+        public static Color SwitchColorByBuilding(ConfigColorCategory configColor, string building)
             => building switch
             {
-                "Без корпуса" => WithoutColor,
-                "1" => VolginoColor,
-                "2" => VolginoColor,
-                "3" => VolginoColor,
-                "5" => KoptevoColor,
-                _ => OtherColor,
+                "Без корпуса" => GetColorByName(configColor, WithoutColorName),
+                "1" => GetColorByName(configColor, VolginoColorName),
+                "2" => GetColorByName(configColor, VolginoColorName),
+                "3" => GetColorByName(configColor, VolginoColorName),
+                "5" => GetColorByName(configColor, KoptevoColorName),
+                _ => GetColorByName(configColor, OtherColorName),
             };
 
         public static List<string> GetBuildings(List<string> auditoriums)
