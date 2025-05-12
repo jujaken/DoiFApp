@@ -205,6 +205,7 @@ namespace DoiFApp.ViewModels
                 fact));
 
             // отчетное
+            // TODO: form report!!!
 
             var formReport = new ToolViewModel()
             {
