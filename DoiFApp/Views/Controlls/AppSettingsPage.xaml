@@ -14,7 +14,7 @@
     <UserControl.Resources>
         <con:ColorToBrushConverter x:Key="colorToBrushConverter"/>
     </UserControl.Resources>
-    
+
     <Grid Height="25" Width="Auto">
 
         <Grid.ColumnDefinitions>
@@ -24,13 +24,14 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Text="{Binding Key}"/>
-        
+
         <picker:ColorPicker Grid.Column="1" SelectedColor="{Binding Value}"/>
-       
+
         <TextBox Grid.Column="2" Text="{Binding Hex}"
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
                  HorizontalContentAlignment="Right"/>
-        
+
     </Grid>
+    
 </UserControl>
