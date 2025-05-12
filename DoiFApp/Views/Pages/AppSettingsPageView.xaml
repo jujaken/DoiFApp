@@ -32,7 +32,7 @@
 
                             <StackPanel>
 
-                                <TextBlock Text="{Binding Tittle}"/>
+                                <TextBlock Text="{Binding Tittle}" Margin="3"/>
 
                                 <ItemsControl ItemsSource="{Binding Colors}">
 
@@ -40,7 +40,7 @@
 
                                         <DataTemplate>
 
-                                            <сontrolls:AppSettingsPage DataContext="{Binding}"/>
+                                            <сontrolls:AppSettingsPage DataContext="{Binding}" Margin="5"/>
 
                                         </DataTemplate>
                                         
