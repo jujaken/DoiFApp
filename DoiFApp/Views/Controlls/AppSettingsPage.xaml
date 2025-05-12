@@ -15,7 +15,7 @@
         <con:ColorToBrushConverter x:Key="colorToBrushConverter"/>
     </UserControl.Resources>
 
-    <Grid Height="25" Width="Auto">
+    <Grid Height="25" Width="Auto" Background="Snow">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
@@ -23,7 +23,7 @@
             <ColumnDefinition Width="80"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Text="{Binding Key}"/>
+        <TextBlock Text="{Binding Key}" VerticalAlignment="Center" Margin="5" />
 
         <picker:ColorPicker Grid.Column="1" SelectedColor="{Binding Value}" SelectedColorChanged="ColorPicker_SelectedColorChanged"/>
 
