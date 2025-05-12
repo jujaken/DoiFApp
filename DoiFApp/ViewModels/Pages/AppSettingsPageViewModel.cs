@@ -43,7 +43,6 @@ namespace DoiFApp.ViewModels.Pages
                     return new ConfigColorCategory(){
                         Tittle = category.Tittle,
                         Colors = category.Colors.Select(color => {
-                            System.Windows.MessageBox.Show(color.Value.ToString());
                             return new ConfigColor() {
                                 Key = color.Key,
                                 Value = [color.Value.R, color.Value.G, color.Value.B]

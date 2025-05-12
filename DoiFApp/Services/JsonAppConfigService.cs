@@ -15,6 +15,7 @@ namespace DoiFApp.Services
 
         public async Task Save(AppConfig appConfig, string path)
         {
+            File.Delete(path);
             using var fs = File.OpenWrite(path);
             await JsonSerializer.SerializeAsync(fs, appConfig, options);
         }
@@ -25,7 +26,14 @@ namespace DoiFApp.Services
                 return null;
 
             using var fs = File.OpenRead(path);
-            return await JsonSerializer.DeserializeAsync<AppConfig?>(fs, options);
+            try
+            {
+                return await JsonSerializer.DeserializeAsync<AppConfig?>(fs, options);
+            }
+            catch
+            {
+                return await SetDefault(path);
+            }
         }
 
         public Task Copy(AppConfig appConfig, string path)

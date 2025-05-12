@@ -33,8 +33,6 @@ namespace DoiFApp.ViewModels
             get => value;
             set
             {
-                System.Windows.MessageBox.Show(value.ToString());
-
                 if (this.value == value) return;
 
                 SetProperty(ref this.value, value);
