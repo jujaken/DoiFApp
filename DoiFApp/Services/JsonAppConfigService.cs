@@ -1,5 +1,6 @@
 ﻿using DoiFApp.Config;
 using System.IO;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 
 namespace DoiFApp.Services
@@ -9,6 +10,7 @@ namespace DoiFApp.Services
         private readonly static JsonSerializerOptions options = new()
         {
             WriteIndented = true,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         };
 
         public async Task Save(AppConfig appConfig, string path)
@@ -25,6 +27,7 @@ namespace DoiFApp.Services
             using var fs = File.OpenRead(path);
             return await JsonSerializer.DeserializeAsync<AppConfig?>(fs, options);
         }
+
         public Task Copy(AppConfig appConfig, string path)
           => Save(appConfig, path);
 

@@ -15,6 +15,8 @@ namespace DoiFApp.Config
                     Colors =
                     [
                         new ConfigColor() { Key = "Цвет такой-то", Value = [255, 0, 0] },
+                        new ConfigColor() { Key = "Цвет такой-то 2", Value = [255, 0, 0] },
+                        new ConfigColor() { Key = "Цвет такой-то 3", Value = [255, 0, 0] },
                     ]
                 },
             ],
