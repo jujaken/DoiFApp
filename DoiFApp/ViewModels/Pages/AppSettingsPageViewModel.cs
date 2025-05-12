@@ -16,7 +16,6 @@ namespace DoiFApp.ViewModels.Pages
         private const string filePath = "doif-colors.json";
 
 
-
         [RelayCommand]
         public async Task Load()
         {
