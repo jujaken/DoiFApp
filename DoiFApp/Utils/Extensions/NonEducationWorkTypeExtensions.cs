@@ -14,13 +14,13 @@ namespace DoiFApp.Utils.Extensions
         public static int GetFirstId(this NonEducationWorkType workType)
             => (workType.GetType()
                 .GetMember(workType.ToString())[0]
-                .GetCustomAttributes(typeof(IPTableIdAttribute), inherit: false)[0]
-                    as IPTableIdAttribute)!.FirstId;
+                .GetCustomAttributes(typeof(IDTableIdAttribute), inherit: false)[0]
+                    as IDTableIdAttribute)!.FirstId;
 
         public static int GetSecondId(this NonEducationWorkType workType)
             => (workType.GetType()
                 .GetMember(workType.ToString())[0]
-                .GetCustomAttributes(typeof(IPTableIdAttribute), inherit: false)[0]
-                    as IPTableIdAttribute)!.SecondId;
+                .GetCustomAttributes(typeof(IDTableIdAttribute), inherit: false)[0]
+                    as IDTableIdAttribute)!.SecondId;
     }
 }
