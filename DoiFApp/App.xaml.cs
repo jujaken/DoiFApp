@@ -38,7 +38,7 @@ namespace DoiFApp
             MigrateConfig(SettingsPath);
         }
 
-        private void MigrateConfig(string path)
+        private static void MigrateConfig(string path)
         {
             var cfgService = Ioc.Default.GetRequiredService<IAppConfigService>();
             
