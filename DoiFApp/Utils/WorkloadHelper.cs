@@ -10,8 +10,38 @@ namespace DoiFApp.Utils
         public const string SaturdayColorName = "Цвет субботы";
         public const string SundayColorName = "Цвет воскресенья";
 
-        public const string KoptevoColorName = "Цвет Коптево";
+        /// <summary>
+        /// 5
+        /// </summary>
+        public const string KoptevoColorName = "Цвет Коптево"; 
+        /// <summary>
+        /// 1-3
+        /// </summary>
         public const string VolginoColorName = "Цвет Волгина";
+        /// <summary>
+        /// 6
+        /// </summary>
+        public const string BobruiskayaColorName = "Цвет Бобруйской";
+        /// <summary>
+        /// 7
+        /// </summary>
+        public const string GlavnayaColorName = "Цвет Главной 86";
+        /// <summary>
+        /// 8
+        /// </summary>
+        public const string OkrujnoyColorName = "Цвет Окружной";
+        /// <summary>
+        /// 9
+        /// </summary>
+        public const string KolskayaColorName = "Цвет Кольской";
+        /// <summary>
+        /// 10
+        /// </summary>
+        public const string DmitrovkaColorName = "Цвет Дмитровки";
+        /// <summary>
+        /// 11
+        /// </summary>
+        public const string PhilimonkovskoyeColorName = "Цвет Филимоньковской";
         public const string OtherColorName = "Цвет для других площадок";
         public const string TransitionColorName = "Цвет перехода";
         public const string WithoutColorName = "Цвет без аудитории";
@@ -35,10 +65,19 @@ namespace DoiFApp.Utils
             => building switch
             {
                 "Без корпуса" => GetColorByName(configColor, WithoutColorName),
+
                 "1" => GetColorByName(configColor, VolginoColorName),
                 "2" => GetColorByName(configColor, VolginoColorName),
                 "3" => GetColorByName(configColor, VolginoColorName),
                 "5" => GetColorByName(configColor, KoptevoColorName),
+
+                "6" => GetColorByName(configColor, BobruiskayaColorName),
+                "7" => GetColorByName(configColor, GlavnayaColorName),
+                "8" => GetColorByName(configColor, OkrujnoyColorName),
+                "9" => GetColorByName(configColor, KolskayaColorName),
+                "10" => GetColorByName(configColor, DmitrovkaColorName),
+                "11" => GetColorByName(configColor, PhilimonkovskoyeColorName),
+
                 _ => GetColorByName(configColor, OtherColorName),
             };
 

@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using DoiFApp.Config;
 using DoiFApp.Data;
 using DoiFApp.Data.Models;
 using DoiFApp.Data.Repo;
@@ -15,6 +16,7 @@ using DoiFApp.Services.Workload;
 using DoiFApp.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using OfficeOpenXml;
+using System.Linq;
 using System.Windows;
 
 namespace DoiFApp
@@ -32,6 +34,30 @@ namespace DoiFApp
             Ioc.Default.ConfigureServices(Services);
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            MigrateConfig(SettingsPath);
+        }
+
+        private void MigrateConfig(string path)
+        {
+            var cfgService = Ioc.Default.GetRequiredService<IAppConfigService>();
+            
+            var oldCfg = cfgService.Get(path).Result!;
+            var newCfg = AppConfig.DefaultConfig;
+
+            oldCfg.ConfigColorCategories.ForEach(category =>
+            {
+                var matchedCategory = newCfg.ConfigColorCategories.Where(c => c.Tittle == category.Tittle).FirstOrDefault();
+                if (matchedCategory != null)
+                    category.Colors.ForEach(color =>
+                    {
+                        var matchedColor = matchedCategory.Colors.Where(c => c.Key == color.Key).FirstOrDefault();
+                        if (matchedColor != null)
+                            matchedColor.Value = color.Value;
+                    });
+            });
+
+            cfgService.Save(newCfg, path).Wait();
         }
 
         private static ServiceProvider ConfigureServices()

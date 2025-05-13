@@ -125,6 +125,12 @@ namespace DoiFApp.Services.Workload
 
             AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.KoptevoColorName), "Коптево");
             AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.VolginoColorName), "Волгина");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.BobruiskayaColorName), "Бобруйская");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.GlavnayaColorName), "Главная 86");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.OkrujnoyColorName), "Окружная");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.KolskayaColorName), "Кольская");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.DmitrovkaColorName), "Дмитровка");
+            AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.PhilimonkovskoyeColorName), "Филимоньковская");
             AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.OtherColorName), "Др. площадки");
             AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.WithoutColorName), "Без аудитории");
             AddNote(worksheet, startNoteY + i++, startNoteX + 1, WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.TransitionColorName), "Переезд");
