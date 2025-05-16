@@ -8,7 +8,7 @@
              xmlns:controlls="clr-namespace:DoiFApp.Views.Controlls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             d:DataContext="{d:DesignInstance vm:FillIndividualPlanPageViewModel, IsDesignTimeCreatable=True}">
+             d:DataContext="{d:DesignInstance vm:FillMonthlyIndividualPlanPageViewModel, IsDesignTimeCreatable=True}">
 
     <Grid>
 
@@ -17,28 +17,32 @@
             <Label Content="Выберите преподавателя:" Style="{StaticResource l2}" FontWeight="Bold" Margin="0,0,0,10"/>
 
             <ComboBox ItemsSource="{Binding Teachers}"
-                      SelectedItem="{Binding SelectedTeacher}"
-                      Margin="2"
-                      IsEditable="True"
-                      StaysOpenOnEdit="True"/>
+                    SelectedItem="{Binding SelectedTeacher}"
+                    Margin="2"
+                    IsEditable="True"
+                    StaysOpenOnEdit="True"/>
 
             <StackPanel Orientation="Horizontal"
-                        Margin="2">
-                
+                      Margin="2">
+
+                <ToggleButton Content="Первый семестр" IsChecked="{Binding IsFirstSemester}"/>
+                <Grid Margin="2"/>
+                <ToggleButton Content="Второй семестр" IsChecked="{Binding IsSecondSemester}"/>
+
             </StackPanel>
-            
+
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
 
                 <Button Content="Отмена"
-                        Command="{Binding CancelCommand}"
-                        Margin="5"/>
+                      Command="{Binding CancelCommand}"
+                      Margin="5"/>
 
                 <Button Content="ОК"
-                        Command="{Binding OkCommand}"
-                        Margin="5"/>
+                      Command="{Binding OkCommand}"
+                      Margin="5"/>
 
             </StackPanel>
-            
+
         </StackPanel>
 
     </Grid>

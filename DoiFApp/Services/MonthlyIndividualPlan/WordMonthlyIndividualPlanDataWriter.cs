@@ -25,24 +25,33 @@ namespace DoiFApp.Services.MonthlyIndividualPlan
         {
             using var doc = DocX.Load(path);
             var tables = doc.Tables;
-            await InsertData(tables[4], data.Lessons!, data.Converters!);
+            await InsertData(tables[4], data.isFirstSemester, data.Lessons!, data.Converters!);
             doc.Save();
         }
 
         protected static async Task InsertData(Table table,
+            bool isFirstSemester,
             IEnumerable<LessonModel> lessons,
             IEnumerable<LessonTypeConverter> converters)
         {
-            // с августа по декабрь
-            for (int i = 8; i < 13; i++)
-                await FillRow(table.Rows[i - 7], lessons.Where(l => l.Date.Month == i), converters);
-            await FillRow(table.Rows[6], lessons.Where(l => 8 <= l.Date.Month && l.Date.Month <= 12), converters);
-            // с января по июль
-            for (int i = 1; i < 8; i++)
-                await FillRow(table.Rows[i + 6], lessons.Where(l => l.Date.Month == i), converters);
-            await FillRow(table.Rows[14], lessons.Where(l => l.Date.Month <= 7), converters);
+            if (isFirstSemester)
+            {
+                // с августа по декабрь
+                for (int i = 8; i < 13; i++)
+                    await FillRow(table.Rows[i - 7], lessons.Where(l => l.Date.Month == i), converters);
+                await FillRow(table.Rows[6], lessons.Where(l => 8 <= l.Date.Month && l.Date.Month <= 12), converters);
+            }
+            else
+            {
+
+                // с января по июль
+                for (int i = 1; i < 8; i++)
+                    await FillRow(table.Rows[i + 6], lessons.Where(l => l.Date.Month == i), converters);
+                await FillRow(table.Rows[14], lessons.Where(l => l.Date.Month <= 7), converters);
+            }
+  
             // итог
-            await FillRow(table.Rows[15], lessons, converters);
+            //await FillRow(table.Rows[15], lessons, converters);
         }
 
         protected static Task FillRow(Row row,

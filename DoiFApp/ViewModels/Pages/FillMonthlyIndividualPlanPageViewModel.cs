@@ -1,60 +1,22 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using CommunityToolkit.Mvvm.Input;
-using DoiFApp.Services;
-using System.Collections.ObjectModel;
+﻿using System.ComponentModel;
 
 namespace DoiFApp.ViewModels.Pages
 {
-    public partial class FillMonthlyIndividualPlanPageViewModel : ObservableObject
+    public partial class FillMonthlyIndividualPlanPageViewModel : FillIndividualPlanPageViewModel
     {
-        //[ObservableProperty]
-        //private string? input;
-
-        [ObservableProperty]
-        private ObservableCollection<string> teachers = [];
-
-        private string? selectedTeacher;
-        public string? SelectedTeacher
+        protected override void OnPropertyChanging(PropertyChangingEventArgs e)
         {
-            get => selectedTeacher;
-            set
+            base.OnPropertyChanging(e);
+
+            if (e.PropertyName == nameof(IsFirstSemester) && IsSecondSemester)
             {
-                SetProperty(ref selectedTeacher, value);
-                CanOk = SelectedTeacher != null;
+                IsSecondSemester = false;
             }
-        }
 
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(OkCommand))]
-        private bool canOk;
-
-        [RelayCommand]
-        public async Task Update()
-        {
-            var finder = Ioc.Default.GetRequiredService<ITeacherFinder>();
-            var teachers = await finder.FindByPart(null);
-            Teachers.Clear();
-            if (teachers != null)
-                foreach (var teacher in teachers)
-                    Teachers.Add(teacher.Name);
-        }
-
-        public event Action? OnCancel;
-
-        [RelayCommand]
-        public void Cancel()
-        {
-            OnCancel?.Invoke();
-        }
-
-        public event Func<string, Task>? OnOk;
-
-        [RelayCommand(CanExecute = nameof(CanOk))]
-        public async Task Ok()
-        {
-            if (OnOk != null)
-                await OnOk.Invoke(selectedTeacher!);
+            if (e.PropertyName == nameof(IsSecondSemester) && IsFirstSemester)
+            {
+                IsFirstSemester = false;
+            }
         }
     }
 }

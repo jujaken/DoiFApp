@@ -548,7 +548,7 @@ namespace DoiFApp.ViewModels
                     var converterRepo = Ioc.Default.GetRequiredService<IRepo<LessonTypeConverter>>();
                     var lessonRepo = Ioc.Default.GetRequiredService<IRepo<LessonModel>>();
                     var lessons = await lessonRepo.GetAll();
-                    
+
                     converterRepo.Db.RecreateLessonTypeConverters();
 
                     foreach (var translation in lessonTypeTranslations)
@@ -631,7 +631,7 @@ namespace DoiFApp.ViewModels
         {
             var page = new FillMonthlyIndividualPlanPageViewModel();
             page.OnCancel += () => CurPage = null;
-            page.OnOk += async (teacherName) =>
+            page.OnOk += async (result) =>
             {
                 var path = GetFile("word file|*.docx", "Индивидуальный план.docx");
                 if (string.IsNullOrEmpty(path))
@@ -643,7 +643,7 @@ namespace DoiFApp.ViewModels
                 await CommandWithProcessAndLoad(async () =>
                 {
                     var teacher = (await Ioc.Default.GetRequiredService<ITeacherFinder>()
-                        .FindByPart(teacherName, true))!.FirstOrDefault()!;
+                        .FindByPart(result.teacherName, true))!.FirstOrDefault()!;
 
                     var lessons = await Ioc.Default.GetRequiredService<IRepo<LessonModel>>()
                         .GetWhere(l => l.TeachersText.Contains(teacher.Name));
@@ -653,10 +653,19 @@ namespace DoiFApp.ViewModels
                     await Ioc.Default.GetRequiredService<IDataWriter<MonthlyIndividualPlanData>>()
                         .Write(new MonthlyIndividualPlanData()
                         {
+                            isFirstSemester = result.isFirstSemester,
                             TeacherModel = teacher,
                             Lessons = lessons,
                             Converters = converters,
                         }, path);
+
+                    if (result.isFirstSemester)
+                        await Ioc.Default.GetRequiredService<IDataWriter<PlanFirstHalfIndividualPlanData>>()
+                            .Write(new PlanFirstHalfIndividualPlanData() { TeacherModel = teacher }, path);
+
+                    if (result.isSecondSemester)
+                        await Ioc.Default.GetRequiredService<IDataWriter<PlanSecondHalfIndividualPlanData>>()
+                            .Write(new PlanSecondHalfIndividualPlanData() { TeacherModel = teacher }, path);
 
                 }, page, "Задание выполнено");
             };
@@ -678,13 +687,13 @@ namespace DoiFApp.ViewModels
             }
 
             var page = new DataPageViewModel();
-            
+
             await CommandWithProcessAndLoad(async () =>
             {
                 var scheduleData = await Ioc.Default.GetRequiredService<IRepo<LessonModel>>().GetAll();
                 await Ioc.Default.GetRequiredService<IDataWriter<TempScheduleData>>().Write(new() { Lessons = scheduleData }, path);
             }, page, "Теперь, вы можете обновить файл и загрузить его с помощью команты \"Загр. редакт. расписание\"!");
-            
+
             await page.LoadData();
         }
 

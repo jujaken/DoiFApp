@@ -1,7 +1,6 @@
 ﻿using DoiFApp.Data.Models;
 using DoiFApp.Services.Data;
 using OfficeOpenXml;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DoiFApp.Services.TempSchedule
 {

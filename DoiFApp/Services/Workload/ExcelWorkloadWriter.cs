@@ -5,6 +5,7 @@ using System.Drawing;
 using DoiFApp.Utils;
 using DoiFApp.Services.Data;
 using DoiFApp.Config;
+using DoiFApp.Data.Models;
 
 namespace DoiFApp.Services.Workload
 {
@@ -55,7 +56,7 @@ namespace DoiFApp.Services.Workload
                     DrawRow(worksheet, index, 2, end, WorkloadHelper.GetColorByName(settingsCategory, WorkloadHelper.SundayColorName));
 
                 var curDayLessons = data.Lessons.Where(l => l.Date == date);
-
+             
                 for (var j = 0; j < teachersUnique.Count; j++)
                 {
                     var teacher = teachersUnique[j];
@@ -64,7 +65,7 @@ namespace DoiFApp.Services.Workload
                     if (!curTeacherCurDayLessons.Any()) continue;
 
                     foreach (var lesson in curTeacherCurDayLessons)
-                        lessonsCell.Value += SwitchClassId(lesson.Time) + " ";
+                        lessonsCell.Value += SwitchClassId(lesson) + " ";
 
                     lessonsCell.Style.Fill.PatternType = ExcelFillStyle.Solid;
 
@@ -160,6 +161,16 @@ namespace DoiFApp.Services.Workload
             worksheet.Cells[y, x].Style.Fill.PatternType = ExcelFillStyle.Solid;
             worksheet.Cells[y, x].Style.Fill.BackgroundColor.SetColor(key);
             worksheet.Cells[y, x + 1].Value = value;
+        }
+
+        private static string SwitchClassId(LessonModel lesson)
+        {
+            if (lesson.Wight > 2)
+                return SwitchClassId(lesson.Time) + "-" +
+                   (lesson.LessionType.Length < 3 ? lesson.LessionType
+                    : lesson.LessionType.ToUpper()[0..3]);
+
+            return SwitchClassId(lesson.Time);
         }
 
         private static string SwitchClassId(string time)
